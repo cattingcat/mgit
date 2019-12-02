@@ -1,6 +1,12 @@
 module Main where
 
 import Lib
+import FFI.LibGit
+import CFilesTest
 
 main :: IO ()
-main = someFunc
+main = do
+  tstRepoOpen
+  tstLibGitVersion
+  tstCFiles
+  pure ()

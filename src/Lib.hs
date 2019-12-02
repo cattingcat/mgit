@@ -1,9 +1,11 @@
+
 {-# LANGUAGE OverloadedStrings #-}
 
 module Lib (
-  someFunc
+  
 ) where
 
+{-
 import Git
 import Git.Libgit2 hiding (getRepository)
 import Control.Monad.IO.Class
@@ -13,7 +15,7 @@ import qualified Data.Text as T
 
 
 someFunc :: IO ()
-someFunc = do 
+someFunc = do
   putStrLn "someFunc"
   gitTest
 
@@ -24,15 +26,25 @@ gitTest = do
                                      , repoIsBare = False
                                      , repoAutoCreate = False
                                      }
+
     withRepository' lgFactory repoOpts $ do
       f <- facts
       liftIO $ print f
-      
-      rep <- getRepository 
+
+      rep <- getRepository
       liftIO $ print (lgRepoPath rep)
+
+      maybeHead <- resolveReference "HEAD"
+      liftIO $ print maybeHead
       
-      h <- resolveReference "HEAD"
-      liftIO $ print h
-      
+      case maybeHead of 
+        Just id -> do
+          commit <- lookupCommit (Tagged id)
+          liftIO $ print (commitLog commit)
+          
+          tag <- lookupTag (Tagged id)
+          liftIO $ print (tagOid tag)
+
+
       pure()
-    pure ()
+    pure ()-}

@@ -5,19 +5,12 @@
 
 packages:
 - completed:
-    hackage: gitlib-3.1.2@sha256:0f7142d8d58f7717242d65238e8814f17f9bbe7224a463adf34f75262c536227,2949
+    hackage: c-storable-deriving-0.1.3@sha256:510aa8423d6b3df57a39365569195ddc5bd4b04b0ff58ba1345c1f309ae6f89e,1030
     pantry-tree:
-      size: 982
-      sha256: 6a6fad020f023be98bddcbcca7ba1c97d9e606f768b6ca6e845ad18285c89748
+      size: 369
+      sha256: 17a631450a907af3253c3aa95414239b1adea9c5d9777705d6beab712cdf61a6
   original:
-    hackage: gitlib-3.1.2
-- completed:
-    hackage: gitlib-libgit2-3.1.2.1@sha256:36bc92f117158440ca69e32051aabdf9df75be8a3fb5f45dff8828898e615a0a,2354
-    pantry-tree:
-      size: 516
-      sha256: 47695cdeb7c1fb95a5c4bfd21bf46014554ccdd1e5059d5558a0348042044f39
-  original:
-    hackage: gitlib-libgit2-3.1.2.1
+    hackage: c-storable-deriving-0.1.3
 snapshots:
 - completed:
     size: 524804

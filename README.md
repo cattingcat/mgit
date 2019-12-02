@@ -10,4 +10,4 @@ stack install text-icu \
  --extra-lib-dirs=/usr/local/opt/icu4c/lib \
  --extra-include-dirs=/usr/local/opt/icu4c/include
  
-stack install yi (optional)
+nm /usr/local/Cellar/libgit2/0.28.3/lib/libgit2.a > nm_out

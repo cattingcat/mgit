@@ -5,34 +5,37 @@ license:             BSD3
 author:              "Author name here"
 maintainer:          "Author email here"
 copyright:           "2019 Author name here"
+synopsis:            Multi repo git tool
+category:            git, tools
+description:         Please see the README on GitHub at <https://github.com/zxc123zxc/mgit#readme>
+
+extra-libraries:
+  - git2 # @0.28.3
 
 extra-source-files:
-- README.md
-- ChangeLog.md
-
-# Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            App category here
-
-# To avoid duplicated efforts in documentation and dealing with the
-# complications of embedding Haddock markup inside cabal files, it is
-# common to point users to the README.md file.
-description: Please see the README on GitHub at <https://github.com/zxc123zxc/mgit#readme>
+  - README.md
+  - ChangeLog.md
 
 dependencies:
 - base >= 4.7 && < 5
 - optparse-applicative
+- directory
 - system-fileio
 - system-filepath
 - text
 - bytestring
-- gitlib
-- gitlib-libgit2
+- c-storable-deriving
+- hlibgit2
 - time
 - tagged
+- process
 
 library:
   source-dirs: src
+  c-sources:
+    cbits/print_kek.c
+  include-dirs:
+    include
 
 executables:
   mgit-exe:

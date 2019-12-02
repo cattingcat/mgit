@@ -4,11 +4,13 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bc08275af9baf4286ede9ae3b80dce438940c8be133faa54d1e528055747cfe2
+-- hash: 6335327bf825b6446f2c8c3c15147fa1652c1551a44affe2111c1281d626e613
 
 name:           mgit
 version:        0.1.0.0
+synopsis:       Multi repo git tool
 description:    Please see the README on GitHub at <https://github.com/zxc123zxc/mgit#readme>
+category:       git, tools
 homepage:       https://github.com/zxc123zxc/mgit#readme
 bug-reports:    https://github.com/zxc123zxc/mgit/issues
 author:         Author name here
@@ -27,17 +29,30 @@ source-repository head
 
 library
   exposed-modules:
+      CFilesTest
+      FFI.LibGit
+      FFI.MyStruct
+      FfiTest
       Lib
+      NativeGit
   other-modules:
       Paths_mgit
   hs-source-dirs:
       src
+  include-dirs:
+      include
+  c-sources:
+      cbits/print_kek.c
+  extra-libraries:
+      git2
   build-depends:
       base >=4.7 && <5
     , bytestring
-    , gitlib
-    , gitlib-libgit2
+    , c-storable-deriving
+    , directory
+    , hlibgit2
     , optparse-applicative
+    , process
     , system-fileio
     , system-filepath
     , tagged
@@ -52,13 +67,17 @@ executable mgit-exe
   hs-source-dirs:
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  extra-libraries:
+      git2
   build-depends:
       base >=4.7 && <5
     , bytestring
-    , gitlib
-    , gitlib-libgit2
+    , c-storable-deriving
+    , directory
+    , hlibgit2
     , mgit
     , optparse-applicative
+    , process
     , system-fileio
     , system-filepath
     , tagged
@@ -74,13 +93,17 @@ test-suite mgit-test
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  extra-libraries:
+      git2
   build-depends:
       base >=4.7 && <5
     , bytestring
-    , gitlib
-    , gitlib-libgit2
+    , c-storable-deriving
+    , directory
+    , hlibgit2
     , mgit
     , optparse-applicative
+    , process
     , system-fileio
     , system-filepath
     , tagged
