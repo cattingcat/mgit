@@ -4,11 +4,11 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6335327bf825b6446f2c8c3c15147fa1652c1551a44affe2111c1281d626e613
+-- hash: 299aadae09427d64d4c83c09f408f6f17491442d184360781badcd55792ed7fb
 
 name:           mgit
 version:        0.1.0.0
-synopsis:       Multi repo git tool
+synopsis:       Multi-repo git tool
 description:    Please see the README on GitHub at <https://github.com/zxc123zxc/mgit#readme>
 category:       git, tools
 homepage:       https://github.com/zxc123zxc/mgit#readme
@@ -30,10 +30,13 @@ source-repository head
 library
   exposed-modules:
       CFilesTest
-      FFI.LibGit
       FFI.MyStruct
       FfiTest
       Lib
+      LibGit.GitFileStatus
+      LibGit.GitFileStatusShow
+      LibGit.LibGit
+      LibGit.Test
       NativeGit
   other-modules:
       Paths_mgit
@@ -43,6 +46,7 @@ library
       include
   c-sources:
       cbits/print_kek.c
+      cbits/git_integr.c
   extra-libraries:
       git2
   build-depends:
@@ -50,7 +54,6 @@ library
     , bytestring
     , c-storable-deriving
     , directory
-    , hlibgit2
     , optparse-applicative
     , process
     , system-fileio
@@ -74,7 +77,6 @@ executable mgit-exe
     , bytestring
     , c-storable-deriving
     , directory
-    , hlibgit2
     , mgit
     , optparse-applicative
     , process
@@ -100,7 +102,6 @@ test-suite mgit-test
     , bytestring
     , c-storable-deriving
     , directory
-    , hlibgit2
     , mgit
     , optparse-applicative
     , process

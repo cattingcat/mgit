@@ -9,6 +9,8 @@ import Foreign.C.Types
 import Foreign.C.String
 import Foreign.CStorable
 
+-- https://downloads.haskell.org/~ghc/7.6.3/docs/html/users_guide/hsc2hs.html
+
 data MyStruct = MyStruct { d :: !Double, c :: !Word8, i :: !Int32 }
   deriving (Show)
 
@@ -23,3 +25,11 @@ instance Storable MyStruct where
     poke (#{ptr MyStruct, d} ptr) df
     poke (#{ptr MyStruct, c} ptr) cf
     poke (#{ptr MyStruct, i} ptr) ifl
+
+-- Binding to kek_t enum
+newtype KekStatusOpt = MkKekStatusOpt CUInt
+#{enum KekStatusOpt, MkKekStatusOpt
+    , kekFst = KEK_FST
+    , kekSnd = KEK_SND
+    , kekThrd = KEK_THRD
+    , kekFrth = KEK_FRTH}

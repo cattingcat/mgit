@@ -5,12 +5,12 @@ license:             BSD3
 author:              "Author name here"
 maintainer:          "Author email here"
 copyright:           "2019 Author name here"
-synopsis:            Multi repo git tool
+synopsis:            Multi-repo git tool
 category:            git, tools
 description:         Please see the README on GitHub at <https://github.com/zxc123zxc/mgit#readme>
 
 extra-libraries:
-  - git2 # @0.28.3
+  - git2                # libgit2 @ 0.28.3  (https://libgit2.org/)
 
 extra-source-files:
   - README.md
@@ -18,14 +18,13 @@ extra-source-files:
 
 dependencies:
 - base >= 4.7 && < 5
-- optparse-applicative
-- directory
-- system-fileio
+- optparse-applicative  # args parser
+- directory             # working with dirs. CurrentDir
+- system-fileio         # advanced working with paths
 - system-filepath
-- text
-- bytestring
-- c-storable-deriving
-- hlibgit2
+- text                  # overloading strings
+- bytestring            # overloading byte strings
+- c-storable-deriving   # Storable deriving for C lang
 - time
 - tagged
 - process
@@ -33,7 +32,8 @@ dependencies:
 library:
   source-dirs: src
   c-sources:
-    cbits/print_kek.c
+    - cbits/print_kek.c
+    - cbits/git_integr.c
   include-dirs:
     include
 

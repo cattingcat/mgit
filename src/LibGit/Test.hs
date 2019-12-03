@@ -1,6 +1,4 @@
-{-# language ForeignFunctionInterface, DeriveGeneric #-}
-
-module FFI.LibGit where
+module LibGit.Test where
 
 import Foreign
 import Foreign.C.Types
@@ -8,31 +6,10 @@ import Foreign.C.String
 import Foreign.CStorable
 import GHC.Generics (Generic)
 import System.Directory
+import LibGit.LibGit
+import LibGit.GitFileStatusShow
 
-
-data GitRepo = GitRepo
-  deriving (Generic, Show)
-
-instance CStorable GitRepo
-
-instance Storable GitRepo where
-  sizeOf = cSizeOf
-  alignment = cAlignment
-  poke = cPoke
-  peek = cPeek
-
--- int git_libgit2_init();
-foreign import ccall "git2/global.h git_libgit2_init" c_git_libgit2_init :: IO CInt
-
--- int git_libgit2_features();
-foreign import ccall "git2/common.h git_libgit2_features" c_git_libgit2_features :: IO CInt
-
--- void git_libgit2_version(int *major, int *minor, int *rev);
-foreign import ccall "git2/common.h git_libgit2_version" c_git_libgit2_version :: Ptr CInt -> Ptr CInt -> Ptr CInt -> IO ()
-
--- int git_repository_open(git_repository **out, const char *path);
-foreign import ccall "git2.h git_repository_open" c_git_repository_open :: Ptr (Ptr GitRepo) -> CString -> IO CInt
-
+import qualified LibGit.GitFileStatus as GFS
 
 tstRepoOpen = do
   print "Test repo open"
@@ -43,6 +20,10 @@ tstRepoOpen = do
   withCString pwd $ \s -> do
     r <- c_git_repository_open p s
     print r
+  repoPtr <- peek p
+  repoPathPtr <- c_git_repository_commondir repoPtr
+  repoPath <- peekCString repoPathPtr
+  print repoPath
   free p
 
 tstLibGitVersion = do
@@ -60,6 +41,29 @@ tstLibGitVersion = do
   free minorPtr
   free patchPtr
 
+tstRepoStatus = do
+  print "Test repo status"
+  pwd <- getCurrentDirectory
+  inir <- c_git_libgit2_init
+  print inir
+  p <- mallocBytes (sizeOf (undefined :: Ptr (Ptr GitRepo)))
+  withCString pwd $ \s -> do
+    r <- c_git_repository_open p s
+    print r
+  repoPtr <- peek p
+  cb <- wrapGitStatusCb statusFunc
+  r <- c_git_status_foreach_integr repoPtr cb nullPtr
+
+  free p
+
+statusFunc :: GitStatusCb
+statusFunc cstr fileStat _ =
+  if fileStat == GFS.ignored
+    then pure 0
+    else do
+      str <- peekCString cstr
+      print (show fileStat ++ " :   " ++ str)
+      pure 0
 
 printVer :: CInt -> CInt -> CInt -> String
 printVer mj mn pc = show mj ++ "." ++ show mn ++ "." ++ show pc
