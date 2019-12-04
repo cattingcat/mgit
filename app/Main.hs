@@ -10,4 +10,6 @@ main = do
   tstLibGitVersion
   tstCFiles
   tstRepoStatus
+  tstRepoOrigin
+  tstFetch
   pure ()

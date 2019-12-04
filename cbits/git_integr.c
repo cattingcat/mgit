@@ -1,5 +1,6 @@
 #include <git2.h>
 #include <git2/status.h>
+#include <git2/remote.h>
 #include "git_integr.h"
 
 
@@ -17,5 +18,13 @@ int git_status_foreach_integr(git_repository *repo, git_status_cb callback, void
     int r = git_status_foreach_ext(repo, opts, callback, payload);
 
     free(opts);
+    return r;
+}
+
+
+int git_fetch_init_options_integr(git_fetch_options **opts) {
+    git_fetch_options *o = malloc(sizeof(git_fetch_options));
+    (*opts) = o;
+    int r = git_fetch_init_options(o, GIT_FETCH_OPTIONS_VERSION);
     return r;
 }

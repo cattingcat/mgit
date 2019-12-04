@@ -20,7 +20,7 @@ instance Show GitFileStatus where
          | a `hasFlag` wtNew           = "wt new"
          | a `hasFlag` ignored         = ""
          | a `hasFlag` conflicted      = "conflict"
-         | otherwise            = "unknown"
+         | otherwise                   = "unknown"
          --  | a `hasFlag` current         = ""
 
 

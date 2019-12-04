@@ -1,5 +1,4 @@
-{-# language ForeignFunctionInterface, DeriveGeneric #-}
-{-# LANGUAGE DeriveAnyClass #-}
+{-# language ForeignFunctionInterface #-}
 
 module LibGit.LibGit where
 
@@ -9,18 +8,9 @@ import Foreign.C.String
 import Foreign.CStorable
 import GHC.Generics (Generic)
 import System.Directory
+import LibGit.Models
 
 import qualified LibGit.GitFileStatus as GFS
-
-
-data GitRepo = GitRepo
-  deriving (Generic, Show, CStorable)
-
-instance Storable GitRepo where
-  sizeOf = cSizeOf
-  alignment = cAlignment
-  poke = cPoke
-  peek = cPeek
 
 -- int git_libgit2_init();
 foreign import ccall "git2/global.h git_libgit2_init" c_git_libgit2_init :: IO CInt
@@ -45,6 +35,18 @@ type GitStatusCb = CString -> GFS.GitFileStatus -> Ptr () -> IO CInt
 
 foreign import ccall "wrapper" wrapGitStatusCb :: GitStatusCb -> IO (FunPtr GitStatusCb)
 
+-- int git_remote_lookup(git_remote **out, git_repository *repo, const char *name);
+foreign import ccall "git2/remote.h git_remote_lookup" c_git_remote_lookup :: Ptr (Ptr GitRemote) -> Ptr GitRepo -> CString -> IO CInt
+
+-- const char * git_remote_url(const git_remote *remote);
+foreign import ccall "git2/remote.h git_remote_url" c_git_remote_url :: Ptr GitRemote -> IO CString
+
+-- int git_remote_download(git_remote *remote, const git_strarray *refspecs, const git_fetch_options *opts);
+foreign import ccall "git2/remote.h git_remote_download" c_git_remote_download :: Ptr GitRemote -> Ptr GitStrArr -> Ptr GitFetchOptions -> IO CInt
+
 
 -- int git_status_foreach(git_repository *repo, git_status_cb callback, void *payload);
 foreign import ccall "git_integr.h git_status_foreach_integr" c_git_status_foreach_integr :: Ptr GitRepo -> FunPtr GitStatusCb -> Ptr () -> IO CInt
+
+-- int git_fetch_init_options_integr(git_fetch_options *opts);
+foreign import ccall "git_integr.h git_fetch_init_options_integr" c_git_fetch_init_options_integr :: Ptr (Ptr GitFetchOptions) -> IO CInt
