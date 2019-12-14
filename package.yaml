@@ -18,6 +18,7 @@ extra-source-files:
 
 dependencies:
 - base >= 4.7 && < 5
+- array
 - optparse-applicative  # args parser
 - directory             # working with dirs. CurrentDir
 - system-fileio         # advanced working with paths
@@ -32,7 +33,7 @@ dependencies:
 library:
   source-dirs: src
   c-sources:
-    - cbits/print_kek.c
+    - cbits/test_ffi.c
     - cbits/git_integr.c
   include-dirs:
     include

@@ -9,16 +9,11 @@ import Foreign
 import Foreign.C.Types
 import Foreign.C.String
 import Foreign.CStorable
+import LibGit.GitStatus
 import GHC.Generics (Generic)
 
 
 data GitRepo = GitRepo
-  deriving (Generic, CStorable)
-
-data GitRemote = GitRemote
-  deriving (Generic, CStorable)
-
-data GitFetchOptions = GitFetchOptions
   deriving (Generic, CStorable)
 
 data GitStrArr = GitStrArr {

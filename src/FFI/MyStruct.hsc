@@ -2,7 +2,7 @@
 
 module FFI.MyStruct where
 
-#include "my_struct.h"
+#include "test_ffi.h"
 
 import Foreign
 import Foreign.C.Types

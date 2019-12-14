@@ -1,15 +1,19 @@
 module Main where
 
 import Lib
-import LibGit.Test
+import LibGit.TestGitLib
 import CFilesTest
+import FFI.TestFfi
 
 main :: IO ()
 main = do
-  tstRepoOpen
-  tstLibGitVersion
-  tstCFiles
-  tstRepoStatus
-  tstRepoOrigin
-  tstFetch
+--  testStatusEnumSize
+  tstRemoteNew
+  tstStatusNew
+--  tstRepoOpen
+--  tstLibGitVersion
+--  tstCFiles
+--  tstRepoStatus
+--  tstRepoOrigin
+--  tstFetch2
   pure ()

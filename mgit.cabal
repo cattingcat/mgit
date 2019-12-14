@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 392ec2b8fa6ef169a96d7dc0b2c71c24d055fa8fd28afcd61dede9ec96e496c7
+-- hash: c128ac4e652704a5599e149c9cf43aa520e7172ac36e94c4894fc059a3ecb250
 
 name:           mgit
 version:        0.1.0.0
@@ -30,14 +30,20 @@ source-repository head
 library
   exposed-modules:
       CFilesTest
+      FFI.CArray
       FFI.MyStruct
+      FFI.TestFfi
       FfiTest
       Lib
+      LibGit.Common
       LibGit.GitFileStatus
       LibGit.GitFileStatusShow
-      LibGit.LibGit
+      LibGit.GitStatus
       LibGit.Models
-      LibGit.Test
+      LibGit.Remote
+      LibGit.Status
+      LibGit.TestGitLib
+      LibGit.Wrappers
       NativeGit
   other-modules:
       Paths_mgit
@@ -46,12 +52,13 @@ library
   include-dirs:
       include
   c-sources:
-      cbits/print_kek.c
+      cbits/test_ffi.c
       cbits/git_integr.c
   extra-libraries:
       git2
   build-depends:
-      base >=4.7 && <5
+      array
+    , base >=4.7 && <5
     , bytestring
     , c-storable-deriving
     , directory
@@ -74,7 +81,8 @@ executable mgit-exe
   extra-libraries:
       git2
   build-depends:
-      base >=4.7 && <5
+      array
+    , base >=4.7 && <5
     , bytestring
     , c-storable-deriving
     , directory
@@ -99,7 +107,8 @@ test-suite mgit-test
   extra-libraries:
       git2
   build-depends:
-      base >=4.7 && <5
+      array
+    , base >=4.7 && <5
     , bytestring
     , c-storable-deriving
     , directory

@@ -6,5 +6,9 @@ int git_status_foreach_integr(
 	git_status_cb callback,
 	void *payload);
 
+int git_status_list_new_integr(
+    git_status_list **out,
+    git_repository *repo);
+
 int git_fetch_init_options_integr(
     git_fetch_options **opts);
