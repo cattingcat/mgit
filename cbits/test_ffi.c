@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <git2.h>
+#include <git2/types.h>
 #include <git2/status.h>
 #include <git2/diff.h>
 
@@ -38,6 +39,7 @@ void test_status_size() {
     printf("sizeof git_delta_t: %d \n", sizeof(git_delta_t));
     printf("sizeof git_diff_file: %d \n", sizeof(git_diff_file));
     printf("sizeof git_diff_delta: %d \n", sizeof(git_diff_delta));
+    printf("sizeof git_branch_t: %d \n", sizeof(git_branch_t));
     printf("sizeof int: %d \n", sizeof(unsigned int));
     printf("sizeof long: %d \n", sizeof(unsigned long));
 }

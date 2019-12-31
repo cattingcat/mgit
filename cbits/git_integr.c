@@ -41,6 +41,14 @@ int git_status_list_new_integr(git_status_list **out, git_repository *repo) {
 int git_fetch_init_options_integr(git_fetch_options **opts) {
     git_fetch_options *o = malloc(sizeof(git_fetch_options));
     (*opts) = o;
+
     int r = git_fetch_init_options(o, GIT_FETCH_OPTIONS_VERSION);
+
+    // Download deletes of branches
+    o->prune = GIT_FETCH_PRUNE;
+
+    // Download all tags
+    o->download_tags = GIT_REMOTE_DOWNLOAD_TAGS_ALL;
+
     return r;
 }

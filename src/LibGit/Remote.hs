@@ -20,9 +20,14 @@ data GitFetchOptions = GitFetchOptions
   deriving (Generic, CStorable)
   
   
+-- int git_remote_list(git_strarray *out, git_repository *repo);
+-- TODO ?
 
 -- int git_remote_lookup(git_remote **out, git_repository *repo, const char *name);
 foreign import ccall "git2/remote.h git_remote_lookup" c_git_remote_lookup :: Ptr (Ptr GitRemote) -> Ptr GitRepo -> CString -> IO CInt
+
+-- void git_remote_free(git_remote *remote);
+foreign import ccall "git2/remote.h git_remote_free" c_git_remote_free :: Ptr GitRemote -> IO ()
 
 -- const char * git_remote_url(const git_remote *remote);
 foreign import ccall "git2/remote.h git_remote_url" c_git_remote_url :: Ptr GitRemote -> IO CString

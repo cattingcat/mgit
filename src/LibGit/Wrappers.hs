@@ -11,7 +11,10 @@ module LibGit.Wrappers(
   repoStatus,
 
   lookupRemote,
-  remoteUri
+  remoteUri,
+  remoteFetch,
+
+  branches
 ) where
 
 import Control.Exception (Exception, throw)
@@ -24,10 +27,11 @@ import Foreign.C.String
 import Foreign.CStorable
 import Foreign.Ptr
 
-import LibGit.Common
+import qualified LibGit.Common as C
 import LibGit.Models
 import qualified LibGit.Status as S
 import qualified LibGit.Remote as R
+import qualified LibGit.Branch as B
 
 
 
@@ -38,15 +42,15 @@ type GitRepoPtr = Ptr GitRepo
 
 withLibGit :: IO a -> IO a
 withLibGit io = do
-  c_git_libgit2_init
+  C.c_git_libgit2_init
   a <- io
-  c_git_libgit2_shutdown
+  C.c_git_libgit2_shutdown
   pure a
 
 withRepo :: FilePath -> (GitRepoPtr -> IO a) -> IO a
 withRepo path f = do
   p <- mallocBytes (sizeOf (undefined :: Ptr (Ptr GitRepo)))
-  r <- withCString path (c_git_repository_open p)
+  r <- withCString path (C.c_git_repository_open p)
   if r /= 0
     then throw (OpenRepoError r)
     else pure ()
@@ -63,7 +67,7 @@ libGitVersion = do
   majorPtr <- mallocBytes (sizeOf (undefined :: Ptr CInt))
   minorPtr <- mallocBytes (sizeOf (undefined :: Ptr CInt))
   patchPtr <- mallocBytes (sizeOf (undefined :: Ptr CInt))
-  c_git_libgit2_version majorPtr minorPtr patchPtr
+  C.c_git_libgit2_version majorPtr minorPtr patchPtr
   verStr <- showVer
     <$> peek majorPtr
     <*> peek minorPtr
@@ -75,7 +79,7 @@ libGitVersion = do
 
 repoDir :: GitRepoPtr -> IO FilePath
 repoDir ptr = do
-  pathPtr <- c_git_repository_commondir ptr
+  pathPtr <- C.c_git_repository_commondir ptr
   path <- peekCString pathPtr
   free pathPtr
   pure path
@@ -105,7 +109,7 @@ data StatusEntryDeltaInfo = StatusEntryDeltaInfo {
   indexToWorkDir :: Maybe DeltaInfo
 } deriving (Show)
 
-newtype StatusInfo = StatusInfo{
+newtype StatusInfo = StatusInfo {
   delta :: [StatusEntryDeltaInfo]
 } deriving (Show)
 
@@ -171,6 +175,7 @@ lookupRemote repo name f = do
   r <- withCString name (R.c_git_remote_lookup p repo)
   remotePtr <- peek p
   res <- f remotePtr
+  R.c_git_remote_free remotePtr
   free p
   pure res
   
@@ -179,3 +184,66 @@ remoteUri :: GitRemotePtr -> IO String
 remoteUri remote = do 
   uriStr <- R.c_git_remote_url remote
   peekCString uriStr
+
+remoteFetch :: GitRemotePtr -> IO ()
+remoteFetch remote = do
+  optsPtrPtr <- malloc
+  R.c_git_fetch_init_options_integr optsPtrPtr
+  optsPtr <- peek optsPtrPtr
+  r <- R.c_git_remote_fetch remote nullPtr optsPtr nullPtr
+  free optsPtr
+  free optsPtrPtr
+  print r
+  pure ()
+  
+
+data BranchType = RemoteBranch | LocalBranch  
+  deriving (Show)
+  
+data BranchInfo = BranchInfo {
+  branchType :: BranchType,
+  name :: String
+} deriving (Show)
+
+branches :: GitRepoPtr -> IO [BranchInfo]
+branches repoPtr = do
+  pp <- malloc
+  r <- B.c_git_branch_iterator_new pp repoPtr B.allBranches
+  iterPtr <- peek pp
+
+  refPtrPtr <- malloc
+  branchTypePtr <- malloc
+  strPtr <- malloc
+
+  res <- loop refPtrPtr branchTypePtr iterPtr strPtr []
+
+  free strPtr
+  free refPtrPtr
+  free branchTypePtr
+  B.c_git_branch_iterator_free iterPtr
+  free pp
+  
+  print res
+  
+  pure res
+
+  where
+    loop rpp branchTypePtr iterPtr branchNamePtr accum = do
+      nr <- B.c_git_branch_next rpp branchTypePtr iterPtr
+      refPtr <- peek rpp
+
+      B.c_git_branch_name branchNamePtr refPtr
+      str <- peek branchNamePtr
+      
+      branchName <- peekCString str
+      branchType <- peek branchTypePtr
+      
+      let 
+        bType = if branchType == B.localBranch 
+          then LocalBranch 
+          else RemoteBranch
+        r = BranchInfo bType branchName
+        rs = r:accum
+      if nr == 0 
+        then loop rpp branchTypePtr iterPtr branchNamePtr rs 
+        else pure rs
