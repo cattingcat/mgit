@@ -15,6 +15,7 @@ module LibGit.Branch (
 ) where
 
 import System.Directory
+import MGit.BranchModels
 import LibGit.Models
 import LibGit.Refs as R
 import Foreign
@@ -64,21 +65,6 @@ foreign import ccall "git2/branch.h git_branch_name" c_git_branch_name :: Ptr CS
 foreign import ccall "git2/branch.h git_branch_is_head" c_git_branch_is_head :: Ptr GitReference -> IO CInt
 
 
-
-
-data BranchType = RemoteBranch | LocalBranch
-  deriving (Show)
-
-data BranchInfo = BranchInfo {
-  branchType :: BranchType,
-  name :: String,
-  isBranch :: Bool
-} deriving (Show)
-
-data Branches = Branches {
-  currentBranch :: BranchInfo,
-  branches :: [BranchInfo]
-}
 
 getBranches :: GitRepoPtr -> IO Branches
 getBranches repoPtr = do

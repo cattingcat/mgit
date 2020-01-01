@@ -1,6 +1,4 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
---{-# LANGUAGE FlexibleInstances #-}
---{-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DataKinds #-}
@@ -20,6 +18,7 @@ module LibGit.Status (
 ) where
 
 import System.Directory
+import MGit.StatusModels
 import LibGit.Models
 import Foreign
 import Foreign.C.Types
@@ -84,35 +83,6 @@ foreign import ccall "git2/status.h git_status_list_free" c_git_status_list_free
 
 
 -- | Wrappers
-
-data DeltaStatus =
-    Unmodified
-  | Added
-  | Deleted
-  | Modified
-  | Renamed
-  | Copied
-  | Ignored
-  | Untracked
-  | Typechange
-  | Unreadable
-  | Conflicted
-  deriving (Show)
-
-data DeltaInfo = DeltaInfo {
-  status :: DeltaStatus,
-  oldPath :: FilePath,
-  newPath :: FilePath
-} deriving (Show)
-
-data StatusEntryDeltaInfo = StatusEntryDeltaInfo {
-  headToIndex :: Maybe DeltaInfo,
-  indexToWorkDir :: Maybe DeltaInfo
-} deriving (Show)
-
-newtype StatusInfo = StatusInfo {
-  delta :: [StatusEntryDeltaInfo]
-} deriving (Show)
 
 repoStatus :: GitRepoPtr -> IO StatusInfo
 repoStatus ptr = do

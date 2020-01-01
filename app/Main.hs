@@ -1,14 +1,15 @@
 module Main where
 
 import Lib
-import LibGit.TestGitLib
+import qualified LibGit.TestGitLib as T
 import Foreign.TestFfi
 
 main :: IO ()
 main = do
-  testStatusEnumSize
+--  testStatusEnumSize
 --  tstRemote
 --  tstStatus
 --  tstRemoteFetch
-  tstBranches
+--  tstBranches
+  T.tstCurrentBranch
   pure ()

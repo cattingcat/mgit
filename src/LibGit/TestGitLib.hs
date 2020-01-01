@@ -1,11 +1,13 @@
 module LibGit.TestGitLib where
 
 import System.Directory
-import LibGit.Models
-import qualified LibGit.Branch as B
-import qualified LibGit.Common as C
-import qualified LibGit.Remote as R
-import qualified LibGit.Status as S
+import qualified LibGit.LibGitApp as A
+import qualified MGit.MonadGit as A
+--import LibGit.Models
+--import qualified LibGit.Branch as B
+--import qualified LibGit.Common as C
+--import qualified LibGit.Remote as R
+--import qualified LibGit.Status as S
 
 
 
@@ -39,27 +41,34 @@ import qualified LibGit.Status as S
 --  free ppRemote
 
 
-tstStatus = C.withLibGit $ do
-  pwd <- getCurrentDirectory
-  C.withRepo pwd $ \repo -> do
-    statusInfo <- S.repoStatus repo
-    print statusInfo
+--tstStatus = C.withLibGit $ do
+--  pwd <- getCurrentDirectory
+--  C.withRepo pwd $ \repo -> do
+--    statusInfo <- S.repoStatus repo
+--    print statusInfo
+--
+--tstRemote = C.withLibGit $ do
+--  pwd <- getCurrentDirectory
+--  C.withRepo pwd $ \repo ->
+--    R.lookupRemote repo "origin" $ \r -> do
+--      uri <- R.remoteUri r
+--      print uri
+--
+--tstRemoteFetch = C.withLibGit $ do
+--  pwd <- getCurrentDirectory
+--  C.withRepo pwd $ \repo ->
+--    R.lookupRemote repo "origin" R.remoteFetch
+--
+--tstBranches = C.withLibGit $ do
+--  pwd <- getCurrentDirectory
+--  C.withRepo pwd $ \repo -> do
+--    res <- B.getBranches repo
+--    print $ "current branch: " <> show (B.currentBranch res)
+--    mapM_ print $ fmap show (B.branches res)
 
-tstRemote = C.withLibGit $ do
+tstCurrentBranch :: IO String
+tstCurrentBranch = do
   pwd <- getCurrentDirectory
-  C.withRepo pwd $ \repo ->
-    R.lookupRemote repo "origin" $ \r -> do
-      uri <- R.remoteUri r
-      print uri
-
-tstRemoteFetch = C.withLibGit $ do
-  pwd <- getCurrentDirectory
-  C.withRepo pwd $ \repo ->
-    R.lookupRemote repo "origin" R.remoteFetch
-
-tstBranches = C.withLibGit $ do
-  pwd <- getCurrentDirectory
-  C.withRepo pwd $ \repo -> do
-    res <- B.getBranches repo
-    print $ "current branch: " <> show (B.currentBranch res)
-    mapM_ print $ fmap show (B.branches res)
+  branchName <- A.runLibGitApp pwd A.currentBranch
+  print branchName
+  pure branchName
