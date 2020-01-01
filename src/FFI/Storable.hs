@@ -1,13 +1,16 @@
-module FFI.Storable where
+module FFI.Storable (
+  CStorableWrapper(..)
+) where
 
 import Foreign
 import Foreign.CStorable
-import Unsafe.Coerce (unsafeCoerce)
 
-newtype StorableW a = StorableW { unStorableW :: a }
 
-instance CStorable a => Storable (StorableW a) where
-  sizeOf = cSizeOf . unStorableW
-  alignment = cAlignment . unStorableW
-  poke ptr (StorableW a) = cPoke (castPtr ptr) a 
-  peek ptr = fmap StorableW (cPeek (castPtr ptr)) 
+-- | Use deriving via with this wrapper to get Storable instance
+newtype CStorableWrapper a = CStorableWrapper { unCSWrap :: a }
+
+instance CStorable a => Storable (CStorableWrapper a) where
+  sizeOf = cSizeOf . unCSWrap
+  alignment = cAlignment . unCSWrap
+  poke ptr (CStorableWrapper a) = cPoke (castPtr ptr) a
+  peek ptr = fmap CStorableWrapper (cPeek (castPtr ptr))

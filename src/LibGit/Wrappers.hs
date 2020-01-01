@@ -27,8 +27,8 @@ import Foreign.C.String
 import Foreign.CStorable
 import Foreign.Ptr
 
-import qualified LibGit.Common as C
 import LibGit.Models
+import qualified LibGit.Common as C
 import qualified LibGit.Status as S
 import qualified LibGit.Remote as R
 import qualified LibGit.Branch as B

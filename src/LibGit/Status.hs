@@ -32,9 +32,9 @@ data GitDiffFile = GitDiffFile {
   flags :: CUInt,
   mode :: CUShort,
   id_abbrev :: CUShort
-} 
+}
   deriving (Generic, CStorable)
-  deriving (Storable) via (StorableW GitDiffFile)
+  deriving (Storable) via (CStorableWrapper GitDiffFile)
 
 data GitDiffDelta = GitDiffDelta {
   deltaDiffStatus :: !CUInt, -- git_delta_t
@@ -43,17 +43,17 @@ data GitDiffDelta = GitDiffDelta {
   deltaNfiles :: !CUShort,
   oldFile :: !GitDiffFile,
   newFile :: !GitDiffFile
-} 
+}
   deriving (Generic, CStorable)
-  deriving (Storable) via (StorableW GitDiffDelta)
+  deriving (Storable) via (CStorableWrapper GitDiffDelta)
 
 data GitStatusEntry = GitStatusEntry {
   status :: !CUInt,
   headToIndex :: !(Ptr GitDiffDelta),
   indexToWorkDir :: !(Ptr GitDiffDelta)
-} 
+}
   deriving (Generic, CStorable, Show)
-  deriving (Storable) via (StorableW GitStatusEntry)
+  deriving (Storable) via (CStorableWrapper GitStatusEntry)
 
 
 

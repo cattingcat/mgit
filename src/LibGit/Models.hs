@@ -22,9 +22,9 @@ data GitRepo = GitRepo
 data GitStrArr = GitStrArr {
   strings :: !(Ptr CString),
   count :: !CSize
-} 
+}
   deriving (Generic, CStorable)
-  deriving (Storable) via (StorableW GitStrArr) 
+  deriving (Storable) via (CStorableWrapper GitStrArr)
 
 makeStrArr :: [String] -> IO (Ptr GitStrArr)
 makeStrArr strs = do

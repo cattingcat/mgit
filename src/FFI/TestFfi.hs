@@ -24,7 +24,7 @@ data MyStruct = MyStruct {
   str :: CString
 }
   deriving (Generic, CStorable)
-  deriving Storable via (StorableW MyStruct)
+  deriving Storable via (CStorableWrapper MyStruct)
 
 foreign import ccall "print_kek.h foo" c_foo :: CInt -> IO (Ptr MyStruct)
 foreign import ccall "print_kek.h bar" c_bar :: Ptr MyStruct -> IO ()

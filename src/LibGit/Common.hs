@@ -5,12 +5,8 @@ module LibGit.Common where
 import Foreign
 import Foreign.C.Types
 import Foreign.C.String
-import Foreign.CStorable
-import GHC.Generics (Generic)
-import System.Directory
 import LibGit.Models
 
-import qualified LibGit.GitFileStatus as GFS
 
 -- int git_libgit2_init();
 foreign import ccall "git2/global.h git_libgit2_init" c_git_libgit2_init :: IO CInt

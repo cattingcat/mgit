@@ -16,9 +16,7 @@ import Foreign.C.Types
 import Foreign.C.String
 import Foreign.CStorable
 import Foreign.Storable
-import LibGit.GitStatus
 import GHC.Generics (Generic)
-import FFI.CArray
 import FFI.Storable
 
 -- git_branch_iterator
@@ -28,7 +26,7 @@ data GitBranchIterator = GitBranchIterator
 -- git_branch_t
 newtype GitBranchType = GitBranchType CUChar
   deriving (Eq, Show, Generic, CStorable)
-  deriving Storable via (StorableW GitBranchType)
+  deriving Storable via (CStorableWrapper GitBranchType)
 
 -- git_reference
 data GitReference = GitReference
