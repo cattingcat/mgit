@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6670a9856281a3912aeda34658dae56c87b6175e51352ddb401f5557d702059b
+-- hash: 2f6d31bf549e4103efea8e773716d461543897efc281b95985fc30ac5f76b4d9
 
 name:           mgit
 version:        0.1.0.0
@@ -31,6 +31,7 @@ library
   exposed-modules:
       FFI.CArray
       FFI.MyStruct
+      FFI.Storable
       FFI.TestFfi
       Lib
       LibGit.Branch

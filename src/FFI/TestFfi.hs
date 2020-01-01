@@ -2,6 +2,8 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DerivingVia #-}
 
 module FFI.TestFfi where
 
@@ -12,6 +14,7 @@ import Foreign.CStorable
 import GHC.Generics (Generic)
 import System.Directory
 import FFI.CArray
+import FFI.Storable
 import qualified LibGit.Status as S
 import qualified Data.Array.Base as A
 
@@ -19,13 +22,9 @@ import qualified Data.Array.Base as A
 data MyStruct = MyStruct {
   arr :: StorableWrap (CArray 5 CInt),
   str :: CString
-} deriving (Generic, CStorable)
-
-instance Storable MyStruct where
-  sizeOf = cSizeOf
-  alignment = cAlignment
-  poke = cPoke
-  peek = cPeek
+}
+  deriving (Generic, CStorable)
+  deriving Storable via (StorableW MyStruct)
 
 foreign import ccall "print_kek.h foo" c_foo :: CInt -> IO (Ptr MyStruct)
 foreign import ccall "print_kek.h bar" c_bar :: Ptr MyStruct -> IO ()

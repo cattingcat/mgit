@@ -2,6 +2,8 @@
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DerivingVia #-}
 
 module LibGit.Models where
 
@@ -10,6 +12,7 @@ import Foreign.C.Types
 import Foreign.C.String
 import Foreign.CStorable
 import LibGit.GitStatus
+import FFI.Storable
 import GHC.Generics (Generic)
 
 
@@ -19,13 +22,9 @@ data GitRepo = GitRepo
 data GitStrArr = GitStrArr {
   strings :: !(Ptr CString),
   count :: !CSize
-} deriving (Generic, CStorable)
-
-instance Storable GitStrArr where
-  sizeOf = cSizeOf
-  alignment = cAlignment
-  poke = cPoke
-  peek = cPeek
+} 
+  deriving (Generic, CStorable)
+  deriving (Storable) via (StorableW GitStrArr) 
 
 makeStrArr :: [String] -> IO (Ptr GitStrArr)
 makeStrArr strs = do

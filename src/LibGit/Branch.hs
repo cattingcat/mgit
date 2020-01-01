@@ -4,6 +4,8 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DerivingVia #-}
 
 module LibGit.Branch where
 
@@ -17,6 +19,7 @@ import Foreign.Storable
 import LibGit.GitStatus
 import GHC.Generics (Generic)
 import FFI.CArray
+import FFI.Storable
 
 -- git_branch_iterator
 data GitBranchIterator = GitBranchIterator
@@ -25,12 +28,7 @@ data GitBranchIterator = GitBranchIterator
 -- git_branch_t
 newtype GitBranchType = GitBranchType CUChar
   deriving (Eq, Show, Generic, CStorable)
-
-instance Storable GitBranchType where
-  sizeOf = cSizeOf
-  alignment = cAlignment
-  poke = cPoke
-  peek = cPeek
+  deriving Storable via (StorableW GitBranchType)
 
 -- git_reference
 data GitReference = GitReference

@@ -4,6 +4,8 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE DerivingVia #-}
 
 module LibGit.Status where
 
@@ -17,6 +19,7 @@ import Foreign.Storable
 import LibGit.GitStatus
 import GHC.Generics (Generic)
 import FFI.CArray
+import FFI.Storable
 
 
 data GitStatusList = GitStatusList
@@ -29,14 +32,9 @@ data GitDiffFile = GitDiffFile {
   flags :: CUInt,
   mode :: CUShort,
   id_abbrev :: CUShort
-} deriving (Generic, CStorable)
-
-instance Storable GitDiffFile where
-  sizeOf = cSizeOf
-  alignment = cAlignment
-  poke = cPoke
-  peek = cPeek
-  
+} 
+  deriving (Generic, CStorable)
+  deriving (Storable) via (StorableW GitDiffFile)
 
 data GitDiffDelta = GitDiffDelta {
   deltaDiffStatus :: !CUInt, -- git_delta_t
@@ -45,26 +43,18 @@ data GitDiffDelta = GitDiffDelta {
   deltaNfiles :: !CUShort,
   oldFile :: !GitDiffFile,
   newFile :: !GitDiffFile
-} deriving (Generic, CStorable)
-
-instance Storable GitDiffDelta where
-  sizeOf = cSizeOf
-  alignment = cAlignment
-  poke = cPoke
-  peek = cPeek
-  
+} 
+  deriving (Generic, CStorable)
+  deriving (Storable) via (StorableW GitDiffDelta)
 
 data GitStatusEntry = GitStatusEntry {
   status :: !CUInt,
   headToIndex :: !(Ptr GitDiffDelta),
   indexToWorkDir :: !(Ptr GitDiffDelta)
-} deriving (Generic, CStorable, Show)
+} 
+  deriving (Generic, CStorable, Show)
+  deriving (Storable) via (StorableW GitStatusEntry)
 
-instance Storable GitStatusEntry where
-  sizeOf = cSizeOf
-  alignment = cAlignment
-  poke = cPoke
-  peek = cPeek
 
 
 

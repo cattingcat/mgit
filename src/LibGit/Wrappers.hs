@@ -195,11 +195,11 @@ remoteFetch remote = do
   free optsPtrPtr
   print r
   pure ()
-  
 
-data BranchType = RemoteBranch | LocalBranch  
+
+data BranchType = RemoteBranch | LocalBranch
   deriving (Show)
-  
+
 data BranchInfo = BranchInfo {
   branchType :: BranchType,
   name :: String
@@ -207,43 +207,40 @@ data BranchInfo = BranchInfo {
 
 branches :: GitRepoPtr -> IO [BranchInfo]
 branches repoPtr = do
-  pp <- malloc
-  r <- B.c_git_branch_iterator_new pp repoPtr B.allBranches
-  iterPtr <- peek pp
-
+  iterPtrPtr <- malloc
+  strPtr <- malloc
   refPtrPtr <- malloc
   branchTypePtr <- malloc
-  strPtr <- malloc
 
+  B.c_git_branch_iterator_new iterPtrPtr repoPtr B.allBranches
+  iterPtr <- peek iterPtrPtr
   res <- loop refPtrPtr branchTypePtr iterPtr strPtr []
 
   free strPtr
   free refPtrPtr
   free branchTypePtr
+
   B.c_git_branch_iterator_free iterPtr
-  free pp
-  
+  free iterPtrPtr
+
   print res
-  
+
   pure res
 
   where
     loop rpp branchTypePtr iterPtr branchNamePtr accum = do
-      nr <- B.c_git_branch_next rpp branchTypePtr iterPtr
+      nextRes <- B.c_git_branch_next rpp branchTypePtr iterPtr
       refPtr <- peek rpp
-
       B.c_git_branch_name branchNamePtr refPtr
       str <- peek branchNamePtr
-      
       branchName <- peekCString str
       branchType <- peek branchTypePtr
-      
-      let 
-        bType = if branchType == B.localBranch 
-          then LocalBranch 
+      let
+        bType = if branchType == B.localBranch
+          then LocalBranch
           else RemoteBranch
         r = BranchInfo bType branchName
         rs = r:accum
-      if nr == 0 
-        then loop rpp branchTypePtr iterPtr branchNamePtr rs 
+      if nextRes == 0
+        then loop rpp branchTypePtr iterPtr branchNamePtr rs
         else pure rs
