@@ -4,23 +4,31 @@
 {-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE InstanceSigs #-}
+{-# LANGUAGE FlexibleInstances #-}
 
-module FFI.CArray where
+module Foreign.CArray where
 
 import GHC.Base
-import qualified GHC.TypeNats as TL
-import Data.Array.ST
-import Data.Array.Base
-import Foreign.Storable
-import Data.Data
+import GHC.TypeNats
 import GHC.Natural
-import Foreign.Ptr
+
+import Data.Data
+import Data.Array.Base
+import Data.Array.ST
 import Data.Array.IO
+import Data.Array.MArray
+
+import Foreign.Ptr
+import Foreign.Storable
 
 
-newtype CArray (n :: Nat) (a :: Type) = CArray (IOArray Int a)
+newtype CArrayInternal (n :: Nat) i (a :: Type) = CArray (IOArray i a)
 
-instance (Storable a, TL.KnownNat n) => Storable (CArray n a) where
+-- todo: derive via MArray
+  
+type CArray (n :: Nat) (a :: Type) = CArrayInternal n Int a
+
+instance (Storable a, KnownNat n) => Storable (CArrayInternal n Int a) where
   sizeOf :: CArray n a -> Int
   sizeOf arr = intVal @n * sizeOf (undefined :: a)
 
@@ -34,10 +42,10 @@ instance (Storable a, TL.KnownNat n) => Storable (CArray n a) where
   alignment _ = sizeOf (undefined :: a)
 
 
-intVal :: forall n . TL.KnownNat n => Int
-intVal = naturalToInt (TL.natVal (Proxy @n))
+intVal :: forall n . KnownNat n => Int
+intVal = naturalToInt (natVal (Proxy @n))
 
-peekCArray :: forall a n . (Storable a, TL.KnownNat n) => 
+peekCArray :: forall a n . (Storable a, KnownNat n) => 
   Ptr (CArray n a) -> IO (CArray n a)
 peekCArray ptr = do
   let len = intVal @n
@@ -52,7 +60,7 @@ peekCArray ptr = do
       let nextIndex = i + 1
       if nextIndex < n then loop nextIndex n ptr arr else pure arr
 
-pokeCArray :: forall a n . (Storable a, TL.KnownNat n) => 
+pokeCArray :: forall a n . (Storable a, KnownNat n) => 
   Ptr (CArray n a) -> CArray n a -> IO ()
 pokeCArray ptr (CArray arr) = do
   let len = intVal @n

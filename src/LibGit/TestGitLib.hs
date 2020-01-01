@@ -1,19 +1,12 @@
 module LibGit.TestGitLib where
 
-import Foreign
-import Foreign.C.Types
-import Foreign.C.String
-import Foreign.CStorable
-import GHC.Generics (Generic)
 import System.Directory
-import LibGit.Common
 import LibGit.Models
+import qualified LibGit.Branch as B
+import qualified LibGit.Common as C
+import qualified LibGit.Remote as R
 import qualified LibGit.Status as S
-import LibGit.Wrappers
-import LibGit.GitFileStatusShow
 
-import qualified LibGit.GitFileStatus as GFS
-import Control.Monad (when)
 
 
 --tstFetch = do
@@ -46,25 +39,27 @@ import Control.Monad (when)
 --  free ppRemote
 
 
-tstStatus = withLibGit $ do
+tstStatus = C.withLibGit $ do
   pwd <- getCurrentDirectory
-  withRepo pwd $ \repo -> do
-    statusInfo <- repoStatus repo
+  C.withRepo pwd $ \repo -> do
+    statusInfo <- S.repoStatus repo
     print statusInfo
 
-tstRemote = withLibGit $ do
+tstRemote = C.withLibGit $ do
   pwd <- getCurrentDirectory
-  withRepo pwd $ \repo ->
-    lookupRemote repo "origin" $ \r -> do
-      uri <- remoteUri r
+  C.withRepo pwd $ \repo ->
+    R.lookupRemote repo "origin" $ \r -> do
+      uri <- R.remoteUri r
       print uri
 
-tstRemoteFetch = withLibGit $ do
+tstRemoteFetch = C.withLibGit $ do
   pwd <- getCurrentDirectory
-  withRepo pwd $ \repo ->
-    lookupRemote repo "origin" remoteFetch
-    
-tstBranches = withLibGit $ do
+  C.withRepo pwd $ \repo ->
+    R.lookupRemote repo "origin" R.remoteFetch
+
+tstBranches = C.withLibGit $ do
   pwd <- getCurrentDirectory
-  withRepo pwd $ \repo ->
-    branches repo
+  C.withRepo pwd $ \repo -> do
+    res <- B.getBranches repo
+    print $ "current branch: " <> show (B.currentBranch res)
+    mapM_ print $ fmap show (B.branches res)

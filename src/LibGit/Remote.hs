@@ -3,7 +3,13 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 
-module LibGit.Remote where
+module LibGit.Remote (
+  GitRemote(..),
+  GitRemotePtr(..),
+  lookupRemote,
+  remoteUri,
+  remoteFetch
+) where
 
 import Foreign
 import Foreign.C.Types
@@ -15,6 +21,8 @@ import GHC.Generics (Generic)
 
 data GitRemote = GitRemote
   deriving (Generic, CStorable)
+
+type GitRemotePtr = Ptr GitRemote
 
 data GitFetchOptions = GitFetchOptions
   deriving (Generic, CStorable)
@@ -40,3 +48,33 @@ foreign import ccall "git2/remote.h git_remote_fetch" c_git_remote_fetch :: Ptr 
 
 -- int git_fetch_init_options_integr(git_fetch_options *opts);
 foreign import ccall "git_integr.h git_fetch_init_options_integr" c_git_fetch_init_options_integr :: Ptr (Ptr GitFetchOptions) -> IO CInt
+
+
+
+
+lookupRemote :: GitRepoPtr -> String -> (GitRemotePtr -> IO a) -> IO a
+lookupRemote repo name f = do
+  p <- malloc
+  r <- withCString name (c_git_remote_lookup p repo)
+  remotePtr <- peek p
+  res <- f remotePtr
+  c_git_remote_free remotePtr
+  free p
+  pure res
+  
+  
+remoteUri :: GitRemotePtr -> IO String
+remoteUri remote = do 
+  uriStr <- c_git_remote_url remote
+  peekCString uriStr
+
+remoteFetch :: GitRemotePtr -> IO ()
+remoteFetch remote = do
+  optsPtrPtr <- malloc
+  c_git_fetch_init_options_integr optsPtrPtr
+  optsPtr <- peek optsPtrPtr
+  r <- c_git_remote_fetch remote nullPtr optsPtr nullPtr
+  free optsPtr
+  free optsPtrPtr
+  print r
+  pure ()

@@ -7,17 +7,23 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DerivingVia #-}
 
-module LibGit.Branch where
+module LibGit.Branch (
+  BranchType(..),
+  BranchInfo(..),
+  Branches(..),
+  getBranches
+) where
 
 import System.Directory
 import LibGit.Models
+import LibGit.Refs as R
 import Foreign
 import Foreign.C.Types
 import Foreign.C.String
 import Foreign.CStorable
 import Foreign.Storable
 import GHC.Generics (Generic)
-import FFI.Storable
+import Foreign.CStorableWrap
 
 -- git_branch_iterator
 data GitBranchIterator = GitBranchIterator
@@ -28,9 +34,6 @@ newtype GitBranchType = GitBranchType CUChar
   deriving (Eq, Show, Generic, CStorable)
   deriving Storable via (CStorableWrapper GitBranchType)
 
--- git_reference
-data GitReference = GitReference
-  deriving (Generic, CStorable)
 
 localBranch :: GitBranchType
 localBranch = GitBranchType 1
@@ -40,6 +43,10 @@ remoteBranch = GitBranchType 2
 
 allBranches :: GitBranchType
 allBranches = GitBranchType $ (1 :: CUChar) .|. (2 :: CUChar)
+
+-- GIT_ITEROVER
+iterOver :: CInt
+iterOver = -31
 
 -- int git_branch_iterator_new(git_branch_iterator **out, git_repository *repo, git_branch_t list_flags);
 foreign import ccall "git2/branch.h git_branch_iterator_new" c_git_branch_iterator_new :: Ptr (Ptr GitBranchIterator) -> Ptr GitRepo -> GitBranchType -> IO CInt
@@ -53,6 +60,63 @@ foreign import ccall "git2/branch.h git_branch_next" c_git_branch_next :: Ptr (P
 -- int git_branch_name(const char **out, const git_reference *ref);
 foreign import ccall "git2/branch.h git_branch_name" c_git_branch_name :: Ptr CString -> Ptr GitReference -> IO CInt
 
--- GIT_ITEROVER
-iterOver :: CInt
-iterOver = -31
+-- int git_branch_is_head(const git_reference *branch);
+foreign import ccall "git2/branch.h git_branch_is_head" c_git_branch_is_head :: Ptr GitReference -> IO CInt
+
+
+
+
+data BranchType = RemoteBranch | LocalBranch
+  deriving (Show)
+
+data BranchInfo = BranchInfo {
+  branchType :: BranchType,
+  name :: String,
+  isBranch :: Bool
+} deriving (Show)
+
+data Branches = Branches {
+  currentBranch :: BranchInfo,
+  branches :: [BranchInfo]
+}
+
+getBranches :: GitRepoPtr -> IO Branches
+getBranches repoPtr = do
+  iterPtrPtr <- malloc
+  strPtr <- malloc
+  refPtrPtr <- malloc
+  branchTypePtr <- malloc
+  c_git_branch_iterator_new iterPtrPtr repoPtr allBranches
+  iterPtr <- peek iterPtrPtr
+  (head, bs) <- loop refPtrPtr branchTypePtr iterPtr strPtr (Nothing, [])
+  free strPtr
+  free refPtrPtr
+  free branchTypePtr
+  c_git_branch_iterator_free iterPtr
+  free iterPtrPtr
+  case head of
+    Nothing -> error "git couldn't find current branch"
+    Just h -> pure $ Branches h bs
+  where
+    loop rpp branchTypePtr iterPtr branchNamePtr (mb, accum) = do
+      nextRes <- c_git_branch_next rpp branchTypePtr iterPtr
+      refPtr <- peek rpp
+      c_git_branch_name branchNamePtr refPtr
+      str <- peek branchNamePtr
+      isHeadRes <- c_git_branch_is_head refPtr
+      isBranchRef <- R.isBranch refPtr
+      branchName <- peekCString str
+      branchType <- peek branchTypePtr
+      let
+        isHead = isHeadRes == 1
+        bType = if branchType == localBranch
+          then LocalBranch
+          else RemoteBranch
+        branchInfo = BranchInfo bType branchName isBranchRef
+        head = case mb of
+          Nothing -> if isHead then Just branchInfo else mb
+          Just _ -> mb
+        tpl = (head, branchInfo:accum)
+      if nextRes == 0
+        then loop rpp branchTypePtr iterPtr branchNamePtr tpl
+        else pure tpl

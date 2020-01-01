@@ -5,7 +5,7 @@
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DerivingVia #-}
 
-module FFI.TestFfi where
+module Foreign.TestFfi where
 
 import Foreign
 import Foreign.C.Types
@@ -13,14 +13,14 @@ import Foreign.C.String
 import Foreign.CStorable
 import GHC.Generics (Generic)
 import System.Directory
-import FFI.CArray
-import FFI.Storable
+import Foreign.CVector
+import Foreign.CStorableWrap
 import qualified LibGit.Status as S
-import qualified Data.Array.Base as A
+import Data.Vector as V hiding ((++))
 
 
 data MyStruct = MyStruct {
-  arr :: StorableWrap (CArray 5 CInt),
+  arr :: StorableWrap (CVector 5 CInt),
   str :: CString
 }
   deriving (Generic, CStorable)
@@ -34,12 +34,13 @@ foreign import ccall "print_kek.h test_status_size" c_test_status_size :: IO ()
 testCArrayFfi :: IO ()
 testCArrayFfi = do
   msPtr <- c_foo 5
-  (MyStruct (Storable (CArray ms)) cstr) <- peek msPtr
-  r0 <- A.readArray ms 0
-  r1 <- A.readArray ms 1
-  r2 <- A.readArray ms 2
-  r3 <- A.readArray ms 3
-  r4 <- A.readArray ms 4
+  (MyStruct (Storable (CVector ms)) cstr) <- peek msPtr
+  let 
+    r0 = ms ! 0
+    r1 = ms ! 1
+    r2 = ms ! 2
+    r3 = ms ! 3
+    r4 = ms ! 4
   str <- peekCString cstr
 --  r5 <- readArray ms 5
 --  r6 <- readArray ms 6
@@ -54,9 +55,9 @@ testCArrayFfi = do
   
 testCArrayFfi2 :: IO ()
 testCArrayFfi2 = do
-  arr <- A.newArray (0, 4) 5
+  let arr = V.replicate 5 5
   withCString "kek puk" $ \s -> do
-    let ms = MyStruct (Storable (CArray arr)) s
+    let ms = MyStruct (Storable (CVector arr)) s
     ptr <- malloc
     poke ptr ms 
     c_bar ptr
@@ -64,5 +65,5 @@ testCArrayFfi2 = do
 testStatusEnumSize :: IO ()
 testStatusEnumSize = do 
   c_test_status_size
-  print $ "GitDiffFile size : " ++ show (sizeOf (undefined :: S.GitDiffFile))
-  print $ "GitDiffDelta size : " ++ show (sizeOf (undefined :: S.GitDiffDelta))
+  print $ "GitDiffFile size : " ++ show S.sizeOfGitDiffFile
+  print $ "GitDiffDelta size : " ++ show S.sizeOfGitDiffDelta

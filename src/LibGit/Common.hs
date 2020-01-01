@@ -1,18 +1,24 @@
 {-# language ForeignFunctionInterface #-}
 
-module LibGit.Common where
+module LibGit.Common (
+  withLibGit,
+  withRepo,
+  libGitVersion,
+  repoDir
+) where
 
 import Foreign
 import Foreign.C.Types
 import Foreign.C.String
 import LibGit.Models
+import Control.Exception (Exception, throw)
 
 
 -- int git_libgit2_init();
 foreign import ccall "git2/global.h git_libgit2_init" c_git_libgit2_init :: IO CInt
 
 -- int git_libgit2_shutdown();
-foreign import ccall "git2/global.h git_libgit2_init" c_git_libgit2_shutdown :: IO CInt
+foreign import ccall "git2/global.h git_libgit2_shutdown" c_git_libgit2_shutdown :: IO CInt
 
 
 -- int git_libgit2_features();
@@ -28,3 +34,50 @@ foreign import ccall "git2.h git_repository_open" c_git_repository_open :: Ptr (
 
 -- const char * git_repository_commondir(const git_repository *repo);
 foreign import ccall "git2/repository.h git_repository_commondir" c_git_repository_commondir :: Ptr GitRepo -> IO CString
+
+
+
+
+withLibGit :: IO a -> IO a
+withLibGit io = do
+  c_git_libgit2_init
+  a <- io
+  c_git_libgit2_shutdown
+  pure a
+
+withRepo :: FilePath -> (GitRepoPtr -> IO a) -> IO a
+withRepo path f = do
+  p <- mallocBytes (sizeOf (undefined :: Ptr (Ptr GitRepo)))
+  r <- withCString path (c_git_repository_open p)
+  if r /= 0
+    then throw (OpenRepoError r)
+    else pure ()
+  repoPtr <- peek p
+  res <- f repoPtr
+  free p
+  pure res
+
+showVer :: CInt -> CInt -> CInt -> String
+showVer mj mn pc = show mj ++ "." ++ show mn ++ "." ++ show pc
+
+libGitVersion :: IO String
+libGitVersion = do
+  majorPtr <- mallocBytes (sizeOf (undefined :: Ptr CInt))
+  minorPtr <- mallocBytes (sizeOf (undefined :: Ptr CInt))
+  patchPtr <- mallocBytes (sizeOf (undefined :: Ptr CInt))
+  c_git_libgit2_version majorPtr minorPtr patchPtr
+  verStr <- showVer
+    <$> peek majorPtr
+    <*> peek minorPtr
+    <*> peek patchPtr
+  free majorPtr
+  free minorPtr
+  free patchPtr
+  pure verStr
+
+repoDir :: GitRepoPtr -> IO FilePath
+repoDir ptr = do
+  pathPtr <- c_git_repository_commondir ptr
+  path <- peekCString pathPtr
+  free pathPtr
+  pure path

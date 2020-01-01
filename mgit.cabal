@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2f6d31bf549e4103efea8e773716d461543897efc281b95985fc30ac5f76b4d9
+-- hash: b6553154be65aa5f4ab6f5f157b3a3712aa8e95585bc1665c36cd6f5b0251722
 
 name:           mgit
 version:        0.1.0.0
@@ -29,10 +29,11 @@ source-repository head
 
 library
   exposed-modules:
-      FFI.CArray
-      FFI.MyStruct
-      FFI.Storable
-      FFI.TestFfi
+      Foreign.CArray
+      Foreign.CStorableWrap
+      Foreign.CVector
+      Foreign.MyStruct
+      Foreign.TestFfi
       Lib
       LibGit.Branch
       LibGit.Common
@@ -40,10 +41,10 @@ library
       LibGit.GitFileStatusShow
       LibGit.GitStatus
       LibGit.Models
+      LibGit.Refs
       LibGit.Remote
       LibGit.Status
       LibGit.TestGitLib
-      LibGit.Wrappers
   other-modules:
       Paths_mgit
   hs-source-dirs:
@@ -68,6 +69,7 @@ library
     , tagged
     , text
     , time
+    , vector
   default-language: Haskell2010
 
 executable mgit-exe
@@ -93,6 +95,7 @@ executable mgit-exe
     , tagged
     , text
     , time
+    , vector
   default-language: Haskell2010
 
 test-suite mgit-test
@@ -119,4 +122,5 @@ test-suite mgit-test
     , tagged
     , text
     , time
+    , vector
   default-language: Haskell2010

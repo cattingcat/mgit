@@ -1,6 +1,6 @@
 {-# LANGUAGE BangPatterns #-}
 
-module FFI.MyStruct where
+module Foreign.MyStruct where
 
 #include "test_ffi.h"
 

@@ -18,7 +18,8 @@ extra-source-files:
 
 dependencies:
 - base >= 4.7 && < 5
-- array
+- array                 # old lib for arrays
+- vector                # arrays
 - optparse-applicative  # args parser
 - directory             # working with dirs. CurrentDir
 - system-fileio         # advanced working with paths
