@@ -41,11 +41,7 @@ instance MonadMGit MGitApp where
     pure $ BranchesInfo infos
     where
       loadAll dirs = runLibGitApps dirs loadRepoInfo
-      loadRepoInfo = do
-        p <- MG.path
-        bs <- MG.currentBranch
-        pure $ BranchInfo p bs
-
+      loadRepoInfo = liftM2 BranchInfo MG.path MG.currentBranch
 
 
 runMGitApp :: MGitApp a -> IO a

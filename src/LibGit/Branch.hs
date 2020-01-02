@@ -6,6 +6,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE DerivingVia #-}
+{-# LANGUAGE MultiWayIf #-}
 
 module LibGit.Branch (
   BranchType(..),
@@ -70,40 +71,46 @@ getBranches :: GitRepoPtr -> IO Branches
 getBranches repoPtr = do
   iterPP <- malloc
   strPtr <- malloc
-  refPP <- malloc
+  referencePP <- malloc
   branchTypePtr <- malloc
-  newIterRes <- c_git_branch_iterator_new iterPP repoPtr allBranches
+  r <- c_git_branch_iterator_new iterPP repoPtr allBranches
   -- todo: ^ check res
   iterPtr <- peek iterPP
-  (head, bs) <- loop refPP branchTypePtr iterPtr strPtr (Nothing, [])
+  (head, bs) <- loop referencePP branchTypePtr iterPtr strPtr (Nothing, [])
   free strPtr
-  free refPP
+  free referencePP
   free branchTypePtr
   c_git_branch_iterator_free iterPtr
   free iterPP
   case head of
     Nothing -> pure $ Branches (BranchInfo LocalBranch "No btanch" False) bs -- error "git couldn't find current branch"
+    -- todo: ^ fix
     Just h -> pure $ Branches h bs
   where
-    loop rpp branchTypePtr iterPtr branchNamePtr (mb, accum) = do
+    loop rpp branchTypePtr iterPtr branchNamePtr accum = do
       nextRes <- c_git_branch_next rpp branchTypePtr iterPtr
-      refPtr <- peek rpp
-      c_git_branch_name branchNamePtr refPtr
-      str <- peek branchNamePtr
-      isHeadRes <- c_git_branch_is_head refPtr
-      isBranchRef <- R.isBranch refPtr
-      branchName <- peekCString str
-      branchType <- peek branchTypePtr
-      let
-        isHead = isHeadRes == 1
-        bType = if branchType == localBranch
-          then LocalBranch
-          else RemoteBranch
-        branchInfo = BranchInfo bType branchName isBranchRef
-        head = case mb of
-          Nothing -> if isHead then Just branchInfo else mb
-          Just _ -> mb
-        tpl = (head, branchInfo:accum)
-      if nextRes == 0
-        then loop rpp branchTypePtr iterPtr branchNamePtr tpl
-        else pure tpl
+      if
+        | nextRes == iterOver -> pure accum
+        | nextRes < 0         -> error $ "getBranches iter error no: " <> show nextRes
+        | otherwise           -> processNextIter rpp branchTypePtr iterPtr branchNamePtr accum
+      where 
+        processNextIter rpp branchTypePtr iterPtr branchNamePtr acc@(headBranch, branches) = do
+          referencePtr <- peek rpp
+          c_git_branch_name branchNamePtr referencePtr
+          str <- peek branchNamePtr
+          isHeadRes <- c_git_branch_is_head referencePtr
+          isBranchRef <- R.isBranch referencePtr
+          branchName <- peekCString str
+          branchType <- peek branchTypePtr
+          let
+            isHead = isHeadRes == 1
+            bType = if branchType == localBranch
+              then LocalBranch
+              else RemoteBranch
+            branchInfo = BranchInfo bType branchName isBranchRef
+            head = case headBranch of
+              Nothing -> if isHead then Just branchInfo else headBranch
+              Just _ -> headBranch
+            tpl = (head, branchInfo:branches)
+            
+          loop rpp branchTypePtr iterPtr branchNamePtr tpl
