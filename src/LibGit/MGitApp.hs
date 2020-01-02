@@ -16,6 +16,7 @@ import MGit.MonadMGit
 import qualified MGit.MonadGit as MG
 import qualified MGit.StatusModels as S
 import qualified MGit.BranchModels as B
+import Debug.Trace (trace)
 
 
 data MGitAppState = MGitAppState {
@@ -25,26 +26,29 @@ data MGitAppState = MGitAppState {
 type MGitApp = ReaderT MGitAppState IO
 
 instance MonadMGit MGitApp where
-  getBranches = do 
+  fetch = do
+    path <- asks rootPath
+    directories <- lift $ Dir.listDirectory path
+    lift $ fetchAll directories
+    pure ()
+    where
+      fetchAll dirs = runLibGitApps dirs MG.fetch
+
+  getBranches = do
     path <- asks rootPath
     directories <- lift $ Dir.listDirectory path
     infos <- lift $ loadAll directories
-    
-    lift $ print infos
-    
     pure $ BranchesInfo infos
-    
-    where 
-      loadRepoInfo = do
-        _ <- MG.fetch
-        p <- MG.path
-        bs <- MG.branches
-        pure $ BranchInfo p (B.name . B.currentBranch $ bs)
-          
+    where
       loadAll dirs = runLibGitApps dirs loadRepoInfo
-      
-      
+      loadRepoInfo = do
+        p <- MG.path
+        bs <- MG.currentBranch
+        pure $ BranchInfo p bs
+
+
+
 runMGitApp :: MGitApp a -> IO a
 runMGitApp app = do
-  pwd <- getCurrentDirectory 
-  runReaderT app $ MGitAppState pwd 
+  pwd <- getCurrentDirectory
+  runReaderT app $ MGitAppState pwd

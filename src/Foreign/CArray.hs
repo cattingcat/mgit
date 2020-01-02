@@ -24,7 +24,6 @@ import Foreign.Storable
 
 newtype CArrayInternal (n :: Nat) i (a :: Type) = CArray (IOArray i a)
 
--- todo: derive via MArray
   
 type CArray (n :: Nat) (a :: Type) = CArrayInternal n Int a
 

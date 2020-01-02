@@ -59,7 +59,7 @@ runLibGitApp path m = C.withLibGit $
       pure a
 
 runLibGitApps :: forall a . [FilePath] -> LibGitApp a -> IO [a]
-runLibGitApps paths m = C.withLibGit $ filterNothings ioAs
+runLibGitApps paths app = C.withLibGit $ filterNothings ioAs
   where
     filterNothings :: IO [Maybe a] -> IO [a]
     filterNothings io = do
@@ -79,5 +79,5 @@ runLibGitApps paths m = C.withLibGit $ filterNothings ioAs
       Nothing -> pure Nothing
 
     processRepo repo = R.lookupRemote repo "origin" $ \remote -> do
-      (a, s) <- runStateT m (LibGitAppState repo remote)
+      (a, s) <- runStateT app (LibGitAppState repo remote)
       pure a

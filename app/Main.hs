@@ -6,6 +6,7 @@ import Foreign.TestFfi
 
 main :: IO ()
 main = do
+  print "MGit app"
 --  testStatusEnumSize
 --  tstRemote
 --  tstStatus

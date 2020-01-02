@@ -29,7 +29,6 @@ data GitFetchOptions = GitFetchOptions
   
   
 -- int git_remote_list(git_strarray *out, git_repository *repo);
--- TODO ?
 
 -- int git_remote_lookup(git_remote **out, git_repository *repo, const char *name);
 foreign import ccall "git2/remote.h git_remote_lookup" c_git_remote_lookup :: Ptr (Ptr GitRemote) -> Ptr GitRepo -> CString -> IO CInt
@@ -56,6 +55,7 @@ lookupRemote :: GitRepoPtr -> String -> (GitRemotePtr -> IO a) -> IO a
 lookupRemote repo name f = do
   p <- malloc
   r <- withCString name (c_git_remote_lookup p repo)
+  -- todo: ^ check res
   remotePtr <- peek p
   res <- f remotePtr
   c_git_remote_free remotePtr
@@ -70,11 +70,10 @@ remoteUri remote = do
 
 remoteFetch :: GitRemotePtr -> IO ()
 remoteFetch remote = do
-  optsPtrPtr <- malloc
-  c_git_fetch_init_options_integr optsPtrPtr
-  optsPtr <- peek optsPtrPtr
+  p <- malloc
+  c_git_fetch_init_options_integr p
+  optsPtr <- peek p
   r <- c_git_remote_fetch remote nullPtr optsPtr nullPtr
-  free optsPtr
-  free optsPtrPtr
-  print r
-  pure ()
+  -- todo: ^ check res
+  free optsPtr -- todo: check
+  free p 

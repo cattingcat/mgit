@@ -11,4 +11,5 @@ newtype BranchesInfo = BranchesInfo {
 
 
 class Monad m => MonadMGit m where
+  fetch :: m ()
   getBranches :: m BranchesInfo

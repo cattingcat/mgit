@@ -33,6 +33,8 @@ foreign import ccall "git2/common.h git_libgit2_version" c_git_libgit2_version :
 -- int git_repository_open(git_repository **out, const char *path);
 foreign import ccall "git2.h git_repository_open" c_git_repository_open :: Ptr (Ptr GitRepo) -> CString -> IO CInt
 
+-- void git_repository_free(git_repository *repo);
+foreign import ccall "git2.h git_repository_free" c_git_repository_free :: Ptr GitRepo -> IO ()
 
 -- const char * git_repository_commondir(const git_repository *repo);
 foreign import ccall "git2/repository.h git_repository_commondir" c_git_repository_commondir :: Ptr GitRepo -> IO CString
@@ -49,7 +51,7 @@ withLibGit io = do
   
 openRepo :: FilePath -> IO GitRepoPtr
 openRepo path = do
-  p <- mallocBytes (sizeOf (undefined :: Ptr (Ptr GitRepo)))
+  p <- malloc
   r <- withCString path (c_git_repository_open p) 
   repoPtr <- peek p
   free p
@@ -57,7 +59,7 @@ openRepo path = do
 
 withRepoSafe :: FilePath -> (Maybe GitRepoPtr -> IO a) -> IO a
 withRepoSafe path f = do
-  p <- mallocBytes (sizeOf (undefined :: Ptr (Ptr GitRepo)))
+  p <- malloc
   r <- withCString path (c_git_repository_open p)
   res <- if r /= 0
     then 
@@ -65,14 +67,14 @@ withRepoSafe path f = do
     else do
       repoPtr <- peek p
       r <- f (Just repoPtr)
-      free repoPtr
+      c_git_repository_free repoPtr
       pure r    
   free p
   pure res
 
 withRepo :: FilePath -> (GitRepoPtr -> IO a) -> IO a
 withRepo path f = do
-  p <- mallocBytes (sizeOf (undefined :: Ptr (Ptr GitRepo)))
+  p <- malloc
   r <- withCString path (c_git_repository_open p)
   if r /= 0
     then throw (OpenRepoError r)
@@ -80,7 +82,7 @@ withRepo path f = do
   repoPtr <- peek p
   res <- f repoPtr
   free p
-  free repoPtr
+  c_git_repository_free repoPtr
   pure res
 
 showVer :: CInt -> CInt -> CInt -> String
@@ -88,9 +90,9 @@ showVer mj mn pc = show mj ++ "." ++ show mn ++ "." ++ show pc
 
 libGitVersion :: IO String
 libGitVersion = do
-  majorPtr <- mallocBytes (sizeOf (undefined :: Ptr CInt))
-  minorPtr <- mallocBytes (sizeOf (undefined :: Ptr CInt))
-  patchPtr <- mallocBytes (sizeOf (undefined :: Ptr CInt))
+  majorPtr <- malloc
+  minorPtr <- malloc
+  patchPtr <- malloc
   c_git_libgit2_version majorPtr minorPtr patchPtr
   verStr <- showVer
     <$> peek majorPtr
@@ -104,6 +106,4 @@ libGitVersion = do
 repoDir :: GitRepoPtr -> IO FilePath
 repoDir ptr = do
   pathPtr <- c_git_repository_commondir ptr
-  path <- peekCString pathPtr
-  free pathPtr
-  pure path
+  peekCString pathPtr
