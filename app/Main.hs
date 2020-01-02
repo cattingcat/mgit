@@ -11,5 +11,5 @@ main = do
 --  tstStatus
 --  tstRemoteFetch
 --  tstBranches
-  T.tstCurrentBranch
+  T.tstCurrentBranches
   pure ()

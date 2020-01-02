@@ -3,6 +3,8 @@
 module LibGit.Common (
   withLibGit,
   withRepo,
+  withRepoSafe,
+  openRepo,
   libGitVersion,
   repoDir
 ) where
@@ -44,6 +46,29 @@ withLibGit io = do
   a <- io
   c_git_libgit2_shutdown
   pure a
+  
+openRepo :: FilePath -> IO GitRepoPtr
+openRepo path = do
+  p <- mallocBytes (sizeOf (undefined :: Ptr (Ptr GitRepo)))
+  r <- withCString path (c_git_repository_open p) 
+  repoPtr <- peek p
+  free p
+  pure repoPtr
+
+withRepoSafe :: FilePath -> (Maybe GitRepoPtr -> IO a) -> IO a
+withRepoSafe path f = do
+  p <- mallocBytes (sizeOf (undefined :: Ptr (Ptr GitRepo)))
+  r <- withCString path (c_git_repository_open p)
+  res <- if r /= 0
+    then 
+      f Nothing
+    else do
+      repoPtr <- peek p
+      r <- f (Just repoPtr)
+      free repoPtr
+      pure r    
+  free p
+  pure res
 
 withRepo :: FilePath -> (GitRepoPtr -> IO a) -> IO a
 withRepo path f = do
@@ -55,6 +80,7 @@ withRepo path f = do
   repoPtr <- peek p
   res <- f repoPtr
   free p
+  free repoPtr
   pure res
 
 showVer :: CInt -> CInt -> CInt -> String

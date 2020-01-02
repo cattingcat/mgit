@@ -1,7 +1,13 @@
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
-module LibGit.LibGitApp where
+module LibGit.LibGitApp (
+  LibGitApp,
+  runLibGitApp,
+  runLibGitApps
+) where
 
 import Control.Monad.State
 
@@ -16,6 +22,7 @@ import qualified LibGit.Remote as R
 import qualified LibGit.Status as S
 import qualified LibGit.Common as C
 import qualified LibGit.Branch as B
+import Data.Maybe (isJust)
 
 
 data LibGitAppState = LibGitAppState {
@@ -33,18 +40,44 @@ instance MonadGit LibGitApp where
 
   branches = do
     repo <- gets repoPtr
-    branchesRes <- lift $ B.getBranches repo
-    pure branchesRes
+    lift $ B.getBranches repo
 
-  status = do
+  status = do 
     repo <- gets repoPtr
-    statusRes <- lift $ S.repoStatus repo
-    pure statusRes
+    lift $ S.repoStatus repo
+
+  path = do
+    repo <- gets repoPtr
+    lift $ C.repoDir repo
 
 
 runLibGitApp :: FilePath -> LibGitApp a -> IO a
-runLibGitApp path m = C.withLibGit $ 
+runLibGitApp path m = C.withLibGit $
   C.withRepo path $ \repo ->
     R.lookupRemote repo "origin" $ \remote -> do
+      (a, s) <- runStateT m (LibGitAppState repo remote)
+      pure a
+
+runLibGitApps :: forall a . [FilePath] -> LibGitApp a -> IO [a]
+runLibGitApps paths m = C.withLibGit $ filterNothings ioAs
+  where
+    filterNothings :: IO [Maybe a] -> IO [a]
+    filterNothings io = do
+      mas <- io
+      pure $ do
+        a <- mas
+        case a of
+          Just r -> [r]
+          _      -> []
+
+    ioAs :: IO [Maybe a]
+    ioAs = mapM foo paths
+
+    foo :: FilePath -> IO (Maybe a)
+    foo path = C.withRepoSafe path $ \case
+      Just repo -> Just <$> processRepo repo
+      Nothing -> pure Nothing
+
+    processRepo repo = R.lookupRemote repo "origin" $ \remote -> do
       (a, s) <- runStateT m (LibGitAppState repo remote)
       pure a

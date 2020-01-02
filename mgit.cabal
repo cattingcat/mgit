@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 999c9f88da83c6756302a1aff4fdf3ad9334a78f15ae6e9c225b24faba0a44d3
+-- hash: 3d570ea3ab472f5e74455431da38afe3b2c29e8f1651fd316dfbb0bdaa7e9cd9
 
 name:           mgit
 version:        0.1.0.0
@@ -41,6 +41,7 @@ library
       LibGit.GitFileStatusShow
       LibGit.GitStatus
       LibGit.LibGitApp
+      LibGit.MGitApp
       LibGit.Models
       LibGit.Refs
       LibGit.Remote
@@ -48,6 +49,7 @@ library
       LibGit.TestGitLib
       MGit.BranchModels
       MGit.MonadGit
+      MGit.MonadMGit
       MGit.StatusModels
   other-modules:
       Paths_mgit
@@ -66,11 +68,10 @@ library
     , bytestring
     , c-storable-deriving
     , directory
+    , filepath
     , mtl
     , optparse-applicative
     , process
-    , system-fileio
-    , system-filepath
     , tagged
     , text
     , time
@@ -92,12 +93,11 @@ executable mgit-exe
     , bytestring
     , c-storable-deriving
     , directory
+    , filepath
     , mgit
     , mtl
     , optparse-applicative
     , process
-    , system-fileio
-    , system-filepath
     , tagged
     , text
     , time
@@ -120,12 +120,11 @@ test-suite mgit-test
     , bytestring
     , c-storable-deriving
     , directory
+    , filepath
     , mgit
     , mtl
     , optparse-applicative
     , process
-    , system-fileio
-    , system-filepath
     , tagged
     , text
     , time

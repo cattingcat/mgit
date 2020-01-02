@@ -22,9 +22,8 @@ dependencies:
 - array                 # old lib for arrays
 - vector                # arrays
 - optparse-applicative  # args parser
-- directory             # working with dirs. CurrentDir
-- system-fileio         # advanced working with paths
-- system-filepath
+- directory             # working with dirs, standard lib
+- filepath              # manipulation with path
 - text                  # overloading strings
 - bytestring            # overloading byte strings
 - c-storable-deriving   # Storable deriving for C lang

@@ -2,7 +2,9 @@ module LibGit.TestGitLib where
 
 import System.Directory
 import qualified LibGit.LibGitApp as A
+import qualified LibGit.MGitApp as MA
 import qualified MGit.MonadGit as A
+import qualified MGit.MonadMGit as MA
 --import LibGit.Models
 --import qualified LibGit.Branch as B
 --import qualified LibGit.Common as C
@@ -72,3 +74,10 @@ tstCurrentBranch = do
   branchName <- A.runLibGitApp pwd A.currentBranch
   print branchName
   pure branchName
+  
+tstCurrentBranches :: IO ()
+tstCurrentBranches = do
+  res <- MA.runMGitApp MA.getBranches
+  print res
+  pure ()
+  

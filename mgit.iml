@@ -17,8 +17,6 @@
     <orderEntry type="library" name="directory-1.3.3.0" level="project" />
     <orderEntry type="library" name="optparse-applicative-0.14.3.0" level="project" />
     <orderEntry type="library" name="process-1.6.5.0" level="project" />
-    <orderEntry type="library" name="system-fileio-0.3.16.4" level="project" />
-    <orderEntry type="library" name="system-filepath-0.4.14" level="project" />
     <orderEntry type="library" name="tagged-0.8.6" level="project" />
     <orderEntry type="library" name="text-1.2.3.1" level="project" />
     <orderEntry type="library" name="time-1.8.0.2" level="project" />
