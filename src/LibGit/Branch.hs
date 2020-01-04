@@ -67,7 +67,7 @@ foreign import ccall "git2/branch.h git_branch_is_head" c_git_branch_is_head :: 
 
 
 
-getBranches :: GitRepoPtr -> IO Branches
+getBranches :: GitRepoPtr -> IO (Maybe Branches)
 getBranches repoPtr = do
   iterPP <- malloc
   strPtr <- malloc
@@ -83,9 +83,8 @@ getBranches repoPtr = do
   c_git_branch_iterator_free iterPtr
   free iterPP
   case head of
-    Nothing -> pure $ Branches (BranchInfo LocalBranch "No btanch" False) bs -- error "git couldn't find current branch"
-    -- todo: ^ fix
-    Just h -> pure $ Branches h bs
+    Nothing -> pure Nothing
+    Just h -> pure $ Just $ Branches h bs
   where
     loop rpp branchTypePtr iterPtr branchNamePtr accum = do
       nextRes <- c_git_branch_next rpp branchTypePtr iterPtr

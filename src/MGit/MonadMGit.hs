@@ -2,7 +2,7 @@ module MGit.MonadMGit where
 
 data BranchInfo = BranchInfo {
   path :: FilePath,
-  branch :: String
+  branch :: Maybe String
 } deriving (Show)
 
 newtype BranchesInfo = BranchesInfo {

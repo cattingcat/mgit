@@ -14,6 +14,7 @@ import Foreign.C.Types
 import Foreign.C.String
 import LibGit.Models
 import Control.Exception (Exception, throw)
+import System.FilePath.Posix (splitDirectories, joinPath)
 
 
 -- int git_libgit2_init();
@@ -106,4 +107,6 @@ libGitVersion = do
 repoDir :: GitRepoPtr -> IO FilePath
 repoDir ptr = do
   pathPtr <- c_git_repository_commondir ptr
-  peekCString pathPtr
+  gitDirPath <- peekCString pathPtr
+  let dirs = splitDirectories gitDirPath
+  pure $ joinPath $ init dirs

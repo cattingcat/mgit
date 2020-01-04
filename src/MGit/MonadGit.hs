@@ -4,11 +4,11 @@ import qualified MGit.BranchModels as B
 
 class Monad m => MonadGit m where
   fetch :: m ()
-  branches :: m B.Branches
+  branches :: m (Maybe B.Branches)
   status :: m S.StatusInfo
   path :: m FilePath
 
-currentBranch :: MonadGit m => m String
+currentBranch :: MonadGit m => m (Maybe String)
 currentBranch = do
   branchesRes <- branches
-  pure . B.name . B.currentBranch $ branchesRes
+  pure $ B.name . B.currentBranch <$>  branchesRes

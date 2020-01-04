@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3d570ea3ab472f5e74455431da38afe3b2c29e8f1651fd316dfbb0bdaa7e9cd9
+-- hash: 78bb74e6d301d3f4d2758504c6cf82db965227fb91a70aa89d1755ed8e39eb5c
 
 name:           mgit
 version:        0.1.0.0
@@ -48,6 +48,7 @@ library
       LibGit.Status
       LibGit.TestGitLib
       MGit.BranchModels
+      MGit.Format
       MGit.MonadGit
       MGit.MonadMGit
       MGit.StatusModels

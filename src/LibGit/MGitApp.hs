@@ -44,7 +44,5 @@ instance MonadMGit MGitApp where
       loadRepoInfo = liftM2 BranchInfo MG.path MG.currentBranch
 
 
-runMGitApp :: MGitApp a -> IO a
-runMGitApp app = do
-  pwd <- getCurrentDirectory
-  runReaderT app $ MGitAppState pwd
+runMGitApp :: FilePath -> MGitApp a -> IO a
+runMGitApp pwd app = runReaderT app $ MGitAppState pwd

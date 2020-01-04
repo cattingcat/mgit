@@ -30,16 +30,16 @@ void bar(my_struct* ptr) {
     printf("kek %d \n", ptr->arr[2]);
     printf("kek %d \n", ptr->arr[3]);
     printf("kek %d \n", ptr->arr[4]);
-    printf(ptr->str);
+    printf("%s", ptr->str);
     printf("\nend\n");
 }
 
 void test_status_size() {
-    printf("sizeof git_status_t: %d \n", sizeof(git_status_t));
-    printf("sizeof git_delta_t: %d \n", sizeof(git_delta_t));
-    printf("sizeof git_diff_file: %d \n", sizeof(git_diff_file));
-    printf("sizeof git_diff_delta: %d \n", sizeof(git_diff_delta));
-    printf("sizeof git_branch_t: %d \n", sizeof(git_branch_t));
-    printf("sizeof int: %d \n", sizeof(unsigned int));
-    printf("sizeof long: %d \n", sizeof(unsigned long));
+    printf("sizeof git_status_t: %zu \n", sizeof(git_status_t));
+    printf("sizeof git_delta_t: %zu \n", sizeof(git_delta_t));
+    printf("sizeof git_diff_file: %zu \n", sizeof(git_diff_file));
+    printf("sizeof git_diff_delta: %zu \n", sizeof(git_diff_delta));
+    printf("sizeof git_branch_t: %zu \n", sizeof(git_branch_t));
+    printf("sizeof int: %zu \n", sizeof(unsigned int));
+    printf("sizeof long: %zu \n", sizeof(unsigned long));
 }

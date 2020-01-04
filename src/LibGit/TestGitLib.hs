@@ -5,6 +5,7 @@ import qualified LibGit.LibGitApp as A
 import qualified LibGit.MGitApp as MA
 import qualified MGit.MonadGit as A
 import qualified MGit.MonadMGit as MA
+import qualified MGit.Format as F
 --import LibGit.Models
 --import qualified LibGit.Branch as B
 --import qualified LibGit.Common as C
@@ -68,7 +69,7 @@ import qualified MGit.MonadMGit as MA
 --    print $ "current branch: " <> show (B.currentBranch res)
 --    mapM_ print $ fmap show (B.branches res)
 
-tstCurrentBranch :: IO String
+tstCurrentBranch :: IO (Maybe String)
 tstCurrentBranch = do
   pwd <- getCurrentDirectory
   branchName <- A.runLibGitApp pwd A.currentBranch
@@ -77,7 +78,8 @@ tstCurrentBranch = do
   
 tstCurrentBranches :: IO ()
 tstCurrentBranches = do
-  res <- MA.runMGitApp MA.getBranches
-  print res
+  pwd <- getCurrentDirectory
+  res <- MA.runMGitApp pwd MA.getBranches
+  F.printBranchesInfo pwd res
   pure ()
   
