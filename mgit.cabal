@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 78bb74e6d301d3f4d2758504c6cf82db965227fb91a70aa89d1755ed8e39eb5c
+-- hash: 229eb70970603b6043f7be85baf9210d7e43673047c0b1fada99c4fd48dd7366
 
 name:           mgit
 version:        0.1.0.0
@@ -29,16 +29,17 @@ source-repository head
 
 library
   exposed-modules:
+      Cli.CliParser
       Foreign.CArray
       Foreign.CStorableWrap
       Foreign.CVector
+      Foreign.GitFileStatusEnumTest
       Foreign.MyStruct
       Foreign.TestFfi
       Lib
       LibGit.Branch
       LibGit.Common
-      LibGit.GitFileStatus
-      LibGit.GitFileStatusShow
+      LibGit.GitLibCommands
       LibGit.GitStatus
       LibGit.LibGitApp
       LibGit.MGitApp
@@ -46,7 +47,6 @@ library
       LibGit.Refs
       LibGit.Remote
       LibGit.Status
-      LibGit.TestGitLib
       MGit.BranchModels
       MGit.Format
       MGit.MonadGit

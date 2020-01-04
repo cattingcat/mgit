@@ -1,4 +1,4 @@
-module LibGit.TestGitLib where
+module LibGit.GitLibCommands where
 
 import System.Directory
 import qualified LibGit.LibGitApp as A
@@ -69,17 +69,18 @@ import qualified MGit.Format as F
 --    print $ "current branch: " <> show (B.currentBranch res)
 --    mapM_ print $ fmap show (B.branches res)
 
-tstCurrentBranch :: IO (Maybe String)
-tstCurrentBranch = do
-  pwd <- getCurrentDirectory
-  branchName <- A.runLibGitApp pwd A.currentBranch
-  print branchName
-  pure branchName
-  
-tstCurrentBranches :: IO ()
-tstCurrentBranches = do
+
+currentBranches :: IO ()
+currentBranches = do
   pwd <- getCurrentDirectory
   res <- MA.runMGitApp pwd MA.getBranches
   F.printBranchesInfo pwd res
+  pure ()
+
+fetchAll :: IO ()
+fetchAll = do
+  pwd <- getCurrentDirectory
+  res <- MA.runMGitApp pwd MA.fetch
+  print "fetched all"
   pure ()
   

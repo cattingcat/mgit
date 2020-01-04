@@ -65,5 +65,5 @@ testCArrayFfi2 = do
 testStatusEnumSize :: IO ()
 testStatusEnumSize = do 
   c_test_status_size
-  print $ "GitDiffFile size : " ++ show S.sizeOfGitDiffFile
-  print $ "GitDiffDelta size : " ++ show S.sizeOfGitDiffDelta
+  putStrLn $ "GitDiffFile size : " ++ show S.sizeOfGitDiffFile
+  putStrLn $ "GitDiffDelta size : " ++ show S.sizeOfGitDiffDelta

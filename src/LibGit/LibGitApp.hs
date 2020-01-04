@@ -36,6 +36,7 @@ instance MonadGit LibGitApp where
   fetch = do
     remote <- gets originRemotePtr
     fetchRes <- lift $ R.remoteFetch remote
+    lift $ print "fetched"
     pure ()
 
   branches = do

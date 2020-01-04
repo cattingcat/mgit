@@ -21,7 +21,7 @@ dependencies:
 - mtl                   # monad transformers
 - array                 # old lib for arrays
 - vector                # arrays
-- optparse-applicative  # args parser
+- optparse-applicative  # cli args parser
 - directory             # working with dirs, standard lib
 - filepath              # manipulation with path
 - text                  # overloading strings

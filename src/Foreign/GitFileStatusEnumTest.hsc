@@ -1,6 +1,6 @@
 {-# LANGUAGE BangPatterns #-}
 
-module LibGit.GitFileStatus where
+module Foreign.GitFileStatusEnumTest where
 
 #include <git2/status.h>
 
