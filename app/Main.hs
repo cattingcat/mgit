@@ -3,7 +3,7 @@ module Main where
 import Lib
 import qualified LibGit.GitLibCommands as T
 import qualified Cli.CliParser as Cli
-import Foreign.TestFfi
+import qualified Foreign.TestFfi as TF
 
 main :: IO ()
 main = do
@@ -12,5 +12,6 @@ main = do
     Cli.Branch        -> T.currentBranches
     Cli.Branches      -> T.aggregateBranches
     Cli.Fetch         -> T.fetchAll
-    Cli.Test          -> testStatusEnumSize
+    Cli.SetHead       -> T.setHead
+    Cli.Test          -> TF.testStatusEnumSize
   pure ()

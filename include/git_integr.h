@@ -12,3 +12,6 @@ int git_status_list_new_integr(
 
 int git_fetch_init_options_integr(
     git_fetch_options **opts);
+
+int git_checkout_head_integr(
+    git_repository *repo);

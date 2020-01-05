@@ -5,8 +5,7 @@ module LibGit.Common (
   withRepo,
   withRepoSafe,
   openRepo,
-  libGitVersion,
-  repoDir
+  libGitVersion
 ) where
 
 import Foreign
@@ -14,7 +13,6 @@ import Foreign.C.Types
 import Foreign.C.String
 import LibGit.Models
 import Control.Exception (Exception, throw)
-import System.FilePath.Posix (splitDirectories, joinPath)
 
 
 -- int git_libgit2_init();
@@ -37,8 +35,6 @@ foreign import ccall "git2.h git_repository_open" c_git_repository_open :: Ptr (
 -- void git_repository_free(git_repository *repo);
 foreign import ccall "git2.h git_repository_free" c_git_repository_free :: Ptr GitRepo -> IO ()
 
--- const char * git_repository_commondir(const git_repository *repo);
-foreign import ccall "git2/repository.h git_repository_commondir" c_git_repository_commondir :: Ptr GitRepo -> IO CString
 
 
 
@@ -103,10 +99,3 @@ libGitVersion = do
   free minorPtr
   free patchPtr
   pure verStr
-
-repoDir :: GitRepoPtr -> IO FilePath
-repoDir ptr = do
-  pathPtr <- c_git_repository_commondir ptr
-  gitDirPath <- peekCString pathPtr
-  let dirs = splitDirectories gitDirPath
-  pure $ joinPath $ init dirs

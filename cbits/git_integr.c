@@ -1,6 +1,7 @@
 #include <git2.h>
 #include <git2/status.h>
 #include <git2/remote.h>
+#include <git2/checkout.h>
 #include "git_integr.h"
 
 
@@ -49,6 +50,18 @@ int git_fetch_init_options_integr(git_fetch_options **opts) {
 
     // Download all tags
     o->download_tags = GIT_REMOTE_DOWNLOAD_TAGS_ALL;
+
+    return r;
+}
+
+int git_checkout_head_integr(git_repository *repo) {
+    git_checkout_options opts;
+    // function will be renamed to git_checkout_options_init
+    int optsR = git_checkout_init_options(&opts, GIT_CHECKOUT_OPTIONS_VERSION);
+
+    opts.checkout_strategy = GIT_CHECKOUT_FORCE;
+
+    int r = git_checkout_head(repo, &opts);
 
     return r;
 }

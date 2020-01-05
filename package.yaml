@@ -32,8 +32,8 @@ dependencies:
 - process
 
 default-extensions:
-  - MultiWayIf                  # if | cond
-  - LambdaCase                  # \case A -> ..; B -> ...
+  - MultiWayIf                  # if | cond -> ...
+  - LambdaCase                  # \case A -> ...; B -> ...
   - ViewPatterns
   - OverloadedStrings           # overload string literals
   - DuplicateRecordFields       # duplicate accessors within module

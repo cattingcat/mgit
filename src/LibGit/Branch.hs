@@ -94,12 +94,13 @@ getBranches repoPtr = do
           isBranchRef <- R.isBranch referencePtr
           branchName <- peekCString str
           branchType <- peek branchTypePtr
+          refName <- R.refName referencePtr
           let
             isHead = isHeadRes == 1
             bType = if branchType == localBranch
               then LocalBranch
               else RemoteBranch
-            branchInfo = RepoBranchInfo bType (BranchName branchName) isBranchRef
+            branchInfo = RepoBranchInfo bType (BranchName branchName) isBranchRef (RefName refName)
             head = case headBranch of
               Nothing -> if isHead then Just branchInfo else headBranch
               Just _ -> headBranch

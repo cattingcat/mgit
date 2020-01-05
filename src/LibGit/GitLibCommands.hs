@@ -80,7 +80,7 @@ currentBranches = do
 aggregateBranches :: IO ()
 aggregateBranches = do
   pwd <- getCurrentDirectory
-  res <- MA.runMGitApp pwd (MA.aggregateBranches (==))
+  res <- MA.runMGitApp pwd (MA.aggregateRemoteBranchCount (==))
   F.printBranchAggregationInfo res
 
 fetchAll :: IO ()
@@ -88,4 +88,9 @@ fetchAll = do
   pwd <- getCurrentDirectory
   res <- MA.runMGitApp pwd MA.fetch
   putStrLn "fetched all"
+  
+setHead :: IO ()
+setHead = do
+  pwd <- getCurrentDirectory 
+  A.runLibGitApp pwd (A.setHeadSafe "branch")
   

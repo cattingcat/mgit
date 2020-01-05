@@ -14,6 +14,7 @@ import MGit.BranchModels
 
 import qualified LibGit.Models as M
 import qualified LibGit.Remote as R
+import qualified LibGit.Repository as Re
 import qualified LibGit.Status as S
 import qualified LibGit.Common as C
 import qualified LibGit.Branch as B
@@ -38,13 +39,17 @@ instance MonadGit LibGitApp where
     repo <- gets repoPtr
     lift $ B.getBranches repo
 
-  status = do 
+  status = do
     repo <- gets repoPtr
     lift $ S.repoStatus repo
 
   path = do
     repo <- gets repoPtr
-    lift $ C.repoDir repo
+    lift $ Re.repoDir repo
+
+  setHead (RefName name) = do
+    repo <- gets repoPtr
+    lift $ Re.setHead repo name
 
 
 runLibGitApp :: FilePath -> LibGitApp a -> IO a
