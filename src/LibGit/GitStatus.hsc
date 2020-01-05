@@ -1,5 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
-
 module LibGit.GitStatus where
 
 #include <git2/status.h>

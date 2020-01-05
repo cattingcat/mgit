@@ -1,8 +1,3 @@
-{-# LANGUAGE InstanceSigs #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-
 module LibGit.LibGitApp (
   LibGitApp,
   runLibGitApp,

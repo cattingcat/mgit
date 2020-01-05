@@ -31,6 +31,25 @@ dependencies:
 - tagged
 - process
 
+default-extensions:
+  - MultiWayIf                  # if | cond
+  - LambdaCase                  # \case A -> ..; B -> ...
+  - ViewPatterns
+  - OverloadedStrings           # overload string literals
+  - DuplicateRecordFields       # duplicate accessors within module
+  - DerivingStrategies          # stock/any class/newtype/via
+  - DeriveGeneric               # derive Generic typeclass
+  - DeriveAnyClass
+  - DerivingVia                 # Data deriving SomeClass via (SomeNewType Data)
+  - BangPatterns                # prevent laziness via !
+  - MultiParamTypeClasses       # class SomeClass a b where ...
+  - KindSignatures              # data Data (m :: Type -> Type) = ...
+  - DataKinds                   # lift data types to kinds
+  - ScopedTypeVariables         # scoped types via "forall a . ..."
+  - TypeApplications            # apply types explicitly via "@a"
+  - InstanceSigs                # type signature for typeclass instances
+  - FlexibleInstances
+
 library:
   source-dirs: src
   c-sources:

@@ -1,5 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
-
 module Foreign.MyStruct where
 
 #include "test_ffi.h"

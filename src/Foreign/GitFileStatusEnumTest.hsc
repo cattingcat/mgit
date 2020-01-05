@@ -1,5 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
-
 module Foreign.GitFileStatusEnumTest where
 
 #include <git2/status.h>

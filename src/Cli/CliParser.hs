@@ -1,4 +1,3 @@
-{-# LANGUAGE MultiWayIf #-}
 module Cli.CliParser where
 
 import System.Environment

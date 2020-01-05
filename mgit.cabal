@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 229eb70970603b6043f7be85baf9210d7e43673047c0b1fada99c4fd48dd7366
+-- hash: 4c0a2fe97c711385eb717a4b6143d80160899f6e076bfd33c939b1b79dbc97e1
 
 name:           mgit
 version:        0.1.0.0
@@ -56,6 +56,7 @@ library
       Paths_mgit
   hs-source-dirs:
       src
+  default-extensions: MultiWayIf LambdaCase ViewPatterns OverloadedStrings DuplicateRecordFields DerivingStrategies DeriveGeneric DeriveAnyClass DerivingVia BangPatterns MultiParamTypeClasses KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs FlexibleInstances
   include-dirs:
       include
   c-sources:
@@ -85,6 +86,7 @@ executable mgit-exe
       Paths_mgit
   hs-source-dirs:
       app
+  default-extensions: MultiWayIf LambdaCase ViewPatterns OverloadedStrings DuplicateRecordFields DerivingStrategies DeriveGeneric DeriveAnyClass DerivingVia BangPatterns MultiParamTypeClasses KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs FlexibleInstances
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   extra-libraries:
       git2
@@ -112,6 +114,7 @@ test-suite mgit-test
       Paths_mgit
   hs-source-dirs:
       test
+  default-extensions: MultiWayIf LambdaCase ViewPatterns OverloadedStrings DuplicateRecordFields DerivingStrategies DeriveGeneric DeriveAnyClass DerivingVia BangPatterns MultiParamTypeClasses KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs FlexibleInstances
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   extra-libraries:
       git2
