@@ -19,6 +19,7 @@ printBranchesInfo pwd info = do
   let lines = formatBranchesInfo pwd info
   mapM_ putStrLn lines
   
+  
 formatBranchAggregationInfo :: AggregatedBranchesInfo -> [String]
 formatBranchAggregationInfo (AggregatedBranchesInfo infos) = fmap formatLine infos
   where 

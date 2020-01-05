@@ -13,7 +13,4 @@ main = do
     Cli.Branches      -> T.aggregateBranches
     Cli.Fetch         -> T.fetchAll
     Cli.Test          -> testStatusEnumSize
-    Cli.NoCommand     -> putStrLn "enter some command"
-    Cli.ErrorCommand  -> putStrLn "commant is not supported"
-    _                 -> error "Unexhaustive command matching"
   pure ()
