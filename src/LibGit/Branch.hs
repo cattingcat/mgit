@@ -3,7 +3,7 @@
 
 module LibGit.Branch (
   BranchType(..),
-  BranchInfo(..),
+  RepoBranchInfo(..),
   Branches(..),
   getBranches
 ) where
@@ -85,7 +85,7 @@ getBranches repoPtr = do
         | nextRes == iterOver -> pure accum
         | nextRes < 0         -> error $ "getBranches iter error no: " <> show nextRes
         | otherwise           -> processNextIter rpp branchTypePtr iterPtr branchNamePtr accum
-      where 
+      where
         processNextIter rpp branchTypePtr iterPtr branchNamePtr acc@(headBranch, branches) = do
           referencePtr <- peek rpp
           c_git_branch_name branchNamePtr referencePtr
@@ -99,10 +99,10 @@ getBranches repoPtr = do
             bType = if branchType == localBranch
               then LocalBranch
               else RemoteBranch
-            branchInfo = BranchInfo bType branchName isBranchRef
+            branchInfo = RepoBranchInfo bType (BranchName branchName) isBranchRef
             head = case headBranch of
               Nothing -> if isHead then Just branchInfo else headBranch
               Just _ -> headBranch
             tpl = (head, branchInfo:branches)
-            
+
           loop rpp branchTypePtr iterPtr branchNamePtr tpl

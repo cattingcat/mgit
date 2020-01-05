@@ -1,15 +1,21 @@
 module MGit.MonadMGit where
+import qualified MGit.BranchModels as B
 
-data BranchInfo = BranchInfo {
+data RepoBranchInfo = RepoBranchInfo {
   path :: FilePath,
-  branch :: Maybe String
+  branch :: Maybe B.BranchName
 } deriving (Show)
 
 newtype BranchesInfo = BranchesInfo {
-  branches :: [BranchInfo]
+  branches :: [RepoBranchInfo]
 } deriving (Show)
+
+data AggregatedBranchesInfo = AggregatedBranchesInfo {
+  info :: [(B.BranchName, Int)]
+}
 
 
 class Monad m => MonadMGit m where
   fetch :: m ()
-  getBranches :: m BranchesInfo
+  currentBranches :: m BranchesInfo
+  aggregateBranches :: (B.BranchName -> B.BranchName -> Bool) ->  m AggregatedBranchesInfo

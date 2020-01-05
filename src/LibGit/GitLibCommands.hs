@@ -73,14 +73,19 @@ import qualified MGit.Format as F
 currentBranches :: IO ()
 currentBranches = do
   pwd <- getCurrentDirectory
-  res <- MA.runMGitApp pwd MA.getBranches
+  res <- MA.runMGitApp pwd MA.currentBranches
   F.printBranchesInfo pwd res
   pure ()
+
+aggregateBranches :: IO ()
+aggregateBranches = do
+  pwd <- getCurrentDirectory
+  res <- MA.runMGitApp pwd (MA.aggregateBranches (==))
+  F.printBranchAggregationInfo res
 
 fetchAll :: IO ()
 fetchAll = do
   pwd <- getCurrentDirectory
   res <- MA.runMGitApp pwd MA.fetch
-  print "fetched all"
-  pure ()
+  putStrLn "fetched all"
   

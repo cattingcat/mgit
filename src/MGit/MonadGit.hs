@@ -8,7 +8,7 @@ class Monad m => MonadGit m where
   status :: m S.StatusInfo
   path :: m FilePath
 
-currentBranch :: MonadGit m => m (Maybe String)
+currentBranch :: MonadGit m => m (Maybe B.BranchName)
 currentBranch = do
   branchesRes <- branches
   pure $ B.name . B.currentBranch <$>  branchesRes

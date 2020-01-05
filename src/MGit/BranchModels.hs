@@ -1,15 +1,18 @@
 module MGit.BranchModels where
 
+newtype BranchName = BranchName String
+  deriving (Show, Eq)
+
 data BranchType = RemoteBranch | LocalBranch
   deriving (Show)
 
-data BranchInfo = BranchInfo {
+data RepoBranchInfo = RepoBranchInfo {
   branchType :: BranchType,
-  name :: String,
+  name :: BranchName,
   isBranch :: Bool
 } deriving (Show)
 
 data Branches = Branches {
-  currentBranch :: BranchInfo,
-  branches :: [BranchInfo]
+  currentBranch :: RepoBranchInfo,
+  branches :: [RepoBranchInfo]
 } deriving (Show)

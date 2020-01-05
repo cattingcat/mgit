@@ -10,6 +10,7 @@ main = do
   command <- Cli.parseCli
   case command of
     Cli.Branch        -> T.currentBranches
+    Cli.Branches      -> T.aggregateBranches
     Cli.Fetch         -> T.fetchAll
     Cli.Test          -> testStatusEnumSize
     Cli.NoCommand     -> putStrLn "enter some command"
