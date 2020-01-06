@@ -11,18 +11,21 @@ module LibGit.Status (
   sizeOfGitDiffDelta
 ) where
 
+import GHC.Generics (Generic)
+
 import System.Directory
-import MGit.StatusModels
-import LibGit.Models
+
 import Foreign
 import Foreign.C.Types
 import Foreign.C.String
 import Foreign.CStorable
 import Foreign.Storable
-import LibGit.GitStatus
-import GHC.Generics (Generic)
 import Foreign.CVector
 import Foreign.CStorableWrap
+
+import LibGit.Models
+import LibGit.GitStatus
+import MGit.StatusModels
 
 
 -- | Status Foreign DTOs

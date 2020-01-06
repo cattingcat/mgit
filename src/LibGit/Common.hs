@@ -8,11 +8,13 @@ module LibGit.Common (
   libGitVersion
 ) where
 
+import Control.Exception (Exception, throw)
+
 import Foreign
 import Foreign.C.Types
 import Foreign.C.String
+
 import LibGit.Models
-import Control.Exception (Exception, throw)
 
 
 -- int git_libgit2_init();

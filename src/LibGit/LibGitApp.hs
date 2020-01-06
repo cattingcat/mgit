@@ -5,6 +5,7 @@ module LibGit.LibGitApp (
 ) where
 
 import Data.List.Split
+import Data.Maybe (isJust)
 import Control.Monad.State
 
 import System.Directory
@@ -24,7 +25,6 @@ import qualified LibGit.Checkout as Chk
 import qualified LibGit.Status as S
 import qualified LibGit.Common as C
 import qualified LibGit.Branch as B
-import Data.Maybe (isJust)
 
 
 data LibGitAppState = LibGitAppState {
@@ -38,7 +38,6 @@ instance MonadGit LibGitApp where
   fetch = do
     remote <- gets originRemotePtr
     fetchRes <- lift $ R.remoteFetch remote
-    lift $ print "fetched"
     pure ()
 
   branches = do
@@ -76,6 +75,7 @@ instance MonadGit LibGitApp where
     ref <- lift $ Ref.lookupRef repo refName
     case ref of
       Nothing  -> error "fatal"
+      -- todo: ^ fix
       Just ref -> lift $ do
         annotComm <- A.getAnnotatedCommit repo ref
         commId <- A.commitId annotComm

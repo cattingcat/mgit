@@ -99,11 +99,17 @@ lookupBranches s = do
 checkout :: String -> IO ()
 checkout s = do
   pwd <- getCurrentDirectory
-  res <- A.runLibGitApp pwd $ do
-    ref <- A.lookupRef s
-    case ref of
-      Nothing -> pure "Checkout: ref not found"
-      Just ref -> do
-        A.checkoutTree (RM.name ref)
-        pure "Checkout: ok"
-  putStrLn res
+  MA.runMGitApp pwd (MA.checkoutSafe s)
+  putStrLn "Checkout done"
+
+--checkout :: String -> IO ()
+--checkout s = do
+--  pwd <- getCurrentDirectory
+--  res <- A.runLibGitApp pwd $ do
+--    ref <- A.lookupRef s
+--    case ref of
+--      Nothing -> pure "Checkout: ref not found"
+--      Just ref -> do
+--        A.checkoutTree (RM.name ref)
+--        pure "Checkout: ok"
+--  putStrLn res

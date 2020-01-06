@@ -5,13 +5,15 @@ module LibGit.Repository (
   setHead
 ) where
 
+import Control.Exception (Exception, throw)
+import System.FilePath.Posix (splitDirectories, joinPath)
+
 import Foreign
 import Foreign.C.Types
 import Foreign.C.String
+
 import LibGit.Models
 import qualified LibGit.Checkout as C
-import Control.Exception (Exception, throw)
-import System.FilePath.Posix (splitDirectories, joinPath)
 
 
 -- const char * git_repository_commondir(const git_repository *repo);

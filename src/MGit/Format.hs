@@ -4,10 +4,13 @@ module MGit.Format (
   printBranchesLookup
 ) where
 
-import qualified MGit.BranchModels as B
-import MGit.MonadMGit
 import Data.Maybe (fromMaybe)
+
 import System.FilePath.Posix (makeRelative)
+
+import MGit.MonadMGit
+import qualified MGit.BranchModels as B
+
 
 formatBranchesInfo :: FilePath -> BranchesInfo -> [String]
 formatBranchesInfo pwd (BranchesInfo branches) = fmap formatLine branches

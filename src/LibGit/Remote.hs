@@ -47,7 +47,6 @@ foreign import ccall "git_integr.h git_fetch_init_options_integr" c_git_fetch_in
 
 
 
-
 lookupRemote :: GitRepoPtr -> String -> (GitRemotePtr -> IO a) -> IO a
 lookupRemote repo name f = do
   p <- malloc

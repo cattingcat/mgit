@@ -2,14 +2,16 @@
 
 module LibGit.Models where
 
+import Data.Data (Typeable)
+import Control.Exception (Exception, throw)
+
+import GHC.Generics (Generic)
+
 import Foreign
 import Foreign.C.Types
 import Foreign.C.String
 import Foreign.CStorable
 import Foreign.CStorableWrap
-import Control.Exception (Exception, throw)
-import GHC.Generics (Generic)
-import Data.Data (Typeable)
 
 
 data GitOid = GitOid

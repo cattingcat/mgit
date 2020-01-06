@@ -6,6 +6,7 @@ module Cli.CliParser (
 import System.Environment
 import Options.Applicative
 
+
 data CliCommand =
     Branch
   | Branches

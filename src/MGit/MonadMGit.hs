@@ -2,16 +2,20 @@ module MGit.MonadMGit (
   RepoBranchInfo(..),
   BranchesInfo(..),
   AggregatedBranchesInfo(..),
+  CheckoutSpec(..),
   MonadMGit(..),
 
   aggregateRemoteBranchCount,
-  lookupBranches
+  lookupBranches,
+  checkoutSafe
 ) where
 
 import Data.Function (on)
+import Data.Maybe (fromMaybe)
 import Data.List
 
 import qualified MGit.BranchModels as B
+import qualified MGit.RefModels as R
 
 
 data RepoBranchInfo = RepoBranchInfo {
@@ -27,11 +31,16 @@ newtype AggregatedBranchesInfo = AggregatedBranchesInfo {
   info :: [(B.BranchName, Int)]
 }
 
+newtype CheckoutSpec = CheckoutSpec {
+  items :: [(FilePath, R.RefName)]
+}
+
 
 class Monad m => MonadMGit m where
   fetch :: m ()
   currentBranches :: m BranchesInfo
   branchesAll :: m [(FilePath, Maybe B.Branches)]
+  checkout :: CheckoutSpec -> m ()
 
 
 aggregateRemoteBranchCount :: MonadMGit m => (B.BranchName -> B.BranchName -> Bool) ->  m AggregatedBranchesInfo
@@ -68,6 +77,20 @@ lookupBranches searchString = do
           [] -> Nothing
           _ -> Just (B.Branches currentBranch res)
 
+checkoutSafe :: MonadMGit m => String -> m ()
+checkoutSafe searchString = do
+  branchesList <- lookupBranches searchString
+  let
+    checkoutSpec = fmap 
+      (\(path, B.Branches _ branches) -> let (B.RepoBranchInfo _ _ _ ref) = lookupSuitableBranch branches in (path, ref)) 
+      branchesList
+
+    lookupSuitableBranch :: [B.RepoBranchInfo] -> B.RepoBranchInfo
+    lookupSuitableBranch bs = let
+      localBranch = find (\case (B.RepoBranchInfo _ _ True _) -> True; _ -> False) bs
+      branch = fromMaybe (head bs) localBranch
+      in branch
+  checkout (CheckoutSpec checkoutSpec)
 
 
 separateBy :: (a -> a -> Bool) -> [a] -> [[a]]

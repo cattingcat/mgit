@@ -3,8 +3,6 @@ module LibGit.MGitApp (
   runMGitApp
 ) where
 
-import Debug.Trace (trace)
-
 import Control.Monad.Reader
 
 import System.Directory as Dir
@@ -15,6 +13,7 @@ import MGit.MonadMGit
 import qualified MGit.MonadGit as MG
 import qualified MGit.StatusModels as S
 import qualified MGit.BranchModels as B
+import qualified MGit.RefModels as R
 
 
 
@@ -50,6 +49,14 @@ instance MonadMGit MGitApp where
       branches <- MG.branches
       pure (path, branches)
 
+  checkout (CheckoutSpec list) = do
+    path <- asks rootPath
+    lift $ mapM changeBranch list
+    pure ()
+      where
+        changeBranch :: (FilePath, R.RefName) -> IO ()
+        changeBranch (path, ref) = runLibGitApp path (MG.checkoutTree ref)
+          
 
 runMGitApp :: FilePath -> MGitApp a -> IO a
 runMGitApp pwd app = runReaderT app $ MGitAppState pwd

@@ -1,5 +1,7 @@
 module MGit.BranchModels where
+
 import qualified MGit.RefModels as R
+
 
 newtype BranchName = BranchName String
   deriving (Show, Eq)
