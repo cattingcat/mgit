@@ -27,6 +27,7 @@ dependencies:
 - text                  # overloading strings
 - bytestring            # overloading byte strings
 - c-storable-deriving   # Storable deriving for C lang
+- split
 - time
 - tagged
 - process

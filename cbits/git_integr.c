@@ -62,6 +62,16 @@ int git_checkout_head_integr(git_repository *repo) {
     opts.checkout_strategy = GIT_CHECKOUT_FORCE;
 
     int r = git_checkout_head(repo, &opts);
+    return r;
+}
 
+int git_checkout_tree_integr(git_repository *repo, const git_object *treeish) {
+    git_checkout_options opts;
+    // function will be renamed to git_checkout_options_init
+    int optsR = git_checkout_init_options(&opts, GIT_CHECKOUT_OPTIONS_VERSION);
+
+    opts.checkout_strategy = GIT_CHECKOUT_FORCE;
+
+    int r = git_checkout_tree(repo, treeish, &opts);
     return r;
 }

@@ -5,19 +5,26 @@ module LibGit.Branch (
   BranchType(..),
   RepoBranchInfo(..),
   Branches(..),
-  getBranches
+  getBranches,
+  createBranchFromRemote
 ) where
 
+import GHC.Generics (Generic)
+
 import System.Directory
+
 import MGit.BranchModels
+import MGit.RefModels
+
 import LibGit.Models
 import LibGit.Refs as R
+import LibGit.AnnotatedCommit as A
+
 import Foreign
 import Foreign.C.Types
 import Foreign.C.String
 import Foreign.CStorable
 import Foreign.Storable
-import GHC.Generics (Generic)
 import Foreign.CStorableWrap
 
 -- git_branch_iterator
@@ -50,14 +57,16 @@ foreign import ccall "git2/branch.h git_branch_iterator_new" c_git_branch_iterat
 foreign import ccall "git2/branch.h git_branch_iterator_free" c_git_branch_iterator_free :: Ptr GitBranchIterator -> IO ()
 
 -- int git_branch_next(git_reference **out, git_branch_t *out_type, git_branch_iterator *iter);
-foreign import ccall "git2/branch.h git_branch_next" c_git_branch_next :: Ptr (Ptr GitReference) -> Ptr GitBranchType -> Ptr GitBranchIterator -> IO CInt
+foreign import ccall "git2/branch.h git_branch_next" c_git_branch_next :: Ptr GitRefPtr -> Ptr GitBranchType -> Ptr GitBranchIterator -> IO CInt
 
 -- int git_branch_name(const char **out, const git_reference *ref);
-foreign import ccall "git2/branch.h git_branch_name" c_git_branch_name :: Ptr CString -> Ptr GitReference -> IO CInt
+foreign import ccall "git2/branch.h git_branch_name" c_git_branch_name :: Ptr CString -> GitRefPtr -> IO CInt
 
 -- int git_branch_is_head(const git_reference *branch);
-foreign import ccall "git2/branch.h git_branch_is_head" c_git_branch_is_head :: Ptr GitReference -> IO CInt
+foreign import ccall "git2/branch.h git_branch_is_head" c_git_branch_is_head :: GitRefPtr -> IO CInt
 
+-- int git_branch_create_from_annotated(git_reference **ref_out, git_repository *repository, const char *branch_name, const git_annotated_commit *commit, int force);
+foreign import ccall "git2/branch.h git_branch_create_from_annotated" c_git_branch_create_from_annotated:: Ptr GitRefPtr -> GitRepoPtr -> CString -> Ptr A.GitAnnotatedCommit -> CInt-> IO CInt
 
 
 getBranches :: GitRepoPtr -> IO (Maybe Branches)
@@ -107,3 +116,12 @@ getBranches repoPtr = do
             tpl = (head, branchInfo:branches)
 
           loop rpp branchTypePtr iterPtr branchNamePtr tpl
+
+
+createBranchFromRemote :: GitRepoPtr -> String -> Ptr A.GitAnnotatedCommit -> IO GitRefPtr
+createBranchFromRemote repo branchName commit = withCString branchName $ \s -> do
+  p <- malloc
+  r <- c_git_branch_create_from_annotated p repo s commit 0
+  res <- peek p
+  free p
+  pure res

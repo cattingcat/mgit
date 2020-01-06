@@ -13,5 +13,7 @@ main = do
     Cli.Branches      -> T.aggregateBranches
     Cli.Fetch         -> T.fetchAll
     Cli.SetHead       -> T.setHead
+    Cli.LookupRef s   -> T.lookupRef s
+    Cli.Checkout s    -> T.checkout s
     Cli.Test          -> TF.testStatusEnumSize
   pure ()

@@ -1,6 +1,7 @@
 module MGit.MonadGit where
 import qualified MGit.StatusModels as S
 import qualified MGit.BranchModels as B
+import qualified MGit.RefModels as R
 import Data.List (isPrefixOf)
 import Debug.Trace (trace)
 
@@ -9,7 +10,10 @@ class Monad m => MonadGit m where
   branches :: m (Maybe B.Branches)
   status :: m S.StatusInfo
   path :: m FilePath
-  setHead :: B.RefName -> m ()
+  setHead :: R.RefName -> m ()
+  lookupRef :: String -> m (Maybe R.RefInfo)
+  checkoutTree :: R.RefName -> m ()
+
 
 currentBranch :: MonadGit m => m (Maybe B.BranchName)
 currentBranch = do
@@ -17,7 +21,7 @@ currentBranch = do
   pure $ B.name . B.currentBranch <$>  branchesRes
 
 setHeadMaster :: MonadGit m => m ()
-setHeadMaster = setHead (B.RefName "refs/heads/master")
+setHeadMaster = setHead (R.RefName "refs/heads/master")
 
 setHeadSafe :: MonadGit m => String -> m ()
 setHeadSafe branchPrefix = do
@@ -32,3 +36,13 @@ setHeadSafe branchPrefix = do
       if length filtered == 1
       then  setHead . B.ref . head $ filtered
       else pure ()
+      
+checkoutTreeSafe :: MonadGit m => String -> m ()
+checkoutTreeSafe refName = do
+  mbRef <- lookupRef refName
+  case mbRef of 
+    Nothing -> pure ()
+    Just (R.RefInfo refType name commitMsg) -> do
+      checkoutTree name
+      setHead name
+  

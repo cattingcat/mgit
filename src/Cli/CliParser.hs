@@ -11,6 +11,8 @@ data CliCommand =
   | Branches
   | Fetch
   | SetHead
+  | LookupRef String
+  | Checkout String
   | Test
   deriving (Show)
 
@@ -20,25 +22,33 @@ cliParser = subparser $
   command "branches"    (info branchesParser (progDesc "Branches aggregated info"))       <>
   command "fetch"       (info fetchParser (progDesc "Fetch all repos"))                   <>
   command "setHead"     (info setHeadParser (progDesc "Set head in all repos"))           <>
+  command "lookup"      (info lookupParser (progDesc "Set head in all repos"))            <>
+  command "checkout"    (info checkoutParser (progDesc "Set head in all repos"))          <>
   command "test"        (info testParser (progDesc "Test command"))
 
-  where 
+  where
     branchParser :: Parser CliCommand
     branchParser = pure Branch
-    
+
     branchesParser :: Parser CliCommand
     branchesParser = pure Branches
-    
+
     fetchParser :: Parser CliCommand
     fetchParser = pure Fetch
-    
+
     setHeadParser :: Parser CliCommand
     setHeadParser = pure SetHead
-    
+
+    lookupParser :: Parser CliCommand
+    lookupParser = LookupRef <$> argument str idm
+
+    checkoutParser :: Parser CliCommand
+    checkoutParser = Checkout <$> argument str idm
+
     testParser :: Parser CliCommand
     testParser = pure Test
-    
-    
+
+
 desc :: InfoMod CliCommand
 desc = fullDesc
        <> progDesc "Print a greeting for TARGET"

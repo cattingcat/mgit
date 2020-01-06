@@ -32,7 +32,4 @@ setHead :: GitRepoPtr -> String -> IO ()
 setHead ptr refName =
   withCString refName $ \s -> do
     r <- c_git_repository_set_head ptr s
-    rr <- C.c_git_checkout_head_integr ptr
-    print r
-    print rr
     pure()

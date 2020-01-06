@@ -12,6 +12,9 @@ import GHC.Generics (Generic)
 import Data.Data (Typeable)
 
 
+data GitOid = GitOid
+  deriving (Generic, CStorable)
+
 data GitRepo = GitRepo
   deriving (Generic, CStorable)
 
@@ -20,6 +23,8 @@ type GitRepoPtr = Ptr GitRepo
 -- git_reference
 data GitReference = GitReference
   deriving (Generic, CStorable)
+  
+type GitRefPtr = Ptr GitReference
 
 newtype OpenRepoError = OpenRepoError CInt deriving (Show, Typeable)
 instance Exception OpenRepoError

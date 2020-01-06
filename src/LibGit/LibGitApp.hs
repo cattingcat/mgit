@@ -4,6 +4,7 @@ module LibGit.LibGitApp (
   runLibGitApps
 ) where
 
+import Data.List.Split
 import Control.Monad.State
 
 import System.Directory
@@ -11,10 +12,15 @@ import System.Directory
 import MGit.MonadGit
 import MGit.StatusModels
 import MGit.BranchModels
+import MGit.RefModels
 
 import qualified LibGit.Models as M
 import qualified LibGit.Remote as R
 import qualified LibGit.Repository as Re
+import qualified LibGit.Refs as Ref
+import qualified LibGit.AnnotatedCommit as A
+import qualified LibGit.Commit as Comm
+import qualified LibGit.Checkout as Chk
 import qualified LibGit.Status as S
 import qualified LibGit.Common as C
 import qualified LibGit.Branch as B
@@ -51,6 +57,49 @@ instance MonadGit LibGitApp where
     repo <- gets repoPtr
     lift $ Re.setHead repo name
 
+  lookupRef str = do
+    repo <- gets repoPtr
+    ref <- lift $ Ref.lookupRef repo str
+    case ref of
+      Nothing  -> pure Nothing
+      Just ref -> lift $ do
+        refName <- Ref.refName ref
+        refType <- getRefType ref
+        annotComm <- A.getAnnotatedCommit repo ref
+        commId <- A.commitId annotComm
+        commit <- Comm.getCommit repo commId
+        message <- Comm.commitMessage commit
+
+        Comm.freeCommit commit
+        A.freeAnnotatedCommit annotComm
+        Ref.freeRef ref
+        pure $ Just (RefInfo refType (RefName refName) message)
+
+  checkoutTree (RefName refName) = do
+    repo <- gets repoPtr
+    ref <- lift $ Ref.lookupRef repo refName
+    case ref of
+      Nothing  -> error "fatal"
+      Just ref -> lift $ do
+        annotComm <- A.getAnnotatedCommit repo ref
+        commId <- A.commitId annotComm
+        commit <- Comm.getCommit repo commId
+        r <- Chk.c_git_checkout_tree_integr repo commit
+        refType <- getRefType ref
+        case refType of
+          Remote -> do
+            let newBranchName = last $ splitOn "/" refName
+            newRef <- B.createBranchFromRemote repo newBranchName annotComm
+            newRefName <- Ref.refName newRef
+            Re.setHead repo newRefName
+          Head -> do
+            annotCommName <- A.annotatedCommitName annotComm
+            Re.setHead repo annotCommName
+          Tag -> pure ()
+
+        A.freeAnnotatedCommit annotComm
+        Comm.freeCommit commit
+
 
 runLibGitApp :: FilePath -> LibGitApp a -> IO a
 runLibGitApp path m = C.withLibGit $
@@ -82,3 +131,14 @@ runLibGitApps paths app = C.withLibGit $ filterNothings ioAs
     processRepo repo = R.lookupRemote repo "origin" $ \remote -> do
       (a, s) <- runStateT app (LibGitAppState repo remote)
       pure a
+
+
+getRefType :: M.GitRefPtr -> IO RefType
+getRefType ref = do
+   isLocal <- Ref.isBranch ref
+   isRemote <- Ref.isRemote ref
+   isTag <- Ref.isTag ref
+   pure $ case (isLocal, isRemote, isTag) of
+    (True, _, _)          -> Head
+    (False, True, _)      -> Remote
+    (False, False, True)  -> Tag

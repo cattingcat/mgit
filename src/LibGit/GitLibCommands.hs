@@ -6,6 +6,7 @@ import qualified LibGit.MGitApp as MA
 import qualified MGit.MonadGit as A
 import qualified MGit.MonadMGit as MA
 import qualified MGit.Format as F
+import qualified MGit.RefModels as RM
 --import LibGit.Models
 --import qualified LibGit.Branch as B
 --import qualified LibGit.Common as C
@@ -94,3 +95,20 @@ setHead = do
   pwd <- getCurrentDirectory 
   A.runLibGitApp pwd (A.setHeadSafe "branch")
   
+lookupRef :: String -> IO ()
+lookupRef s = do
+  pwd <- getCurrentDirectory 
+  res <- A.runLibGitApp pwd (A.lookupRef s)
+  print res
+  
+checkout :: String -> IO ()
+checkout s = do
+  pwd <- getCurrentDirectory 
+  res <- A.runLibGitApp pwd $ do
+    ref <- A.lookupRef s
+    case ref of 
+      Nothing -> pure "Checkout: ref not found"
+      Just ref -> do 
+        A.checkoutTree (RM.name ref)
+        pure "Checkout: ok"
+  print res

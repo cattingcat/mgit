@@ -15,3 +15,7 @@ int git_fetch_init_options_integr(
 
 int git_checkout_head_integr(
     git_repository *repo);
+
+int git_checkout_tree_integr(
+    git_repository *repo,
+    const git_object *treeish);

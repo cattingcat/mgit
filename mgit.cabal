@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e85811288a378474ec80cfd94aca4af377d75dafeacee4617d376a09ba799984
+-- hash: 4257705b6fa7772829983674a1a731d2a5f83647359b918af36b378749222a48
 
 name:           mgit
 version:        0.1.0.0
@@ -37,8 +37,10 @@ library
       Foreign.MyStruct
       Foreign.TestFfi
       Lib
+      LibGit.AnnotatedCommit
       LibGit.Branch
       LibGit.Checkout
+      LibGit.Commit
       LibGit.Common
       LibGit.GitLibCommands
       LibGit.GitStatus
@@ -53,6 +55,7 @@ library
       MGit.Format
       MGit.MonadGit
       MGit.MonadMGit
+      MGit.RefModels
       MGit.StatusModels
   other-modules:
       Paths_mgit
@@ -76,6 +79,7 @@ library
     , mtl
     , optparse-applicative
     , process
+    , split
     , tagged
     , text
     , time
@@ -103,6 +107,7 @@ executable mgit-exe
     , mtl
     , optparse-applicative
     , process
+    , split
     , tagged
     , text
     , time
@@ -131,6 +136,7 @@ test-suite mgit-test
     , mtl
     , optparse-applicative
     , process
+    , split
     , tagged
     , text
     , time
