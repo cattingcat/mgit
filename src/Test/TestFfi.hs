@@ -1,6 +1,8 @@
 {-# language ForeignFunctionInterface #-}
 
-module Foreign.TestFfi where
+module Test.TestFfi (
+  tstFfi
+) where
 
 import Foreign
 import Foreign.C.Types
@@ -62,3 +64,8 @@ testStatusEnumSize = do
   c_test_status_size
   putStrLn $ "GitDiffFile size : " ++ show S.sizeOfGitDiffFile
   putStrLn $ "GitDiffDelta size : " ++ show S.sizeOfGitDiffDelta
+  
+tstFfi :: IO ()
+tstFfi = do
+  putStrLn "TestFfi"
+  testStatusEnumSize

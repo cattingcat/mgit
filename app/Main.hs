@@ -1,9 +1,9 @@
 module Main where
 
-import Lib
+import Test
 import qualified LibGit.GitLibCommands as T
 import qualified Cli.CliParser as Cli
-import qualified Foreign.TestFfi as TF
+import qualified Test as Tst
 
 main :: IO ()
 main = do
@@ -15,5 +15,5 @@ main = do
     Cli.SetHead       -> T.setHead
     Cli.LookupRef s   -> T.lookupRef s
     Cli.Checkout s    -> T.checkout s
-    Cli.Test          -> TF.testStatusEnumSize
+    Cli.Test          -> Tst.runTst
   pure ()

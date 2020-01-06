@@ -1,5 +1,3 @@
-{-# LANGUAGE TypeSynonymInstances #-}
-
 module LibGit.MGitApp (
   MGitApp,
   runMGitApp

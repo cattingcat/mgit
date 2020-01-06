@@ -13,7 +13,7 @@ packages:
     hackage: c-storable-deriving-0.1.3
 snapshots:
 - completed:
-    size: 524804
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/14/16.yaml
-    sha256: 4d1519a4372d051d47a5eae2241cf3fb54e113d7475f89707ddb6ec06add2888
-  original: lts-14.16
+    size: 444367
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/nightly/2020/1/6.yaml
+    sha256: 53cc08beac90b2e1fdfcde2df030c3452fa696b38015192a4d1ba54f7a8b196a
+  original: nightly-2020-01-06

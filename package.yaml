@@ -35,21 +35,55 @@ dependencies:
 default-extensions:
   - MultiWayIf                  # if | cond -> ...
   - LambdaCase                  # \case A -> ...; B -> ...
-  - ViewPatterns
+  - ViewPatterns                # size (view -> Unit) = 1   apply view on arg and match
   - OverloadedStrings           # overload string literals
+  - NegativeLiterals
+  - NumDecimals                 # allow 1.2e6 literals
+  - BinaryLiterals              # allow 0b10101001 literals
+  - HexFloatLiterals            # 0x0.01 is the same as 1/256
+  - NumericUnderscores          # 1_000_000_000
+  - PartialTypeSignatures       # show warnings for type holes
+  - NamedWildCards              # named wildcards
+  - ApplicativeDo               # do-notation for applicatives
+  - Arrows                      # todo: https://downloads.haskell.org/ghc/latest/docs/html/users_guide/glasgow_exts.html#extension-Arrows
+  - PostfixOperators            # allow (a .) instead of ((.) a)
+  - TupleSections               # partially applied tuples (,,,True,,,"Str")
   - DuplicateRecordFields       # duplicate accessors within module
+  - NamedFieldPuns              # f (C {a}) = a  instead of   f (C {a = a}) = a
+  - RecordWildCards             # f (C {a = 1, ..}) = b + c + d
   - DerivingStrategies          # stock/any class/newtype/via
+  - EmptyDataDeriving           # derive standard classes for empty data
+  - StandaloneDeriving          # deriving instance Eq a => Eq (SomeData a)
+  - GeneralizedNewtypeDeriving  # derive any typeclass of internal newtype's data
   - DeriveGeneric               # derive Generic typeclass
-  - DeriveAnyClass
+  - DeriveFunctor               # derive Functor for every ADT
+  - DeriveAnyClass              # derive any class with defaults
   - DerivingVia                 # Data deriving SomeClass via (SomeNewType Data)
   - BangPatterns                # prevent laziness via !
+  - PatternSynonyms             # pattern synonyms for pattern matching (module M (pattern Zero) where)
+  - EmptyDataDecls              # allow data without ctors, use for phantom-types
+  - TypeOperators               # type operators (import M (type (+)))
+  - LiberalTypeSynonyms         # forall and Constraints in type synonyms
+  - DefaultSignatures           # default instance for type-class (for example Generic-based)
+  - GADTs
   - MultiParamTypeClasses       # class SomeClass a b where ...
+  - FunctionalDependencies
   - KindSignatures              # data Data (m :: Type -> Type) = ...
   - DataKinds                   # lift data types to kinds
   - ScopedTypeVariables         # scoped types via "forall a . ..."
   - TypeApplications            # apply types explicitly via "@a"
   - InstanceSigs                # type signature for typeclass instances
-  - FlexibleInstances
+  - TypeSynonymInstances        # instances for type synonyms
+  - FlexibleInstances           # flexible instance context
+  - FlexibleContexts            # flexible class context
+  - ConstrainedClassMethods     # constraints in class methods
+  - TypeFamilies                # data family, type family
+  - ConstraintKinds             # allow constraint kinds (for example type synonyms w constraints)
+  - RankNTypes                  # forall
+#  - QuantifiedConstraints       # forall in const (Eq a, forall b. (Eq b) => Eq (f b))
+  - PolyKinds                   # replacement of TypeInType
+  - ImplicitParams              # (?cmp :: a -> a -> Bool) => [a] -> [a]
+
 
 library:
   source-dirs: src

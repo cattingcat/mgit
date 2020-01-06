@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4257705b6fa7772829983674a1a731d2a5f83647359b918af36b378749222a48
+-- hash: dd7676842b436e92438c1ef17f7d25c2543cb63010cb2cebb3517e025a0dcc75
 
 name:           mgit
 version:        0.1.0.0
@@ -35,8 +35,6 @@ library
       Foreign.CVector
       Foreign.GitFileStatusEnumTest
       Foreign.MyStruct
-      Foreign.TestFfi
-      Lib
       LibGit.AnnotatedCommit
       LibGit.Branch
       LibGit.Checkout
@@ -57,11 +55,14 @@ library
       MGit.MonadMGit
       MGit.RefModels
       MGit.StatusModels
+      Test
+      Test.TestExts
+      Test.TestFfi
   other-modules:
       Paths_mgit
   hs-source-dirs:
       src
-  default-extensions: MultiWayIf LambdaCase ViewPatterns OverloadedStrings DuplicateRecordFields DerivingStrategies DeriveGeneric DeriveAnyClass DerivingVia BangPatterns MultiParamTypeClasses KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs FlexibleInstances
+  default-extensions: MultiWayIf LambdaCase ViewPatterns OverloadedStrings NegativeLiterals NumDecimals BinaryLiterals HexFloatLiterals NumericUnderscores PartialTypeSignatures NamedWildCards ApplicativeDo Arrows PostfixOperators TupleSections DuplicateRecordFields NamedFieldPuns RecordWildCards DerivingStrategies EmptyDataDeriving StandaloneDeriving GeneralizedNewtypeDeriving DeriveGeneric DeriveFunctor DeriveAnyClass DerivingVia BangPatterns PatternSynonyms EmptyDataDecls TypeOperators LiberalTypeSynonyms DefaultSignatures GADTs MultiParamTypeClasses FunctionalDependencies KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs TypeSynonymInstances FlexibleInstances FlexibleContexts ConstrainedClassMethods TypeFamilies ConstraintKinds RankNTypes PolyKinds ImplicitParams
   include-dirs:
       include
   c-sources:
@@ -92,7 +93,7 @@ executable mgit-exe
       Paths_mgit
   hs-source-dirs:
       app
-  default-extensions: MultiWayIf LambdaCase ViewPatterns OverloadedStrings DuplicateRecordFields DerivingStrategies DeriveGeneric DeriveAnyClass DerivingVia BangPatterns MultiParamTypeClasses KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs FlexibleInstances
+  default-extensions: MultiWayIf LambdaCase ViewPatterns OverloadedStrings NegativeLiterals NumDecimals BinaryLiterals HexFloatLiterals NumericUnderscores PartialTypeSignatures NamedWildCards ApplicativeDo Arrows PostfixOperators TupleSections DuplicateRecordFields NamedFieldPuns RecordWildCards DerivingStrategies EmptyDataDeriving StandaloneDeriving GeneralizedNewtypeDeriving DeriveGeneric DeriveFunctor DeriveAnyClass DerivingVia BangPatterns PatternSynonyms EmptyDataDecls TypeOperators LiberalTypeSynonyms DefaultSignatures GADTs MultiParamTypeClasses FunctionalDependencies KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs TypeSynonymInstances FlexibleInstances FlexibleContexts ConstrainedClassMethods TypeFamilies ConstraintKinds RankNTypes PolyKinds ImplicitParams
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   extra-libraries:
       git2
@@ -121,7 +122,7 @@ test-suite mgit-test
       Paths_mgit
   hs-source-dirs:
       test
-  default-extensions: MultiWayIf LambdaCase ViewPatterns OverloadedStrings DuplicateRecordFields DerivingStrategies DeriveGeneric DeriveAnyClass DerivingVia BangPatterns MultiParamTypeClasses KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs FlexibleInstances
+  default-extensions: MultiWayIf LambdaCase ViewPatterns OverloadedStrings NegativeLiterals NumDecimals BinaryLiterals HexFloatLiterals NumericUnderscores PartialTypeSignatures NamedWildCards ApplicativeDo Arrows PostfixOperators TupleSections DuplicateRecordFields NamedFieldPuns RecordWildCards DerivingStrategies EmptyDataDeriving StandaloneDeriving GeneralizedNewtypeDeriving DeriveGeneric DeriveFunctor DeriveAnyClass DerivingVia BangPatterns PatternSynonyms EmptyDataDecls TypeOperators LiberalTypeSynonyms DefaultSignatures GADTs MultiParamTypeClasses FunctionalDependencies KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs TypeSynonymInstances FlexibleInstances FlexibleContexts ConstrainedClassMethods TypeFamilies ConstraintKinds RankNTypes PolyKinds ImplicitParams
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   extra-libraries:
       git2

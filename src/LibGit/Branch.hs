@@ -33,7 +33,8 @@ data GitBranchIterator = GitBranchIterator
 
 -- git_branch_t
 newtype GitBranchType = GitBranchType CUChar
-  deriving (Eq, Show, Generic, CStorable)
+  deriving (Eq, Show, Generic)
+  deriving newtype CStorable
   deriving Storable via (CStorableWrapper GitBranchType)
 
 
