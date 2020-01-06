@@ -94,7 +94,7 @@ lookupBranches :: String -> IO ()
 lookupBranches s = do
   pwd <- getCurrentDirectory
   res <- MA.runMGitApp pwd (MA.lookupBranches s)
-  F.printBranchesLookup res
+  F.printBranchesLookup pwd res
 
 checkout :: String -> IO ()
 checkout s = do

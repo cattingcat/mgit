@@ -39,9 +39,9 @@ printBranchAggregationInfo info = do
   let lines = formatBranchAggregationInfo info
   mapM_ putStrLn lines
 
-formatBranchesLookup :: [(FilePath, B.Branches)] -> [String]
-formatBranchesLookup [] = []
-formatBranchesLookup ((p, b):as) = p : prepareBranches b <> formatBranchesLookup as
+formatBranchesLookup :: FilePath -> [(FilePath, B.Branches)] -> [String]
+formatBranchesLookup _ [] = []
+formatBranchesLookup pwd ((p, b):as) = (makeRelative pwd p) : prepareBranches b <> formatBranchesLookup pwd as
   where
     prepareBranches B.Branches{branches} = fmap prepareBranchInfo branches
     prepareBranchInfo (B.RepoBranchInfo branchType (B.BranchName name) isBranch ref) = let
@@ -50,7 +50,7 @@ formatBranchesLookup ((p, b):as) = p : prepareBranches b <> formatBranchesLookup
       space = " " <> (if spaceLen > 0 then replicate spaceLen ' ' else "") <> ""
       in "  " <> name <> space <> show ref
 
-printBranchesLookup :: [(FilePath, B.Branches)] -> IO ()
-printBranchesLookup d = do
-  let lines = formatBranchesLookup d
+printBranchesLookup :: FilePath -> [(FilePath, B.Branches)] -> IO ()
+printBranchesLookup pwd d = do
+  let lines = formatBranchesLookup pwd d
   mapM_ putStrLn lines
