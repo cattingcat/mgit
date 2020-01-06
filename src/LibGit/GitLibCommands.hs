@@ -89,26 +89,21 @@ fetchAll = do
   pwd <- getCurrentDirectory
   res <- MA.runMGitApp pwd MA.fetch
   putStrLn "fetched all"
-  
-setHead :: IO ()
-setHead = do
-  pwd <- getCurrentDirectory 
-  A.runLibGitApp pwd (A.setHeadSafe "branch")
-  
-lookupRef :: String -> IO ()
-lookupRef s = do
-  pwd <- getCurrentDirectory 
-  res <- A.runLibGitApp pwd (A.lookupRef s)
-  print res
-  
+
+lookupBranches :: String -> IO ()
+lookupBranches s = do
+  pwd <- getCurrentDirectory
+  res <- MA.runMGitApp pwd (MA.lookupBranches s)
+  F.printBranchesLookup res
+
 checkout :: String -> IO ()
 checkout s = do
-  pwd <- getCurrentDirectory 
+  pwd <- getCurrentDirectory
   res <- A.runLibGitApp pwd $ do
     ref <- A.lookupRef s
-    case ref of 
+    case ref of
       Nothing -> pure "Checkout: ref not found"
-      Just ref -> do 
+      Just ref -> do
         A.checkoutTree (RM.name ref)
         pure "Checkout: ok"
-  print res
+  putStrLn res

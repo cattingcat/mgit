@@ -1,4 +1,9 @@
-module MGit.Format where
+module MGit.Format (
+  printBranchesInfo,
+  printBranchAggregationInfo,
+  printBranchesLookup
+) where
+
 import qualified MGit.BranchModels as B
 import MGit.MonadMGit
 import Data.Maybe (fromMaybe)
@@ -32,4 +37,20 @@ formatBranchAggregationInfo (AggregatedBranchesInfo infos) = fmap formatLine inf
 printBranchAggregationInfo :: AggregatedBranchesInfo -> IO ()
 printBranchAggregationInfo info = do
   let lines = formatBranchAggregationInfo info
+  mapM_ putStrLn lines
+
+formatBranchesLookup :: [(FilePath, B.Branches)] -> [String]
+formatBranchesLookup [] = []
+formatBranchesLookup ((p, b):as) = p : prepareBranches b <> formatBranchesLookup as
+  where
+    prepareBranches B.Branches{branches} = fmap prepareBranchInfo branches
+    prepareBranchInfo (B.RepoBranchInfo branchType (B.BranchName name) isBranch ref) = let
+      len = length name
+      spaceLen = 60 - len
+      space = " " <> (if spaceLen > 0 then replicate spaceLen ' ' else "") <> ""
+      in "  " <> name <> space <> show ref
+
+printBranchesLookup :: [(FilePath, B.Branches)] -> IO ()
+printBranchesLookup d = do
+  let lines = formatBranchesLookup d
   mapM_ putStrLn lines

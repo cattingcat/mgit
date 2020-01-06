@@ -1,13 +1,13 @@
 name:                mgit
 version:             0.1.0.0
-github:              "zxc123zxc/mgit"
+github:              "cattingcat/mgit"
 license:             BSD3
 author:              "Author name here"
 maintainer:          "Author email here"
 copyright:           "2019 Author name here"
 synopsis:            Multi-repo git tool
 category:            git, tools
-description:         Please see the README on GitHub at <https://github.com/zxc123zxc/mgit#readme>
+description:         Please see the README on GitHub at <https://github.com/cattingcat/mgit#readme>
 
 extra-libraries:
   - git2                # libgit2 @ 0.28.3  (https://libgit2.org/)

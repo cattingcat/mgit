@@ -4,7 +4,8 @@ module MGit.MonadMGit (
   AggregatedBranchesInfo(..),
   MonadMGit(..),
 
-  aggregateRemoteBranchCount
+  aggregateRemoteBranchCount,
+  lookupBranches
 ) where
 
 import Data.Function (on)
@@ -45,6 +46,27 @@ aggregateRemoteBranchCount p = do
     aggregation = fmap (\(a:as) -> (a, length as + 1))buckets
     sorted = sortBy (compare `on` snd) aggregation
   pure $ AggregatedBranchesInfo sorted
+
+lookupBranches :: MonadMGit m => String -> m [(FilePath, B.Branches)]
+lookupBranches searchString = do
+  branches <- branchesAll
+  pure $ filterEmptyRepos . filterRepos $ branches
+    where
+      filterEmptyRepos ::  [(FilePath, Maybe B.Branches)] -> [(FilePath, B.Branches)]
+      filterEmptyRepos [] = []
+      filterEmptyRepos ((p, Nothing):as) = filterEmptyRepos as
+      filterEmptyRepos ((p, Just b):as) = (p, b) : filterEmptyRepos as
+
+      filterRepos :: [(FilePath, Maybe B.Branches)] -> [(FilePath, Maybe B.Branches)]
+      filterRepos = fmap $ \(p, branches) -> (p, filterBranches branches)
+
+      filterBranches :: Maybe B.Branches -> Maybe B.Branches
+      filterBranches Nothing = Nothing
+      filterBranches (Just B.Branches{currentBranch, branches}) = let
+        res = filter (\B.RepoBranchInfo{name} -> let (B.BranchName bName) = name in isInfixOf searchString bName) branches
+        in case res of
+          [] -> Nothing
+          _ -> Just (B.Branches currentBranch res)
 
 
 

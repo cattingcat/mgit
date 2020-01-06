@@ -53,10 +53,6 @@ instance MonadGit LibGitApp where
     repo <- gets repoPtr
     lift $ Re.repoDir repo
 
-  setHead (RefName name) = do
-    repo <- gets repoPtr
-    lift $ Re.setHead repo name
-
   lookupRef str = do
     repo <- gets repoPtr
     ref <- lift $ Ref.lookupRef repo str
