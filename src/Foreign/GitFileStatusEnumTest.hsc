@@ -2,13 +2,10 @@ module Foreign.GitFileStatusEnumTest where
 
 #include <git2/status.h>
 
-import Foreign
 import Foreign.C.Types
-import Foreign.C.String
-import Foreign.CStorable
 
 newtype GitFileStatus = MkGitFileStatus CULong
-    deriving (Eq)
+    deriving stock (Eq)
 
 #{enum GitFileStatus, MkGitFileStatus
     , current         = GIT_STATUS_CURRENT

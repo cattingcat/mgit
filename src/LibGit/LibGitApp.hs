@@ -5,14 +5,9 @@ module LibGit.LibGitApp (
 ) where
 
 import Data.List.Split
-import Data.Maybe (isJust)
 import Control.Monad.State
 
-import System.Directory
-
 import MGit.MonadGit
-import MGit.StatusModels
-import MGit.BranchModels
 import MGit.RefModels
 
 import qualified LibGit.Models as M
@@ -37,7 +32,7 @@ type LibGitApp = StateT LibGitAppState IO
 instance MonadGit LibGitApp where
   fetch = do
     remote <- gets originRemotePtr
-    fetchRes <- lift $ R.remoteFetch remote
+    _ <- lift $ R.remoteFetch remote
     pure ()
 
   branches = do
@@ -54,8 +49,8 @@ instance MonadGit LibGitApp where
 
   lookupRef str = do
     repo <- gets repoPtr
-    ref <- lift $ Ref.lookupRef repo str
-    case ref of
+    lookupRes <- lift $ Ref.lookupRef repo str
+    case lookupRes of
       Nothing  -> pure Nothing
       Just ref -> lift $ do
         refName <- Ref.refName ref
@@ -72,15 +67,15 @@ instance MonadGit LibGitApp where
 
   checkoutTree (RefName refName) = do
     repo <- gets repoPtr
-    ref <- lift $ Ref.lookupRef repo refName
-    case ref of
+    lookupRes <- lift $ Ref.lookupRef repo refName
+    case lookupRes of
       Nothing  -> error "fatal"
       -- todo: ^ fix
       Just ref -> lift $ do
         annotComm <- A.getAnnotatedCommit repo ref
         commId <- A.commitId annotComm
         commit <- Comm.getCommit repo commId
-        r <- Chk.c_git_checkout_tree_integr repo commit
+        _ <- Chk.c_git_checkout_tree_integr repo commit
         refType <- getRefType ref
         case refType of
           Remote -> do
@@ -98,10 +93,10 @@ instance MonadGit LibGitApp where
 
 
 runLibGitApp :: FilePath -> LibGitApp a -> IO a
-runLibGitApp path m = C.withLibGit $
-  C.withRepo path $ \repo ->
+runLibGitApp repoPath m = C.withLibGit $
+  C.withRepo repoPath $ \repo ->
     R.lookupRemote repo "origin" $ \remote -> do
-      (a, s) <- runStateT m (LibGitAppState repo remote)
+      (a, _) <- runStateT m (LibGitAppState repo remote)
       pure a
 
 runLibGitApps :: forall a . [FilePath] -> LibGitApp a -> IO [a]
@@ -120,12 +115,12 @@ runLibGitApps paths app = C.withLibGit $ filterNothings ioAs
     ioAs = mapM foo paths
 
     foo :: FilePath -> IO (Maybe a)
-    foo path = C.withRepoSafe path $ \case
+    foo repoPath = C.withRepoSafe repoPath $ \case
       Just repo -> Just <$> processRepo repo
       Nothing -> pure Nothing
 
     processRepo repo = R.lookupRemote repo "origin" $ \remote -> do
-      (a, s) <- runStateT app (LibGitAppState repo remote)
+      (a, _) <- runStateT app (LibGitAppState repo remote)
       pure a
 
 
@@ -138,3 +133,4 @@ getRefType ref = do
     (True, _, _)          -> Head
     (False, True, _)      -> Remote
     (False, False, True)  -> Tag
+    _                     -> error "unknown flag configuration"

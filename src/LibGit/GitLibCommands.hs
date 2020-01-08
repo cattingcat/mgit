@@ -1,12 +1,9 @@
 module LibGit.GitLibCommands where
 
 import System.Directory
-import qualified LibGit.LibGitApp as A
 import qualified LibGit.MGitApp as MA
-import qualified MGit.MonadGit as A
 import qualified MGit.MonadMGit as MA
 import qualified MGit.Format as F
-import qualified MGit.RefModels as RM
 --import LibGit.Models
 --import qualified LibGit.Branch as B
 --import qualified LibGit.Common as C
@@ -87,7 +84,7 @@ aggregateBranches = do
 fetchAll :: IO ()
 fetchAll = do
   pwd <- getCurrentDirectory
-  res <- MA.runMGitApp pwd MA.fetch
+  _ <- MA.runMGitApp pwd MA.fetch
   putStrLn "fetched all"
 
 lookupBranches :: String -> IO ()

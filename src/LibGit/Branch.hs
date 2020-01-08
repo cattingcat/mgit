@@ -5,13 +5,18 @@ module LibGit.Branch (
   BranchType(..),
   RepoBranchInfo(..),
   Branches(..),
+
+  localBranch,
+  remoteBranch,
+  allBranches,
+
   getBranches,
   createBranchFromRemote
 ) where
 
-import GHC.Generics (Generic)
+import Prelude hiding (head)
 
-import System.Directory
+import GHC.Generics (Generic)
 
 import MGit.BranchModels
 import MGit.RefModels
@@ -24,16 +29,16 @@ import Foreign
 import Foreign.C.Types
 import Foreign.C.String
 import Foreign.CStorable
-import Foreign.Storable
 import Foreign.CStorableWrap
 
 -- git_branch_iterator
 data GitBranchIterator = GitBranchIterator
-  deriving (Generic, CStorable)
+  deriving stock (Generic)
+  deriving anyclass (CStorable)
 
 -- git_branch_t
 newtype GitBranchType = GitBranchType CUChar
-  deriving (Eq, Show, Generic)
+  deriving stock (Eq, Show, Generic)
   deriving newtype CStorable
   deriving Storable via (CStorableWrapper GitBranchType)
 
@@ -76,7 +81,7 @@ getBranches repoPtr = do
   strPtr <- malloc
   referencePP <- malloc
   branchTypePtr <- malloc
-  r <- c_git_branch_iterator_new iterPP repoPtr allBranches
+  _ <- c_git_branch_iterator_new iterPP repoPtr allBranches
   -- todo: ^ check res
   iterPtr <- peek iterPP
   (head, bs) <- loop referencePP branchTypePtr iterPtr strPtr (Nothing, [])
@@ -94,9 +99,9 @@ getBranches repoPtr = do
       if
         | nextRes == iterOver -> pure accum
         | nextRes < 0         -> error $ "getBranches iter error no: " <> show nextRes
-        | otherwise           -> processNextIter rpp branchTypePtr iterPtr branchNamePtr accum
+        | otherwise           -> processNextIteration accum
       where
-        processNextIter rpp branchTypePtr iterPtr branchNamePtr acc@(headBranch, branches) = do
+        processNextIteration (headBranch, branches) = do
           referencePtr <- peek rpp
           c_git_branch_name branchNamePtr referencePtr
           str <- peek branchNamePtr
@@ -104,13 +109,13 @@ getBranches repoPtr = do
           isBranchRef <- R.isBranch referencePtr
           branchName <- peekCString str
           branchType <- peek branchTypePtr
-          refName <- R.refName referencePtr
+          referenceName <- R.refName referencePtr
           let
             isHead = isHeadRes == 1
             bType = if branchType == localBranch
               then LocalBranch
               else RemoteBranch
-            branchInfo = RepoBranchInfo bType (BranchName branchName) isBranchRef (RefName refName)
+            branchInfo = RepoBranchInfo bType (BranchName branchName) isBranchRef (RefName referenceName)
             head = case headBranch of
               Nothing -> if isHead then Just branchInfo else headBranch
               Just _ -> headBranch
@@ -122,7 +127,7 @@ getBranches repoPtr = do
 createBranchFromRemote :: GitRepoPtr -> String -> Ptr A.GitAnnotatedCommit -> IO GitRefPtr
 createBranchFromRemote repo branchName commit = withCString branchName $ \s -> do
   p <- malloc
-  r <- c_git_branch_create_from_annotated p repo s commit 0
+  _ <- c_git_branch_create_from_annotated p repo s commit 0
   res <- peek p
   free p
   pure res

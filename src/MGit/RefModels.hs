@@ -1,13 +1,13 @@
 module MGit.RefModels where
 
 newtype RefName = RefName String
-  deriving (Show)
+  deriving stock (Show)
 
 data RefType = Remote | Head | Tag
-  deriving (Show)
+  deriving stock (Show)
 
 data RefInfo = RefInfo {
   refType :: RefType,
   name :: RefName,
   lastCommitMsg :: String
-} deriving (Show)
+} deriving stock (Show)

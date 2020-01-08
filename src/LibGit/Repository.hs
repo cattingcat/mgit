@@ -5,15 +5,12 @@ module LibGit.Repository (
   setHead
 ) where
 
-import Control.Exception (Exception, throw)
 import System.FilePath.Posix (splitDirectories, joinPath)
 
-import Foreign
 import Foreign.C.Types
 import Foreign.C.String
 
 import LibGit.Models
-import qualified LibGit.Checkout as C
 
 
 -- const char * git_repository_commondir(const git_repository *repo);
@@ -33,5 +30,5 @@ repoDir ptr = do
 setHead :: GitRepoPtr -> String -> IO ()
 setHead ptr refName =
   withCString refName $ \s -> do
-    r <- c_git_repository_set_head ptr s
+    _ <- c_git_repository_set_head ptr s
     pure()

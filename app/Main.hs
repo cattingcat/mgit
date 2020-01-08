@@ -1,6 +1,5 @@
 module Main where
 
-import Test
 import qualified LibGit.GitLibCommands as T
 import qualified Cli.CliParser as Cli
 import qualified Test as Tst

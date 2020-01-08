@@ -2,7 +2,7 @@
 
 module LibGit.Remote (
   GitRemote(..),
-  GitRemotePtr(..),
+  GitRemotePtr,
   lookupRemote,
   remoteUri,
   remoteFetch
@@ -17,12 +17,14 @@ import GHC.Generics (Generic)
 
 
 data GitRemote = GitRemote
-  deriving (Generic, CStorable)
+  deriving stock (Generic)
+  deriving anyclass (CStorable)
 
 type GitRemotePtr = Ptr GitRemote
 
 data GitFetchOptions = GitFetchOptions
-  deriving (Generic, CStorable)
+  deriving stock (Generic)
+  deriving anyclass (CStorable)
   
   
 -- int git_remote_list(git_strarray *out, git_repository *repo);
@@ -37,7 +39,7 @@ foreign import ccall "git2/remote.h git_remote_free" c_git_remote_free :: Ptr Gi
 foreign import ccall "git2/remote.h git_remote_url" c_git_remote_url :: Ptr GitRemote -> IO CString
 
 -- int git_remote_download(git_remote *remote, const git_strarray *refspecs, const git_fetch_options *opts);
-foreign import ccall "git2/remote.h git_remote_download" c_git_remote_download :: Ptr GitRemote -> Ptr GitStrArr -> Ptr GitFetchOptions -> IO CInt
+--foreign import ccall "git2/remote.h git_remote_download" c_git_remote_download :: Ptr GitRemote -> Ptr GitStrArr -> Ptr GitFetchOptions -> IO CInt
 
 -- int git_remote_fetch(git_remote *remote, const git_strarray *refspecs, const git_fetch_options *opts, const char *reflog_message);
 foreign import ccall "git2/remote.h git_remote_fetch" c_git_remote_fetch :: Ptr GitRemote -> Ptr GitStrArr -> Ptr GitFetchOptions -> CString -> IO CInt
@@ -50,7 +52,7 @@ foreign import ccall "git_integr.h git_fetch_init_options_integr" c_git_fetch_in
 lookupRemote :: GitRepoPtr -> String -> (GitRemotePtr -> IO a) -> IO a
 lookupRemote repo name f = do
   p <- malloc
-  r <- withCString name (c_git_remote_lookup p repo)
+  _ <- withCString name (c_git_remote_lookup p repo)
   -- todo: ^ check res
   remotePtr <- peek p
   res <- f remotePtr
@@ -69,7 +71,7 @@ remoteFetch remote = do
   p <- malloc
   c_git_fetch_init_options_integr p
   optsPtr <- peek p
-  r <- c_git_remote_fetch remote nullPtr optsPtr nullPtr
+  _ <- c_git_remote_fetch remote nullPtr optsPtr nullPtr
   -- todo: ^ check res
   free optsPtr -- todo: check
-  free p 
+  free p

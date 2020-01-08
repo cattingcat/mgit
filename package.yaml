@@ -92,6 +92,15 @@ library:
     - cbits/git_integr.c
   include-dirs:
     include
+  ghc-options:
+    - -Wall
+    - -Werror
+    - -Wcompat
+    - -Wredundant-constraints
+    - -Wincomplete-patterns
+    - -Wincomplete-uni-patterns
+    - -Wincomplete-record-updates
+    - -Wmissing-deriving-strategies
 
 executables:
   mgit-exe:
@@ -101,6 +110,11 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -Wall
+    - -Werror
+    - -Wcompat
+    - -Wredundant-constraints
+    - -Wincomplete-patterns
     dependencies:
     - mgit
 

@@ -4,13 +4,11 @@ module Foreign.MyStruct where
 
 import Foreign
 import Foreign.C.Types
-import Foreign.C.String
-import Foreign.CStorable
 
 -- https://downloads.haskell.org/~ghc/7.6.3/docs/html/users_guide/hsc2hs.html
 
 data MyStruct = MyStruct { d :: !Double, c :: !Word8, i :: !Int32 }
-  deriving (Show)
+  deriving stock (Show)
 
 instance Storable MyStruct where
   sizeOf    _ = #{size MyStruct}

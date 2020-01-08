@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -w #-}
 {-# language ForeignFunctionInterface #-}
 
 module Test.TestFfi (

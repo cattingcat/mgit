@@ -11,8 +11,6 @@ import LibGit.LibGitApp
 
 import MGit.MonadMGit
 import qualified MGit.MonadGit as MG
-import qualified MGit.StatusModels as S
-import qualified MGit.BranchModels as B
 import qualified MGit.RefModels as R
 
 
@@ -45,12 +43,11 @@ instance MonadMGit MGitApp where
     path <- asks rootPath
     directories <- lift $ Dir.listDirectory path
     lift $ runLibGitApps directories $ do
-      path <- MG.path
+      repoPath <- MG.path
       branches <- MG.branches
-      pure (path, branches)
+      pure (repoPath, branches)
 
   checkout (CheckoutSpec list) = do
-    path <- asks rootPath
     lift $ mapM changeBranch list
     pure ()
       where

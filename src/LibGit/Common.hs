@@ -8,7 +8,7 @@ module LibGit.Common (
   libGitVersion
 ) where
 
-import Control.Exception (Exception, throw)
+import Control.Exception (throw)
 
 import Foreign
 import Foreign.C.Types
@@ -25,7 +25,7 @@ foreign import ccall "git2/global.h git_libgit2_shutdown" c_git_libgit2_shutdown
 
 
 -- int git_libgit2_features();
-foreign import ccall "git2/common.h git_libgit2_features" c_git_libgit2_features :: IO CInt
+--foreign import ccall "git2/common.h git_libgit2_features" c_git_libgit2_features :: IO CInt
 
 -- void git_libgit2_version(int *major, int *minor, int *rev);
 foreign import ccall "git2/common.h git_libgit2_version" c_git_libgit2_version :: Ptr CInt -> Ptr CInt -> Ptr CInt -> IO ()
@@ -51,7 +51,7 @@ withLibGit io = do
 openRepo :: FilePath -> IO GitRepoPtr
 openRepo path = do
   p <- malloc
-  r <- withCString path (c_git_repository_open p) 
+  _ <- withCString path (c_git_repository_open p)
   repoPtr <- peek p
   free p
   pure repoPtr
@@ -59,15 +59,15 @@ openRepo path = do
 withRepoSafe :: FilePath -> (Maybe GitRepoPtr -> IO a) -> IO a
 withRepoSafe path f = do
   p <- malloc
-  r <- withCString path (c_git_repository_open p)
-  res <- if r /= 0
+  openRes <- withCString path (c_git_repository_open p)
+  res <- if openRes /= 0
     then 
       f Nothing
     else do
       repoPtr <- peek p
-      r <- f (Just repoPtr)
+      res <- f (Just repoPtr)
       c_git_repository_free repoPtr
-      pure r    
+      pure res
   free p
   pure res
 

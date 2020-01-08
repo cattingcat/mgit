@@ -21,11 +21,11 @@ import qualified MGit.RefModels as R
 data RepoBranchInfo = RepoBranchInfo {
   path :: FilePath,
   branch :: Maybe B.BranchName
-} deriving (Show)
+} deriving stock (Show)
 
 newtype BranchesInfo = BranchesInfo {
   branches :: [RepoBranchInfo]
-} deriving (Show)
+} deriving stock (Show)
 
 newtype AggregatedBranchesInfo = AggregatedBranchesInfo {
   info :: [(B.BranchName, Int)]
@@ -52,7 +52,10 @@ aggregateRemoteBranchCount p = do
     remoteBranches = filter (\case (B.RepoBranchInfo B.RemoteBranch _ _ _) -> True; _ -> False) branches
     remoteBranchNames = fmap B.name remoteBranches
     buckets = separateBy p remoteBranchNames
-    aggregation = fmap (\(a:as) -> (a, length as + 1))buckets
+    aggregation = fmap aggrFunc buckets
+      where
+        aggrFunc []     = error "impossible empty branches"
+        aggrFunc (a:as) = (a, length as + 1)
     sorted = sortBy (compare `on` snd) aggregation
   pure $ AggregatedBranchesInfo sorted
 
@@ -63,7 +66,7 @@ lookupBranches searchString = do
     where
       filterEmptyRepos ::  [(FilePath, Maybe B.Branches)] -> [(FilePath, B.Branches)]
       filterEmptyRepos [] = []
-      filterEmptyRepos ((p, Nothing):as) = filterEmptyRepos as
+      filterEmptyRepos ((_, Nothing):as) = filterEmptyRepos as
       filterEmptyRepos ((p, Just b):as) = (p, b) : filterEmptyRepos as
 
       filterRepos :: [(FilePath, Maybe B.Branches)] -> [(FilePath, Maybe B.Branches)]
@@ -81,8 +84,8 @@ checkoutSafe :: MonadMGit m => String -> m ()
 checkoutSafe searchString = do
   branchesList <- lookupBranches searchString
   let
-    checkoutSpec = fmap 
-      (\(path, B.Branches _ branches) -> let (B.RepoBranchInfo _ _ _ ref) = lookupSuitableBranch branches in (path, ref)) 
+    checkoutSpec = fmap
+      (\(path, B.Branches _ branches) -> let (B.RepoBranchInfo _ _ _ ref) = lookupSuitableBranch branches in (path, ref))
       branchesList
 
     lookupSuitableBranch :: [B.RepoBranchInfo] -> B.RepoBranchInfo
@@ -93,13 +96,13 @@ checkoutSafe searchString = do
   checkout (CheckoutSpec checkoutSpec)
 
 
-separateBy :: (a -> a -> Bool) -> [a] -> [[a]]
+separateBy :: forall a . (a -> a -> Bool) -> [a] -> [[a]]
 separateBy _ [] = []
-separateBy p as = loop p as []
+separateBy cmp l = loop l []
   where
-    loop :: (a -> a -> Bool) -> [a] -> [[a]] -> [[a]]
-    loop _ [] acc = acc
-    loop p (a:as) acc = loop p as (putToAcc a acc)
+    loop :: [a] -> [[a]] -> [[a]]
+    loop [] acc = acc
+    loop (a:as) acc = loop as (putToAcc a acc)
       where
-        putToAcc a [] = [[a]]
-        putToAcc a (acc:accs) = if p a (head acc) then (a:acc):accs else acc : putToAcc a accs
+        putToAcc item [] = [[item]]
+        putToAcc item (accum:accums) = if cmp item (head accum) then (a:accum):accums else accum : putToAcc a accums

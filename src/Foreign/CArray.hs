@@ -8,9 +8,7 @@ import GHC.Natural
 
 import Data.Data
 import Data.Array.Base
-import Data.Array.ST
 import Data.Array.IO
-import Data.Array.MArray
 
 import Foreign.Ptr
 import Foreign.Storable
@@ -23,7 +21,7 @@ type CArray (n :: Nat) (a :: Type) = CArrayInternal n Int a
 
 instance (Storable a, KnownNat n) => Storable (CArrayInternal n Int a) where
   sizeOf :: CArray n a -> Int
-  sizeOf arr = intVal @n * sizeOf (undefined :: a)
+  sizeOf _ = intVal @n * sizeOf (undefined :: a)
 
   peek :: Ptr (CArray n a) -> IO (CArray n a)
   peek = peekCArray
@@ -46,22 +44,20 @@ peekCArray ptr = do
   res <- loop 0 len ptr arr
   pure (CArray res)
   where
-    loop :: forall a b . Storable b => Int -> Int -> Ptr a -> IOArray Int b -> IO (IOArray Int b)
-    loop i n ptr arr = do
-      e <- peekByteOff ptr (i * sizeOf (undefined :: b))
-      writeArray arr i e
-      let nextIndex = i + 1
-      if nextIndex < n then loop nextIndex n ptr arr else pure arr
+    loop ind len p arr = do
+      e <- peekByteOff p (ind * sizeOf (undefined :: a))
+      writeArray arr ind e
+      let nextIndex = ind + 1
+      if nextIndex < len then loop nextIndex len p arr else pure arr
 
 pokeCArray :: forall a n . (Storable a, KnownNat n) => 
   Ptr (CArray n a) -> CArray n a -> IO ()
 pokeCArray ptr (CArray arr) = do
   let len = intVal @n
-  loop 0 len ptr arr 
+  loop 0 len
   where 
-    loop :: forall a b . Storable b => Int -> Int -> Ptr a -> IOArray Int b -> IO ()
-    loop i n ptr arr = do
-      e <- readArray arr i
-      pokeByteOff ptr (i * sizeOf (undefined :: b)) e
-      let nextIndex = i + 1
-      if nextIndex < n then loop nextIndex n ptr arr else pure ()
+    loop ind len = do
+      e <- readArray arr ind
+      pokeByteOff ptr (ind * sizeOf (undefined :: a)) e
+      let nextIndex = ind + 1
+      if nextIndex < len then loop nextIndex len else pure ()

@@ -9,7 +9,6 @@ module LibGit.AnnotatedCommit (
 import GHC.Generics (Generic)
 
 import Foreign
-import Foreign.Ptr
 import Foreign.C.Types
 import Foreign.C.String
 import Foreign.CStorable (CStorable)
@@ -18,7 +17,8 @@ import LibGit.Models
 
 
 data GitAnnotatedCommit = GitAnnotatedCommit
-  deriving (Generic, CStorable)
+  deriving stock (Generic)
+  deriving anyclass (CStorable)
 
 -- const char * git_annotated_commit_ref(const git_annotated_commit *commit);
 foreign import ccall "git2/annotated_commit.h git_annotated_commit_ref" c_git_annotated_commit_ref :: Ptr GitAnnotatedCommit -> IO CString
@@ -41,7 +41,7 @@ annotatedCommitName commitPtr = do
 getAnnotatedCommit :: GitRepoPtr -> GitRefPtr -> IO (Ptr GitAnnotatedCommit)
 getAnnotatedCommit repo ref = do
   p <- malloc
-  r <- c_git_annotated_commit_from_ref p repo ref
+  _ <- c_git_annotated_commit_from_ref p repo ref
   resPtr <- peek p
   free p
   pure resPtr

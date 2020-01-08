@@ -4,7 +4,7 @@ module MGit.Format (
   printBranchesLookup
 ) where
 
-import Data.Maybe (fromMaybe)
+import Prelude hiding (lines)
 
 import System.FilePath.Posix (makeRelative)
 
@@ -47,7 +47,7 @@ formatBranchesLookup _ [] = []
 formatBranchesLookup pwd ((p, b):as) = (makeRelative pwd p) : prepareBranches b <> formatBranchesLookup pwd as
   where
     prepareBranches B.Branches{branches} = fmap prepareBranchInfo branches
-    prepareBranchInfo (B.RepoBranchInfo branchType (B.BranchName name) isBranch ref) = let
+    prepareBranchInfo (B.RepoBranchInfo _ (B.BranchName name) _ ref) = let
       len = length name
       spaceLen = 60 - len
       space = " " <> (if spaceLen > 0 then replicate spaceLen ' ' else "") <> ""

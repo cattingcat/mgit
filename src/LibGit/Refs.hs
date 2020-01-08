@@ -7,13 +7,13 @@ module LibGit.Refs (
 
   formatRemoteRef,
   formatLocalRef,
+  formatTagRef,
 
   lookupRef,
   freeRef
 ) where
 
 import Foreign
-import Foreign.Ptr
 import Foreign.C.Types
 import Foreign.C.String
 import LibGit.Models

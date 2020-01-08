@@ -4,19 +4,19 @@ import qualified MGit.RefModels as R
 
 
 newtype BranchName = BranchName String
-  deriving (Show, Eq)
+  deriving stock (Show, Eq)
 
 data BranchType = RemoteBranch | LocalBranch
-  deriving (Show)
+  deriving stock (Show)
 
 data RepoBranchInfo = RepoBranchInfo {
   branchType :: BranchType,
   name :: BranchName,
   isBranch :: Bool,
   ref :: R.RefName
-} deriving (Show)
+} deriving stock (Show)
 
 data Branches = Branches {
   currentBranch :: RepoBranchInfo,
   branches :: [RepoBranchInfo]
-} deriving (Show)
+} deriving stock (Show)

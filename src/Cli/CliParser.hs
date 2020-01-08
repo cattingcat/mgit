@@ -3,7 +3,6 @@ module Cli.CliParser (
   parseCli
 ) where
 
-import System.Environment
 import Options.Applicative
 
 
@@ -14,7 +13,7 @@ data CliCommand =
   | LookupBranches String
   | Checkout String
   | Test
-  deriving (Show)
+  deriving stock (Show)
 
 cliParser :: Parser CliCommand
 cliParser = subparser $

@@ -1,7 +1,5 @@
 module MGit.MonadGit where
 
-import Data.List (isPrefixOf)
-
 import qualified MGit.StatusModels as S
 import qualified MGit.BranchModels as B
 import qualified MGit.RefModels as R

@@ -3,7 +3,7 @@
 module LibGit.Models where
 
 import Data.Data (Typeable)
-import Control.Exception (Exception, throw)
+import Control.Exception (Exception)
 
 import GHC.Generics (Generic)
 
@@ -15,27 +15,32 @@ import Foreign.CStorableWrap
 
 
 data GitOid = GitOid
-  deriving (Generic, CStorable)
+  deriving stock (Generic)
+  deriving anyclass (CStorable)
 
 data GitRepo = GitRepo
-  deriving (Generic, CStorable)
+  deriving stock (Generic)
+  deriving anyclass (CStorable)
 
 type GitRepoPtr = Ptr GitRepo
 
 -- git_reference
 data GitReference = GitReference
-  deriving (Generic, CStorable)
+  deriving stock (Generic)
+  deriving anyclass (CStorable)
   
 type GitRefPtr = Ptr GitReference
 
-newtype OpenRepoError = OpenRepoError CInt deriving (Show, Typeable)
+newtype OpenRepoError = OpenRepoError CInt 
+  deriving stock (Show, Typeable)
 instance Exception OpenRepoError
 
 data GitStrArr = GitStrArr {
   strings :: !(Ptr CString),
   count :: !CSize
 }
-  deriving (Generic, CStorable)
+  deriving stock (Generic)
+  deriving anyclass (CStorable)
   deriving (Storable) via (CStorableWrapper GitStrArr)
 
 makeStrArr :: [String] -> IO (Ptr GitStrArr)

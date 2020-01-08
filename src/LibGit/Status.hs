@@ -13,25 +13,22 @@ module LibGit.Status (
 
 import GHC.Generics (Generic)
 
-import System.Directory
-
 import Foreign
 import Foreign.C.Types
 import Foreign.C.String
 import Foreign.CStorable
-import Foreign.Storable
 import Foreign.CVector
 import Foreign.CStorableWrap
 
 import LibGit.Models
-import LibGit.GitStatus
 import MGit.StatusModels
 
 
 -- | Status Foreign DTOs
 
 data GitStatusList = GitStatusList
-  deriving (Generic, CStorable)
+  deriving stock (Generic)
+  deriving anyclass (CStorable)
 
 data GitDiffFile = GitDiffFile {
   id :: StorableWrap (CVector 20 CUChar),
@@ -41,7 +38,8 @@ data GitDiffFile = GitDiffFile {
   mode :: CUShort,
   id_abbrev :: CUShort
 }
-  deriving (Generic, CStorable)
+  deriving stock (Generic)
+  deriving anyclass (CStorable)
   deriving (Storable) via (CStorableWrapper GitDiffFile)
 
 data GitDiffDelta = GitDiffDelta {
@@ -52,7 +50,8 @@ data GitDiffDelta = GitDiffDelta {
   oldFile :: !GitDiffFile,
   newFile :: !GitDiffFile
 }
-  deriving (Generic, CStorable)
+  deriving stock (Generic)
+  deriving anyclass (CStorable)
   deriving (Storable) via (CStorableWrapper GitDiffDelta)
 
 data GitStatusEntry = GitStatusEntry {
@@ -60,7 +59,8 @@ data GitStatusEntry = GitStatusEntry {
   headToIndex :: !(Ptr GitDiffDelta),
   indexToWorkDir :: !(Ptr GitDiffDelta)
 }
-  deriving (Generic, CStorable, Show)
+  deriving stock (Generic, Show)
+  deriving anyclass (CStorable)
   deriving (Storable) via (CStorableWrapper GitStatusEntry)
 
 
@@ -97,11 +97,11 @@ repoStatus ptr = do
     loop listPtr count i = if i == count then pure [] else do
       entryPtr <- c_git_status_byindex listPtr i
       entry <- peek entryPtr
-      tail <- loop listPtr count (i + 1)
-      pure (entry : tail)
+      rest <- loop listPtr count (i + 1)
+      pure (entry : rest)
 
 mapStatusEntry :: GitStatusEntry -> IO StatusEntryDeltaInfo
-mapStatusEntry (GitStatusEntry s h2i i2w) = do
+mapStatusEntry (GitStatusEntry _ h2i i2w) = do
   h2iPaths <- mapDeltaPtr h2i
   i2wPaths <- mapDeltaPtr i2w
   pure $ StatusEntryDeltaInfo h2iPaths i2wPaths
@@ -133,6 +133,7 @@ mapStatus 7  = Untracked
 mapStatus 8  = Typechange
 mapStatus 9  = Unreadable
 mapStatus 10 = Conflicted
+mapStatus _  = error "check LibGit integration"
 
 
 sizeOfGitDiffFile :: Int

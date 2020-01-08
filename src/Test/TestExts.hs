@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -w #-}
+
 module Test.TestExts (
   tstExts
 ) where
@@ -59,6 +61,10 @@ tstExecImplicit = let ?s = "kekpuk" in tstImplicit
 --tstPertialSig :: [a] -> a -> _r
 --tstPertialSig [] a     = a
 --tstPertialSig (a:as) _ = a
+
+-- | DatatypeContexts
+-- https://downloads.haskell.org/ghc/latest/docs/html/users_guide/glasgow_exts.html?highlight=datatypecontexts#extension-DatatypeContexts
+--data Show a => TstConst a = TstConst a
 
 
 tstExts :: IO ()
