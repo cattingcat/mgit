@@ -8,15 +8,18 @@ import Prelude hiding (lines)
 
 import System.FilePath.Posix (makeRelative)
 
+import qualified Data.Text as T
+
 import qualified MGit.MonadMGit as MG
 import qualified MGit.BranchModels as B
+
 import PrintTable.Print
 
 
 printBranchesInfo :: FilePath -> MG.BranchesInfo -> IO ()
 printBranchesInfo pwd (MG.BranchesInfo branches) = let
-  accessPath = makeRelative pwd . MG.path
-  accessName = formatBranchMaybe . MG.branch
+  accessPath = T.pack . makeRelative pwd . MG.path
+  accessName = T.pack . formatBranchMaybe . MG.branch
   formatBranchMaybe Nothing = "no branches"
   formatBranchMaybe (Just (B.BranchName name)) = name
   in printTable @('MaxLen :|: 'MaxLen :|: Endl) (C accessPath :| C accessName :| Endl) branches

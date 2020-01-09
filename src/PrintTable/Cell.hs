@@ -8,13 +8,13 @@ import Prelude ()
 import PrintTable.SizingStrategies
 import GHC.TypeNats (KnownNat, natVal)
 import Data.Data (Proxy(..))
-import GHC.Base (String)
 import GHC.Real (fromIntegral)
 import Control.Category ((.))
 import Data.Function (($))
+import Data.Text
 
 
-newtype Cell a (strategy :: CellSizingStrategy) = C (a -> String)
+newtype Cell a (strategy :: CellSizingStrategy) = C (a -> Text)
 
 instance KnownSizingStrategy (Cell a 'MaxLen) where
   strategyVal _ = StrategyMaxLen
