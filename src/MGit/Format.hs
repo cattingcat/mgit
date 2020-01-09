@@ -8,28 +8,22 @@ import Prelude hiding (lines)
 
 import System.FilePath.Posix (makeRelative)
 
-import MGit.MonadMGit
+import qualified MGit.MonadMGit as MG
 import qualified MGit.BranchModels as B
+import PrintTable.Print
 
 
-formatBranchesInfo :: FilePath -> BranchesInfo -> [String]
-formatBranchesInfo pwd (BranchesInfo branches) = fmap formatLine branches
-  where
-    formatLine (RepoBranchInfo path branch) =
-      let relativePath = makeRelative pwd path
-          len = length relativePath
-          spaceLen = 40 - len
-          space = " " <> (if spaceLen > 0 then replicate spaceLen ' ' else "") <> " "
-       in relativePath <> space <> maybe "no branches" (\(B.BranchName n) -> n) branch
+printBranchesInfo :: FilePath -> MG.BranchesInfo -> IO ()
+printBranchesInfo pwd (MG.BranchesInfo branches) = let
+  accessPath = makeRelative pwd . MG.path
+  accessName = formatBranchMaybe . MG.branch
+  formatBranchMaybe Nothing = "no branches"
+  formatBranchMaybe (Just (B.BranchName name)) = name
+  in printTable @('MaxLen :|: 'MaxLen :|: Endl) (C accessPath :| C accessName :| Endl) branches
 
-printBranchesInfo :: FilePath -> BranchesInfo -> IO ()
-printBranchesInfo pwd info = do
-  let lines = formatBranchesInfo pwd info
-  mapM_ putStrLn lines
   
-  
-formatBranchAggregationInfo :: AggregatedBranchesInfo -> [String]
-formatBranchAggregationInfo (AggregatedBranchesInfo infos) = fmap formatLine infos
+formatBranchAggregationInfo :: MG.AggregatedBranchesInfo -> [String]
+formatBranchAggregationInfo (MG.AggregatedBranchesInfo infos) = fmap formatLine infos
   where 
     formatLine (B.BranchName name, count) = 
       let len = length name
@@ -37,7 +31,7 @@ formatBranchAggregationInfo (AggregatedBranchesInfo infos) = fmap formatLine inf
           space = " " <> (if spaceLen > 0 then replicate spaceLen ' ' else "") <> ""
        in name <> space <> show count 
        
-printBranchAggregationInfo :: AggregatedBranchesInfo -> IO ()
+printBranchAggregationInfo :: MG.AggregatedBranchesInfo -> IO ()
 printBranchAggregationInfo info = do
   let lines = formatBranchAggregationInfo info
   mapM_ putStrLn lines

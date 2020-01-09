@@ -83,6 +83,7 @@ default-extensions:
 #  - QuantifiedConstraints       # forall in const (Eq a, forall b. (Eq b) => Eq (f b))
   - PolyKinds                   # replacement of TypeInType
   - ImplicitParams              # (?cmp :: a -> a -> Bool) => [a] -> [a]
+  - AllowAmbiguousTypes         # allow types which can be passed only via @type
 
 
 library:
