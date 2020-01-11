@@ -1,5 +1,10 @@
 module Main where
 
+import Prelude ()
+
+import System.IO (IO)
+import Control.Applicative (pure)
+
 import qualified LibGit.GitLibCommands as T
 import qualified Cli.CliParser as Cli
 import qualified Test as Tst

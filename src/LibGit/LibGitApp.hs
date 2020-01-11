@@ -5,6 +5,7 @@ module LibGit.LibGitApp (
 ) where
 
 import Data.List.Split
+import qualified Data.Text as T
 import Control.Monad.State
 
 import MGit.MonadGit
@@ -80,7 +81,7 @@ instance MonadGit LibGitApp where
         case refType of
           Remote -> do
             let newBranchName = last $ splitOn "/" refName
-            newRef <- B.createBranchFromRemote repo newBranchName annotComm
+            newRef <- B.createBranchFromRemote repo (T.pack newBranchName) annotComm -- todo: remove T.pack
             newRefName <- Ref.refName newRef
             Re.setHead repo newRefName
           Head -> do

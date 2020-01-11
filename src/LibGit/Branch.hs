@@ -14,9 +14,21 @@ module LibGit.Branch (
   createBranchFromRemote
 ) where
 
-import Prelude hiding (head)
+import Prelude ()
 
+import System.IO (IO)
+import Control.Applicative (pure)
+import Control.Category ((.))
+import Data.Maybe (Maybe(..))
+import Data.Ord ((<))
+import Data.Function (($))
+import Data.Bool (otherwise)
+import Data.Monoid ((<>))
+import qualified Data.Text as T
 import GHC.Generics (Generic)
+import GHC.Show (Show(..))
+import GHC.Base (Eq(..))
+import GHC.Err (error)
 
 import MGit.BranchModels
 import MGit.RefModels
@@ -115,7 +127,7 @@ getBranches repoPtr = do
             bType = if branchType == localBranch
               then LocalBranch
               else RemoteBranch
-            branchInfo = RepoBranchInfo bType (BranchName branchName) isBranchRef (RefName referenceName)
+            branchInfo = RepoBranchInfo bType (BranchName . T.pack $ branchName) isBranchRef (RefName referenceName)
             head = case headBranch of
               Nothing -> if isHead then Just branchInfo else headBranch
               Just _ -> headBranch
@@ -124,8 +136,8 @@ getBranches repoPtr = do
           loop rpp branchTypePtr iterPtr branchNamePtr tpl
 
 
-createBranchFromRemote :: GitRepoPtr -> String -> Ptr A.GitAnnotatedCommit -> IO GitRefPtr
-createBranchFromRemote repo branchName commit = withCString branchName $ \s -> do
+createBranchFromRemote :: GitRepoPtr -> T.Text -> Ptr A.GitAnnotatedCommit -> IO GitRefPtr
+createBranchFromRemote repo branchName commit = withCString (T.unpack branchName) $ \s -> do
   p <- malloc
   _ <- c_git_branch_create_from_annotated p repo s commit 0
   res <- peek p

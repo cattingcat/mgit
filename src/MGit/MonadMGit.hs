@@ -10,9 +10,20 @@ module MGit.MonadMGit (
   checkoutSafe
 ) where
 
-import Data.Function (on)
-import Data.Maybe (fromMaybe)
-import Data.List
+import Prelude()
+
+import Control.Category ((.))
+import Data.Function (on, ($))
+import Data.Maybe (fromMaybe, maybe)
+import Data.Tuple (snd)
+import Data.List (sortBy, find)
+import Data.Text (Text, isInfixOf)
+
+import GHC.IO (FilePath)
+import GHC.Base (Maybe(..), Int, Monad(..), Bool(..), Functor(..), Applicative(..), Ord(..), error)
+import GHC.Show (Show)
+import GHC.Num ((+))
+import GHC.List (concatMap, filter, length, head)
 
 import qualified MGit.BranchModels as B
 import qualified MGit.RefModels as R
@@ -59,7 +70,7 @@ aggregateRemoteBranchCount p = do
     sorted = sortBy (compare `on` snd) aggregation
   pure $ AggregatedBranchesInfo sorted
 
-lookupBranches :: MonadMGit m => String -> m [(FilePath, B.Branches)]
+lookupBranches :: MonadMGit m => Text -> m [(FilePath, B.Branches)]
 lookupBranches searchString = do
   branches <- branchesAll
   pure $ filterEmptyRepos . filterRepos $ branches
@@ -80,7 +91,7 @@ lookupBranches searchString = do
           [] -> Nothing
           _ -> Just (B.Branches currentBranch res)
 
-checkoutSafe :: MonadMGit m => String -> m ()
+checkoutSafe :: MonadMGit m => Text -> m ()
 checkoutSafe searchString = do
   branchesList <- lookupBranches searchString
   let

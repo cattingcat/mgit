@@ -1,6 +1,13 @@
 module LibGit.GitLibCommands where
 
+import Prelude ()
+import System.IO (IO)
 import System.Directory
+import Control.Applicative
+import Data.Eq
+import Data.Text
+import Data.Text.IO
+
 import qualified LibGit.MGitApp as MA
 import qualified MGit.MonadMGit as MA
 import qualified MGit.Format as F
@@ -87,13 +94,13 @@ fetchAll = do
   _ <- MA.runMGitApp pwd MA.fetch
   putStrLn "fetched all"
 
-lookupBranches :: String -> IO ()
+lookupBranches :: Text -> IO ()
 lookupBranches s = do
   pwd <- getCurrentDirectory
   res <- MA.runMGitApp pwd (MA.lookupBranches s)
   F.printBranchesLookup pwd res
 
-checkout :: String -> IO ()
+checkout :: Text -> IO ()
 checkout s = do
   pwd <- getCurrentDirectory
   MA.runMGitApp pwd (MA.checkoutSafe s)

@@ -3,15 +3,22 @@ module Cli.CliParser (
   parseCli
 ) where
 
+import Prelude ()
+
+import Data.Function (($))
+import Data.Monoid ((<>))
+import Data.Text
 import Options.Applicative
+import System.IO (IO)
+import Text.Show (Show)
 
 
 data CliCommand =
     Branch
   | Branches
   | Fetch
-  | LookupBranches String
-  | Checkout String
+  | LookupBranches Text
+  | Checkout Text
   | Test
   deriving stock (Show)
 

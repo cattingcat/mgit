@@ -1,9 +1,11 @@
 module MGit.BranchModels where
 
+import Data.Text
+
 import qualified MGit.RefModels as R
 
 
-newtype BranchName = BranchName String
+newtype BranchName = BranchName Text
   deriving stock (Show, Eq)
 
 data BranchType = RemoteBranch | LocalBranch

@@ -22,7 +22,6 @@ import PrintTable.SizingStrategies
 import PrintTable.Cell
 
 
-
 data Endl
 
 infixr 5 :|:
@@ -35,13 +34,16 @@ type family Strategies spec :: [CellSizingStrategy] where
 
 printTable :: forall spec a . Accessors a (Strategies spec) -> ([a] -> IO ())
 printTable accessors as = let
-  access :: Accessors a strat -> a -> [Text]
+  access :: Accessors a strategy -> a -> [Text]
   access Endl _ = []
   access (C accessor :| cs) a = accessor a : access cs a
 
   format (str, len) = let
     diff = len - length str
-    in if diff > 0 then str <> replicate diff " " <> " " else take len str <> " "
+    space n = replicate n " "
+    shorten = take len
+    formattedStr = if diff > 0 then str <> space diff else shorten str
+    in formattedStr <> " "
 
   formatLine pairs = foldr (<>) "" (fmap format pairs)
 
