@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b260535cae996fd9960daa7c1c7978cb7b229db3d9510c3a422767b8c5f99f0f
+-- hash: 438f9138c8a33df6195b94b04de0f0b97771473414e3770b6d9de65dc8270ce5
 
 name:           mgit
 version:        0.1.0.0
@@ -35,6 +35,7 @@ library
       Foreign.CVector
       Foreign.GitFileStatusEnumTest
       Foreign.LibGit.AnnotatedCommit
+      Foreign.LibGit.Branch
       Foreign.LibGit.Checkout
       Foreign.LibGit.Commit
       Foreign.LibGit.Common

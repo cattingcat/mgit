@@ -7,12 +7,12 @@
             .git - branch-1
         repo2
             .git - branch-1
-        repo2
+        repo3
             .git - branch-2
-        repo2
+        repo4
             .git - branch-4
-        just-folder
-
+        just-folder1
+        just-folder2
 ```
 
 How to mass checkout?
