@@ -10,28 +10,10 @@ import System.IO (IO)
 import Control.Applicative
 import Data.Text
 
-import GHC.Generics (Generic)
-
 import Foreign
-import Foreign.C.Types
-import Foreign.C.String
-import Foreign.CStorable (CStorable)
-
-import LibGit.Models
-
-
-data GitCommit = GitCommit
-  deriving stock (Generic)
-  deriving anyclass (CStorable)
-
--- int git_commit_lookup(git_commit **commit, git_repository *repo, const git_oid *id);
-foreign import ccall "git2/commit.h git_commit_lookup" c_git_commit_lookup :: Ptr (Ptr GitCommit) -> GitRepoPtr -> Ptr GitOid -> IO CInt
-
--- void git_commit_free(git_commit *commit);
-foreign import ccall "git2/commit.h git_commit_free" c_git_commit_free :: Ptr GitCommit -> IO ()
-
--- const char * git_commit_message(const git_commit *commit);
-foreign import ccall "git2/commit.h git_commit_message" c_git_commit_message :: Ptr GitCommit -> IO CString
+import Foreign.C.String (peekCString)
+import Foreign.LibGit.Commit
+import Foreign.LibGit.Models
 
 
 getCommit :: GitRepoPtr -> Ptr GitOid -> IO (Ptr GitCommit)

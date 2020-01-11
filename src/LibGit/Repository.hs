@@ -1,5 +1,3 @@
-{-# language ForeignFunctionInterface #-}
-
 module LibGit.Repository (
   repoDir,
   setHead
@@ -15,17 +13,9 @@ import Data.Text.Foreign (withCStringLen)
 import Data.List (init)
 import Data.Function (($))
 
-import Foreign.C.Types
-import Foreign.C.String (CString, peekCString)
-
-import LibGit.Models
-
-
--- const char * git_repository_commondir(const git_repository *repo);
-foreign import ccall "git2/repository.h git_repository_commondir" c_git_repository_commondir :: GitRepoPtr -> IO CString
-
--- int git_repository_set_head(git_repository *repo, const char *refname);
-foreign import ccall "git2/repository.h git_repository_set_head" c_git_repository_set_head :: GitRepoPtr -> CString-> IO CInt
+import Foreign.C.String (peekCString)
+import Foreign.LibGit.Models
+import Foreign.LibGit.Repository
 
 
 repoDir :: GitRepoPtr -> IO FilePath

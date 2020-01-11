@@ -1,4 +1,6 @@
-module Foreign.CVector where
+module Foreign.CVector (
+  CVector(..)
+) where
 
 import GHC.Base
 import GHC.TypeNats

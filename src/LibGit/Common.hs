@@ -1,5 +1,3 @@
-{-# language ForeignFunctionInterface #-}
-
 module LibGit.Common (
   withLibGit,
   withRepo,
@@ -16,41 +14,23 @@ import Data.Text
 import Data.Maybe
 import Data.Monoid
 import Data.Function (($))
+import Data.Typeable (Typeable)
 import Text.Show (show)
 
 import Control.Applicative
-import Control.Exception (throw)
+import Control.Exception (throw, Exception)
+import GHC.Show (Show)
 
 import Foreign
 import Foreign.C.Types
-import Foreign.C.String
-
-import LibGit.Models
-
-
--- int git_libgit2_init();
-foreign import ccall "git2/global.h git_libgit2_init" c_git_libgit2_init :: IO CInt
-
--- int git_libgit2_shutdown();
-foreign import ccall "git2/global.h git_libgit2_shutdown" c_git_libgit2_shutdown :: IO CInt
+import Foreign.C.String (withCString)
+import Foreign.LibGit.Models
+import Foreign.LibGit.Common
 
 
--- int git_libgit2_features();
---foreign import ccall "git2/common.h git_libgit2_features" c_git_libgit2_features :: IO CInt
-
--- void git_libgit2_version(int *major, int *minor, int *rev);
-foreign import ccall "git2/common.h git_libgit2_version" c_git_libgit2_version :: Ptr CInt -> Ptr CInt -> Ptr CInt -> IO ()
-
-
--- int git_repository_open(git_repository **out, const char *path);
-foreign import ccall "git2.h git_repository_open" c_git_repository_open :: Ptr (Ptr GitRepo) -> CString -> IO CInt
-
--- void git_repository_free(git_repository *repo);
-foreign import ccall "git2.h git_repository_free" c_git_repository_free :: Ptr GitRepo -> IO ()
-
-
-
-
+newtype OpenRepoError = OpenRepoError CInt 
+  deriving stock (Show, Typeable)
+instance Exception OpenRepoError
 
 withLibGit :: IO a -> IO a
 withLibGit io = do

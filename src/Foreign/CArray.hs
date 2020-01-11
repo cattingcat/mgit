@@ -1,4 +1,6 @@
-module Foreign.CArray where
+module Foreign.CArray (
+  CArray
+) where
 
 import GHC.Base
 import GHC.TypeNats
@@ -15,7 +17,6 @@ import Foreign.Storable
 
 newtype CArrayInternal (n :: Nat) i (a :: Type) = CArray (IOArray i a)
 
-  
 type CArray (n :: Nat) (a :: Type) = CArrayInternal n Int a
 
 instance (Storable a, KnownNat n) => Storable (CArrayInternal n Int a) where

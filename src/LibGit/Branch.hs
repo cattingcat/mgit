@@ -1,4 +1,3 @@
-{-# LANGUAGE ForeignFunctionInterface #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module LibGit.Branch (
@@ -32,7 +31,6 @@ import GHC.Err (error)
 import MGit.BranchModels
 import MGit.RefModels
 
-import LibGit.Models
 import LibGit.Refs as R
 import LibGit.AnnotatedCommit as A
 
@@ -41,6 +39,7 @@ import Foreign.C.Types
 import Foreign.C.String (CString, peekCString)
 import Foreign.CStorable
 import Foreign.CStorableWrap
+import Foreign.LibGit.Models
 
 -- git_branch_iterator
 data GitBranchIterator = GitBranchIterator

@@ -1,18 +1,15 @@
 {-# LANGUAGE UndecidableInstances #-}
 
-module LibGit.Models where
+module Foreign.LibGit.Models where
 
 import System.IO (IO)
 import Data.Ord
-import Data.Data (Typeable)
 import Data.List as L
 import Data.Text hiding (count)
 import Data.Function (($))
 import Control.Applicative 
 import Control.Monad
 import Control.Category
-import Control.Exception (Exception)
-import Text.Show (Show)
 
 import GHC.Enum (toEnum)
 import GHC.Generics (Generic)
@@ -21,7 +18,7 @@ import GHC.Real (fromIntegral)
 
 import Foreign
 import Foreign.C.Types
-import Foreign.C.String
+import Foreign.C.String (CString, newCString)
 import Foreign.CStorable
 import Foreign.CStorableWrap
 
@@ -43,9 +40,12 @@ data GitReference = GitReference
   
 type GitRefPtr = Ptr GitReference
 
-newtype OpenRepoError = OpenRepoError CInt 
-  deriving stock (Show, Typeable)
-instance Exception OpenRepoError
+data GitCommit = GitCommit
+  deriving stock (Generic)
+  deriving anyclass (CStorable)
+
+
+
 
 data GitStrArr = GitStrArr {
   strings :: !(Ptr CString),

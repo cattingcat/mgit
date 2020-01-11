@@ -9,7 +9,7 @@ import Prelude
 
 import Foreign
 import Foreign.C.Types
-import Foreign.C.String
+import Foreign.C.String (CString, withCString, peekCString)
 import Foreign.CStorable
 import GHC.Generics (Generic)
 import System.Directory

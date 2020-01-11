@@ -18,13 +18,14 @@ import Control.Monad.State
 import MGit.MonadGit
 import MGit.RefModels
 
-import qualified LibGit.Models as M
+import qualified Foreign.LibGit.Models as M
+import qualified Foreign.LibGit.Checkout as Chk
+
 import qualified LibGit.Remote as R
 import qualified LibGit.Repository as Re
 import qualified LibGit.Refs as Ref
 import qualified LibGit.AnnotatedCommit as A
 import qualified LibGit.Commit as Comm
-import qualified LibGit.Checkout as Chk
 import qualified LibGit.Status as S
 import qualified LibGit.Common as C
 import qualified LibGit.Branch as B
