@@ -14,8 +14,6 @@ module LibGit.Branch (
   createBranchFromRemote
 ) where
 
-import Prelude ()
-
 import System.IO (IO)
 import Control.Applicative (pure)
 import Control.Category ((.))
@@ -25,6 +23,7 @@ import Data.Function (($))
 import Data.Bool (otherwise)
 import Data.Monoid ((<>))
 import qualified Data.Text as T
+import qualified Data.Text.Foreign as T
 import GHC.Generics (Generic)
 import GHC.Show (Show(..))
 import GHC.Base (Eq(..))
@@ -39,7 +38,7 @@ import LibGit.AnnotatedCommit as A
 
 import Foreign
 import Foreign.C.Types
-import Foreign.C.String
+import Foreign.C.String hiding (withCStringLen)
 import Foreign.CStorable
 import Foreign.CStorableWrap
 
@@ -137,7 +136,7 @@ getBranches repoPtr = do
 
 
 createBranchFromRemote :: GitRepoPtr -> T.Text -> Ptr A.GitAnnotatedCommit -> IO GitRefPtr
-createBranchFromRemote repo branchName commit = withCString (T.unpack branchName) $ \s -> do
+createBranchFromRemote repo branchName commit = T.withCStringLen branchName $ \(s, _) -> do
   p <- malloc
   _ <- c_git_branch_create_from_annotated p repo s commit 0
   res <- peek p

@@ -11,6 +11,19 @@ module LibGit.Status (
   sizeOfGitDiffDelta
 ) where
 
+import System.IO (IO)
+
+import Control.Monad
+import Control.Applicative
+
+import Text.Show
+import Data.Maybe
+import Data.Eq
+import Data.Function (($))
+
+import GHC.Err (error)
+import GHC.Base (undefined)
+import GHC.Num
 import GHC.Generics (Generic)
 
 import Foreign

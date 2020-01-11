@@ -1,6 +1,5 @@
 module LibGit.GitLibCommands where
 
-import Prelude ()
 import System.IO (IO)
 import System.Directory
 import Control.Applicative

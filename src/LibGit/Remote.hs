@@ -8,12 +8,22 @@ module LibGit.Remote (
   remoteFetch
 ) where
 
+import System.IO (IO)
+
+import Control.Category ((.))
+import Control.Applicative (pure)
+import Data.Text
+import Data.Text.Foreign
+import Data.Tuple (fst)
+import Data.Functor ((<$>))
+
+import GHC.Generics (Generic)
+
 import Foreign
 import Foreign.C.Types
-import Foreign.C.String
+import Foreign.C.String hiding (withCStringLen)
 import Foreign.CStorable
 import LibGit.Models
-import GHC.Generics (Generic)
 
 
 data GitRemote = GitRemote
@@ -49,10 +59,10 @@ foreign import ccall "git_integr.h git_fetch_init_options_integr" c_git_fetch_in
 
 
 
-lookupRemote :: GitRepoPtr -> String -> (GitRemotePtr -> IO a) -> IO a
+lookupRemote :: GitRepoPtr -> Text -> (GitRemotePtr -> IO a) -> IO a
 lookupRemote repo name f = do
   p <- malloc
-  _ <- withCString name (c_git_remote_lookup p repo)
+  _ <- withCStringLen name (c_git_remote_lookup p repo . fst)
   -- todo: ^ check res
   remotePtr <- peek p
   res <- f remotePtr
@@ -61,10 +71,10 @@ lookupRemote repo name f = do
   pure res
   
   
-remoteUri :: GitRemotePtr -> IO String
+remoteUri :: GitRemotePtr -> IO Text
 remoteUri remote = do 
   uriStr <- c_git_remote_url remote
-  peekCString uriStr
+  pack <$> peekCString uriStr
 
 remoteFetch :: GitRemotePtr -> IO ()
 remoteFetch remote = do

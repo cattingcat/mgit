@@ -3,8 +3,6 @@ module Cli.CliParser (
   parseCli
 ) where
 
-import Prelude ()
-
 import Data.Function (($))
 import Data.Monoid ((<>))
 import Data.Text

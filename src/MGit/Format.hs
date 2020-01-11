@@ -4,28 +4,27 @@ module MGit.Format (
   printBranchesLookup
 ) where
 
-import Prelude ()
-
+import System.IO (IO)
+import System.FilePath (FilePath)
 import System.FilePath.Posix (makeRelative)
 
+import Control.Category ((.))
+import Control.Monad (mapM_)
+import Data.Monoid ((<>))
+import Data.Ord ((>))
+import Data.Functor (fmap)
+import Data.Function (($))
+import Data.Maybe (Maybe(..))
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
+import Text.Show (show)
+
+import GHC.Num ((-))
 
 import qualified MGit.MonadMGit as MG
 import qualified MGit.BranchModels as B
 
 import PrintTable.Print
-import System.FilePath (FilePath)
-import Data.Maybe (Maybe(..))
-import System.IO (IO)
-import GHC.Num ((-))
-import Data.Monoid ((<>))
-import Data.Ord ((>))
-import Text.Show (show)
-import Control.Category ((.))
-import Data.Functor (fmap)
-import Control.Monad (mapM_)
-import Data.Function (($))
 
 
 printBranchesInfo :: FilePath -> MG.BranchesInfo -> IO ()
@@ -44,7 +43,7 @@ formatBranchAggregationInfo (MG.AggregatedBranchesInfo infos) = fmap formatLine 
       let len = T.length name
           spaceLen = 40 - len
           space = " " <> (if spaceLen > 0 then T.replicate spaceLen " " else "") <> ""
-       in name <> space <> T.pack (show count) 
+       in name <> space <> T.pack (show count)
        
 printBranchAggregationInfo :: MG.AggregatedBranchesInfo -> IO ()
 printBranchAggregationInfo info = do

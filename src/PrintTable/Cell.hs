@@ -5,6 +5,7 @@ module PrintTable.Cell (
 ) where
 
 import Prelude ()
+
 import PrintTable.SizingStrategies
 import GHC.TypeNats (KnownNat, natVal)
 import Data.Data (Proxy(..))

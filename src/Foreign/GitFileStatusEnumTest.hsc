@@ -2,6 +2,8 @@ module Foreign.GitFileStatusEnumTest where
 
 #include <git2/status.h>
 
+import Prelude
+
 import Foreign.C.Types
 
 newtype GitFileStatus = MkGitFileStatus CULong

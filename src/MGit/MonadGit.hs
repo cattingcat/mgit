@@ -1,7 +1,5 @@
 module MGit.MonadGit where
 
-import Prelude ()
-
 import System.FilePath
 import Control.Monad
 import Control.Applicative

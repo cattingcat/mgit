@@ -2,7 +2,6 @@ module Foreign.CStorableWrap (
   CStorableWrapper(..)
 ) where
 
-import Prelude ()
 import Control.Category
 import Data.Functor
 

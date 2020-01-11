@@ -2,8 +2,6 @@
 
 module LibGit.Checkout where
 
-import Prelude ()
-
 import System.IO (IO)
 
 import Foreign

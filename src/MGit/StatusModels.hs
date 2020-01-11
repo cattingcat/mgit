@@ -1,5 +1,10 @@
 module MGit.StatusModels where
 
+import System.FilePath
+import Data.Maybe
+import Text.Show
+
+
 data DeltaStatus =
     Unmodified
   | Added

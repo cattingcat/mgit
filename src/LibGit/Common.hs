@@ -8,6 +8,17 @@ module LibGit.Common (
   libGitVersion
 ) where
 
+import System.IO (IO)
+import System.FilePath (FilePath)
+
+import Data.Eq
+import Data.Text
+import Data.Maybe
+import Data.Monoid
+import Data.Function (($))
+import Text.Show (show)
+
+import Control.Applicative
 import Control.Exception (throw)
 
 import Foreign
@@ -84,10 +95,10 @@ withRepo path f = do
   c_git_repository_free repoPtr
   pure res
 
-showVer :: CInt -> CInt -> CInt -> String
-showVer mj mn pc = show mj ++ "." ++ show mn ++ "." ++ show pc
+showVer :: CInt -> CInt -> CInt -> Text
+showVer mj mn pc = pack $ show mj <> "." <> show mn <> "." <> show pc
 
-libGitVersion :: IO String
+libGitVersion :: IO Text
 libGitVersion = do
   majorPtr <- malloc
   minorPtr <- malloc

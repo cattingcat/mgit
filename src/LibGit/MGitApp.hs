@@ -3,8 +3,12 @@ module LibGit.MGitApp (
   runMGitApp
 ) where
 
+import Control.Applicative 
 import Control.Monad.Reader
+import Data.Function
 
+import System.IO (IO)
+import System.FilePath
 import System.Directory as Dir
 
 import LibGit.LibGitApp
@@ -12,7 +16,6 @@ import LibGit.LibGitApp
 import MGit.MonadMGit
 import qualified MGit.MonadGit as MG
 import qualified MGit.RefModels as R
-
 
 
 newtype MGitAppState = MGitAppState {

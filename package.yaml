@@ -33,6 +33,7 @@ dependencies:
 - process
 
 default-extensions:
+  - NoImplicitPrelude
   - MultiWayIf                  # if | cond -> ...
   - LambdaCase                  # \case A -> ...; B -> ...
   - ViewPatterns                # size (view -> Unit) = 1   apply view on arg and match

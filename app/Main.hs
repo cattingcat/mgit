@@ -1,7 +1,5 @@
 module Main where
 
-import Prelude ()
-
 import System.IO (IO)
 import Control.Applicative (pure)
 

@@ -4,6 +4,7 @@ module Test.TestExts (
   tstExts
 ) where
 
+import Prelude
 import GHC.Exts (Constraint)
 
 

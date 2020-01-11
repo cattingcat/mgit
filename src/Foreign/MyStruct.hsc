@@ -2,6 +2,8 @@ module Foreign.MyStruct where
 
 #include "test_ffi.h"
 
+import Prelude
+
 import Foreign
 import Foreign.C.Types
 

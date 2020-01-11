@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c0f362aab23795f8d742fc5dc9804032f92a802101990dcb49f0269e3e54644f
+-- hash: d5962f87c82f84777fdcbc9002929899611450a7af18277a8990abea95ddc3d9
 
 name:           mgit
 version:        0.1.0.0
@@ -41,7 +41,6 @@ library
       LibGit.Commit
       LibGit.Common
       LibGit.GitLibCommands
-      LibGit.GitStatus
       LibGit.LibGitApp
       LibGit.MGitApp
       LibGit.Models
@@ -65,7 +64,7 @@ library
       Paths_mgit
   hs-source-dirs:
       src
-  default-extensions: MultiWayIf LambdaCase ViewPatterns OverloadedStrings NegativeLiterals NumDecimals BinaryLiterals HexFloatLiterals NumericUnderscores PartialTypeSignatures NamedWildCards ApplicativeDo Arrows PostfixOperators TupleSections DuplicateRecordFields NamedFieldPuns RecordWildCards DerivingStrategies EmptyDataDeriving StandaloneDeriving GeneralizedNewtypeDeriving DeriveGeneric DeriveFunctor DeriveAnyClass DerivingVia BangPatterns PatternSynonyms EmptyDataDecls TypeOperators LiberalTypeSynonyms DefaultSignatures GADTs MultiParamTypeClasses FunctionalDependencies KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs TypeSynonymInstances FlexibleInstances FlexibleContexts ConstrainedClassMethods TypeFamilies ConstraintKinds RankNTypes PolyKinds ImplicitParams AllowAmbiguousTypes
+  default-extensions: NoImplicitPrelude MultiWayIf LambdaCase ViewPatterns OverloadedStrings NegativeLiterals NumDecimals BinaryLiterals HexFloatLiterals NumericUnderscores PartialTypeSignatures NamedWildCards ApplicativeDo Arrows PostfixOperators TupleSections DuplicateRecordFields NamedFieldPuns RecordWildCards DerivingStrategies EmptyDataDeriving StandaloneDeriving GeneralizedNewtypeDeriving DeriveGeneric DeriveFunctor DeriveAnyClass DerivingVia BangPatterns PatternSynonyms EmptyDataDecls TypeOperators LiberalTypeSynonyms DefaultSignatures GADTs MultiParamTypeClasses FunctionalDependencies KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs TypeSynonymInstances FlexibleInstances FlexibleContexts ConstrainedClassMethods TypeFamilies ConstraintKinds RankNTypes PolyKinds ImplicitParams AllowAmbiguousTypes
   ghc-options: -Wall -Werror -Wcompat -Wredundant-constraints -Wincomplete-patterns -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-deriving-strategies
   include-dirs:
       include
@@ -97,7 +96,7 @@ executable mgit-exe
       Paths_mgit
   hs-source-dirs:
       app
-  default-extensions: MultiWayIf LambdaCase ViewPatterns OverloadedStrings NegativeLiterals NumDecimals BinaryLiterals HexFloatLiterals NumericUnderscores PartialTypeSignatures NamedWildCards ApplicativeDo Arrows PostfixOperators TupleSections DuplicateRecordFields NamedFieldPuns RecordWildCards DerivingStrategies EmptyDataDeriving StandaloneDeriving GeneralizedNewtypeDeriving DeriveGeneric DeriveFunctor DeriveAnyClass DerivingVia BangPatterns PatternSynonyms EmptyDataDecls TypeOperators LiberalTypeSynonyms DefaultSignatures GADTs MultiParamTypeClasses FunctionalDependencies KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs TypeSynonymInstances FlexibleInstances FlexibleContexts ConstrainedClassMethods TypeFamilies ConstraintKinds RankNTypes PolyKinds ImplicitParams AllowAmbiguousTypes
+  default-extensions: NoImplicitPrelude MultiWayIf LambdaCase ViewPatterns OverloadedStrings NegativeLiterals NumDecimals BinaryLiterals HexFloatLiterals NumericUnderscores PartialTypeSignatures NamedWildCards ApplicativeDo Arrows PostfixOperators TupleSections DuplicateRecordFields NamedFieldPuns RecordWildCards DerivingStrategies EmptyDataDeriving StandaloneDeriving GeneralizedNewtypeDeriving DeriveGeneric DeriveFunctor DeriveAnyClass DerivingVia BangPatterns PatternSynonyms EmptyDataDecls TypeOperators LiberalTypeSynonyms DefaultSignatures GADTs MultiParamTypeClasses FunctionalDependencies KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs TypeSynonymInstances FlexibleInstances FlexibleContexts ConstrainedClassMethods TypeFamilies ConstraintKinds RankNTypes PolyKinds ImplicitParams AllowAmbiguousTypes
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror -Wcompat -Wredundant-constraints -Wincomplete-patterns
   extra-libraries:
       git2
@@ -126,7 +125,7 @@ test-suite mgit-test
       Paths_mgit
   hs-source-dirs:
       test
-  default-extensions: MultiWayIf LambdaCase ViewPatterns OverloadedStrings NegativeLiterals NumDecimals BinaryLiterals HexFloatLiterals NumericUnderscores PartialTypeSignatures NamedWildCards ApplicativeDo Arrows PostfixOperators TupleSections DuplicateRecordFields NamedFieldPuns RecordWildCards DerivingStrategies EmptyDataDeriving StandaloneDeriving GeneralizedNewtypeDeriving DeriveGeneric DeriveFunctor DeriveAnyClass DerivingVia BangPatterns PatternSynonyms EmptyDataDecls TypeOperators LiberalTypeSynonyms DefaultSignatures GADTs MultiParamTypeClasses FunctionalDependencies KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs TypeSynonymInstances FlexibleInstances FlexibleContexts ConstrainedClassMethods TypeFamilies ConstraintKinds RankNTypes PolyKinds ImplicitParams AllowAmbiguousTypes
+  default-extensions: NoImplicitPrelude MultiWayIf LambdaCase ViewPatterns OverloadedStrings NegativeLiterals NumDecimals BinaryLiterals HexFloatLiterals NumericUnderscores PartialTypeSignatures NamedWildCards ApplicativeDo Arrows PostfixOperators TupleSections DuplicateRecordFields NamedFieldPuns RecordWildCards DerivingStrategies EmptyDataDeriving StandaloneDeriving GeneralizedNewtypeDeriving DeriveGeneric DeriveFunctor DeriveAnyClass DerivingVia BangPatterns PatternSynonyms EmptyDataDecls TypeOperators LiberalTypeSynonyms DefaultSignatures GADTs MultiParamTypeClasses FunctionalDependencies KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs TypeSynonymInstances FlexibleInstances FlexibleContexts ConstrainedClassMethods TypeFamilies ConstraintKinds RankNTypes PolyKinds ImplicitParams AllowAmbiguousTypes
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   extra-libraries:
       git2

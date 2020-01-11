@@ -2,10 +2,22 @@
 
 module LibGit.Models where
 
+import System.IO (IO)
+import Data.Ord
 import Data.Data (Typeable)
+import Data.List as L
+import Data.Text hiding (count)
+import Data.Function (($))
+import Control.Applicative 
+import Control.Monad
+import Control.Category
 import Control.Exception (Exception)
+import Text.Show (Show)
 
+import GHC.Enum (toEnum)
 import GHC.Generics (Generic)
+import GHC.Num ((+))
+import GHC.Real (fromIntegral)
 
 import Foreign
 import Foreign.C.Types
@@ -43,10 +55,10 @@ data GitStrArr = GitStrArr {
   deriving anyclass (CStorable)
   deriving (Storable) via (CStorableWrapper GitStrArr)
 
-makeStrArr :: [String] -> IO (Ptr GitStrArr)
+makeStrArr :: [Text] -> IO (Ptr GitStrArr)
 makeStrArr strings = do
-  ptrs <- mapM newCString strings
-  let len = length strings
+  ptrs <- mapM (newCString . unpack) strings
+  let len = L.length strings
   arr <- newArray ptrs
   ptr <- malloc
   poke ptr $ GitStrArr arr (toEnum len)
@@ -58,10 +70,10 @@ freeStrArr ptr = do
   loop (strings arr) (fromIntegral . count $ arr) 0
   free ptr
   where
-    loop arr count index = do
-      cstr <- peekElemOff arr index
+    loop arr count ind = do
+      cstr <- peekElemOff arr ind
       free cstr
-      let newIndex = index + 1
+      let newIndex = ind + 1
       if newIndex < count
         then loop arr count newIndex
         else pure ()

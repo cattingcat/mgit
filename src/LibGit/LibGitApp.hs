@@ -4,8 +4,15 @@ module LibGit.LibGitApp (
   runLibGitApps
 ) where
 
-import Data.List.Split
+import System.IO (IO)
+import System.FilePath
+
+import Data.Maybe
+import Data.Bool
 import qualified Data.Text as T
+import Data.Function (($))
+import Control.Monad
+import Control.Applicative
 import Control.Monad.State
 
 import MGit.MonadGit
@@ -21,6 +28,8 @@ import qualified LibGit.Checkout as Chk
 import qualified LibGit.Status as S
 import qualified LibGit.Common as C
 import qualified LibGit.Branch as B
+import GHC.Err (error)
+import Data.List (last)
 
 
 data LibGitAppState = LibGitAppState {
@@ -80,13 +89,13 @@ instance MonadGit LibGitApp where
         refType <- getRefType ref
         case refType of
           Remote -> do
-            let newBranchName = last $ splitOn "/" (T.unpack refName)
-            newRef <- B.createBranchFromRemote repo (T.pack newBranchName) annotComm -- todo: remove T.pack
+            let newBranchName = last $ T.splitOn "/" refName
+            newRef <- B.createBranchFromRemote repo newBranchName annotComm
             newRefName <- Ref.refName newRef
-            Re.setHead repo (T.unpack newRefName)
+            Re.setHead repo newRefName
           Head -> do
             annotCommName <- A.annotatedCommitName annotComm
-            Re.setHead repo (T.unpack annotCommName)
+            Re.setHead repo annotCommName
           Tag -> pure ()
 
         A.freeAnnotatedCommit annotComm

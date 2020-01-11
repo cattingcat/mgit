@@ -13,20 +13,19 @@ module LibGit.Refs (
   freeRef
 ) where
 
-import Prelude ()
-
 import System.IO (IO)
 import Control.Applicative
 import Data.Eq
 import Data.Bool
 import Data.Maybe
 import Data.Text
+import Data.Text.Foreign
 import Data.Monoid
 import Data.Function
 
 import Foreign
 import Foreign.C.Types
-import Foreign.C.String
+import Foreign.C.String hiding (withCStringLen)
 import LibGit.Models
 
 -- | git show-ref
@@ -80,7 +79,7 @@ formatTagRef ::  Text -> Text
 formatTagRef tag = "refs/tags/" <> tag
 
 lookupRef :: GitRepoPtr -> Text -> IO (Maybe GitRefPtr)
-lookupRef ptr name = withCString (unpack name) $ \str -> do
+lookupRef ptr name = withCStringLen name $ \(str, _) -> do
   p <- malloc
   r <- c_git_reference_lookup p ptr str
   if r == 0

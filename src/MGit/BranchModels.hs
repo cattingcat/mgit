@@ -1,6 +1,10 @@
 module MGit.BranchModels where
 
+import Data.Eq
+import Data.Bool
 import Data.Text
+
+import GHC.Show
 
 import qualified MGit.RefModels as R
 

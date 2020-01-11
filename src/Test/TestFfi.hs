@@ -5,6 +5,8 @@ module Test.TestFfi (
   tstFfi
 ) where
 
+import Prelude
+
 import Foreign
 import Foreign.C.Types
 import Foreign.C.String

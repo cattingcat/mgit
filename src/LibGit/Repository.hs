@@ -5,10 +5,18 @@ module LibGit.Repository (
   setHead
 ) where
 
+import System.IO (IO)
+import System.FilePath (FilePath)
 import System.FilePath.Posix (splitDirectories, joinPath)
 
+import Control.Applicative (pure)
+import Data.Text (Text)
+import Data.Text.Foreign (withCStringLen)
+import Data.List (init)
+import Data.Function (($))
+
 import Foreign.C.Types
-import Foreign.C.String
+import Foreign.C.String hiding (withCStringLen)
 
 import LibGit.Models
 
@@ -25,10 +33,10 @@ repoDir ptr = do
   pathPtr <- c_git_repository_commondir ptr
   gitDirPath <- peekCString pathPtr
   let dirs = splitDirectories gitDirPath
-  pure $ joinPath $ init dirs
+  pure $ joinPath $ init dirs -- Remove /.git/ segment
 
-setHead :: GitRepoPtr -> String -> IO ()
+setHead :: GitRepoPtr -> Text -> IO ()
 setHead ptr refName =
-  withCString refName $ \s -> do
+  withCStringLen refName $ \(s, _) -> do
     _ <- c_git_repository_set_head ptr s
-    pure()
+    pure ()

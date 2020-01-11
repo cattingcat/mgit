@@ -6,8 +6,6 @@ module LibGit.AnnotatedCommit (
   commitId
 ) where
 
-import Prelude ()
-
 import System.IO (IO)
 import Control.Applicative
 import Data.Text
