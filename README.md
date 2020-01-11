@@ -1,6 +1,30 @@
 ## mgit - Multi repo git
 
+### Problem
+```
+    root
+        repo1
+            .git - branch-1
+        repo2
+            .git - branch-1
+        repo2
+            .git - branch-2
+        repo2
+            .git - branch-4
+        just-folder
+
+```
+
+How to mass checkout?
+
+How to mass pull/fetch?
+
+How to understand which repos have specified branch?
+
+
 ### Commands
+    `cd` to your root of repos and:
+ 
 `mgit branch`  Current branch in each repo
    
 `mgit branches` Branches with number of repos
