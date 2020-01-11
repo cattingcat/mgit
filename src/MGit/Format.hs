@@ -1,7 +1,8 @@
 module MGit.Format (
   printBranchesInfo,
   printBranchAggregationInfo,
-  printBranchesLookup
+  printBranchesLookup,
+  printRepos
 ) where
 
 import System.IO (IO)
@@ -65,3 +66,6 @@ printBranchesLookup :: FilePath -> [(FilePath, B.Branches)] -> IO ()
 printBranchesLookup pwd d = do
   let lines = formatBranchesLookup pwd d
   mapM_ T.putStrLn lines
+  
+printRepos :: [FilePath] -> IO ()
+printRepos = printTable @('MaxLen :|: Endl) (C T.pack :| Endl)

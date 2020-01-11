@@ -16,5 +16,6 @@ main = do
     Cli.Fetch             -> T.fetchAll
     Cli.LookupBranches s  -> T.lookupBranches s
     Cli.Checkout s        -> T.checkout s
+    Cli.Repos             -> T.repos
     Cli.Test              -> Tst.runTst
   pure ()

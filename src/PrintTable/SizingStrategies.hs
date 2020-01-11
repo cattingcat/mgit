@@ -4,7 +4,6 @@ module PrintTable.SizingStrategies (
   KnownSizingStrategy(..)
 ) where
 
-import Prelude ()
 import GHC.Base (Nat)
 import Data.Int (Int)
 import GHC.Show (Show)

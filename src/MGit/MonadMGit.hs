@@ -4,29 +4,34 @@ module MGit.MonadMGit (
   AggregatedBranchesInfo(..),
   CheckoutSpec(..),
   MonadMGit(..),
+  MonadMultiRepo(..),
 
   aggregateRemoteBranchCount,
   lookupBranches,
   checkoutSafe
 ) where
 
-import Prelude()
-
 import Control.Category ((.))
+import Control.Applicative
+import Control.Monad
 import Data.Function (on, ($))
-import Data.Maybe (fromMaybe, maybe)
 import Data.Tuple (snd)
 import Data.List (sortBy, find)
 import Data.Text (Text, isInfixOf)
+import Data.Int
+import Data.Bool
+import Data.Ord
+import Data.Maybe
 
 import GHC.IO (FilePath)
-import GHC.Base (Maybe(..), Int, Monad(..), Bool(..), Functor(..), Applicative(..), Ord(..), error)
+import GHC.Err (error)
 import GHC.Show (Show)
 import GHC.Num ((+))
 import GHC.List (concatMap, filter, length, head)
 
 import qualified MGit.BranchModels as B
 import qualified MGit.RefModels as R
+import MGit.MonadMultiRepo (MonadMultiRepo(..))
 
 
 data RepoBranchInfo = RepoBranchInfo {
@@ -47,7 +52,7 @@ newtype CheckoutSpec = CheckoutSpec {
 }
 
 
-class Monad m => MonadMGit m where
+class (Monad m, MonadMultiRepo m) => MonadMGit m where
   fetch :: m ()
   currentBranches :: m BranchesInfo
   branchesAll :: m [(FilePath, Maybe B.Branches)]

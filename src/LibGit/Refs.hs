@@ -25,7 +25,7 @@ import Data.Function
 
 import Foreign
 import Foreign.C.Types
-import Foreign.C.String hiding (withCStringLen)
+import Foreign.C.String (CString, peekCString)
 import LibGit.Models
 
 -- | git show-ref

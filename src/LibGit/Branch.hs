@@ -38,7 +38,7 @@ import LibGit.AnnotatedCommit as A
 
 import Foreign
 import Foreign.C.Types
-import Foreign.C.String hiding (withCStringLen)
+import Foreign.C.String (CString, peekCString)
 import Foreign.CStorable
 import Foreign.CStorableWrap
 

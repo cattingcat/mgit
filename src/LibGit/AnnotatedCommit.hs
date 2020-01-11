@@ -14,7 +14,7 @@ import GHC.Generics (Generic)
 
 import Foreign
 import Foreign.C.Types
-import Foreign.C.String
+import Foreign.C.String (CString, peekCString)
 import Foreign.CStorable (CStorable)
 
 import LibGit.Models

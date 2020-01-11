@@ -5,7 +5,8 @@ module LibGit.MGitApp (
 
 import Control.Applicative 
 import Control.Monad.Reader
-import Data.Function
+import Control.Category ((.))
+import Data.Function (($))
 
 import System.IO (IO)
 import System.FilePath
@@ -24,28 +25,32 @@ newtype MGitAppState = MGitAppState {
 
 type MGitApp = ReaderT MGitAppState IO
 
+instance MonadMultiRepo MGitApp where
+  repos = do
+    path <- asks rootPath
+    lift $ do
+      subdirs <- Dir.listDirectory path
+      filterM (Dir.doesPathExist . (</> ".git/")) subdirs
+
 instance MonadMGit MGitApp where
   fetch = do
-    path <- asks rootPath
-    directories <- lift $ Dir.listDirectory path
-    lift $ fetchAll directories
+    rs <- repos
+    lift $ fetchAll rs
     pure ()
     where
       fetchAll dirs = runLibGitApps dirs MG.fetch
 
   currentBranches = do
-    path <- asks rootPath
-    directories <- lift $ Dir.listDirectory path
-    infos <- lift $ loadAll directories
+    rs <- repos
+    infos <- lift $ loadAll rs
     pure $ BranchesInfo infos
     where
       loadAll dirs = runLibGitApps dirs loadRepoInfo
       loadRepoInfo = liftM2 RepoBranchInfo MG.path MG.currentBranch
 
   branchesAll = do
-    path <- asks rootPath
-    directories <- lift $ Dir.listDirectory path
-    lift $ runLibGitApps directories $ do
+    rs <- repos
+    lift $ runLibGitApps rs $ do
       repoPath <- MG.path
       branches <- MG.branches
       pure (repoPath, branches)

@@ -1,7 +1,5 @@
 module MGit.RefModels where
 
-import Prelude ()
-
 import Data.Text
 import Text.Show (Show)
 

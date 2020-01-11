@@ -17,6 +17,7 @@ data CliCommand =
   | Fetch
   | LookupBranches Text
   | Checkout Text
+  | Repos
   | Test
   deriving stock (Show)
 
@@ -27,6 +28,7 @@ cliParser = subparser $
   command "fetch"       (info fetchParser (progDesc "Fetch all repos"))                   <>
   command "lookup"      (info lookupParser (progDesc "Set head in all repos"))            <>
   command "checkout"    (info checkoutParser (progDesc "Set head in all repos"))          <>
+  command "repos"       (info reposParser (progDesc "print available repos"))          <>
   command "test"        (info testParser (progDesc "Test command"))
 
   where
@@ -45,6 +47,9 @@ cliParser = subparser $
     checkoutParser :: Parser CliCommand
     checkoutParser = Checkout <$> argument str idm
 
+    reposParser :: Parser CliCommand
+    reposParser = pure Repos
+    
     testParser :: Parser CliCommand
     testParser = pure Test
 

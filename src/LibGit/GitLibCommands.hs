@@ -105,6 +105,12 @@ checkout s = do
   MA.runMGitApp pwd (MA.checkoutSafe s)
   putStrLn "Checkout done"
 
+repos :: IO ()
+repos = do
+  pwd <- getCurrentDirectory
+  rs <- MA.runMGitApp pwd MA.repos
+  F.printRepos rs 
+
 --checkout :: String -> IO ()
 --checkout s = do
 --  pwd <- getCurrentDirectory

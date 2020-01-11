@@ -8,15 +8,20 @@ module PrintTable.Print (
   Cell(..)
 ) where
 
-import Prelude (($), mapM_)
-import GHC.Base (IO, error, fmap, (>), (<>))
-import Data.Int (Int)
+import System.IO (IO)
 import Control.Category ((.))
-import Data.Ord (max, min)
-import GHC.List (foldr, zip)
-import GHC.Num ((-))
+import Control.Monad
+import Data.Foldable hiding (length)
+import Data.Int
+import Data.Monoid
+import Data.Ord
+import Data.List (zip)
+import Data.Function (($))
 import Data.Text as T hiding (foldr, zip)
 import Data.Text.IO
+
+import GHC.Num
+import GHC.Err (error)
 
 import PrintTable.SizingStrategies
 import PrintTable.Cell
