@@ -6,6 +6,12 @@ module LibGit.AnnotatedCommit (
   commitId
 ) where
 
+import Prelude ()
+
+import System.IO (IO)
+import Control.Applicative
+import Data.Text
+
 import GHC.Generics (Generic)
 
 import Foreign
@@ -33,10 +39,10 @@ foreign import ccall "git2/annotated_commit.h git_annotated_commit_free" c_git_a
 foreign import ccall "git2/annotated_commit.h git_annotated_commit_id" c_git_annotated_commit_id :: Ptr GitAnnotatedCommit -> IO (Ptr GitOid)
 
 
-annotatedCommitName :: Ptr GitAnnotatedCommit -> IO String
+annotatedCommitName :: Ptr GitAnnotatedCommit -> IO Text
 annotatedCommitName commitPtr = do
   cstr <- c_git_annotated_commit_ref commitPtr
-  peekCString cstr
+  pack <$> peekCString cstr
 
 getAnnotatedCommit :: GitRepoPtr -> GitRefPtr -> IO (Ptr GitAnnotatedCommit)
 getAnnotatedCommit repo ref = do

@@ -1,8 +1,11 @@
 module Foreign.CVector where
 
+import Prelude ()
+
 import GHC.Base
 import GHC.TypeNats
 import GHC.Natural
+import GHC.Num
 
 import Data.Data
 import Data.Vector

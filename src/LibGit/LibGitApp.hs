@@ -80,13 +80,13 @@ instance MonadGit LibGitApp where
         refType <- getRefType ref
         case refType of
           Remote -> do
-            let newBranchName = last $ splitOn "/" refName
+            let newBranchName = last $ splitOn "/" (T.unpack refName)
             newRef <- B.createBranchFromRemote repo (T.pack newBranchName) annotComm -- todo: remove T.pack
             newRefName <- Ref.refName newRef
-            Re.setHead repo newRefName
+            Re.setHead repo (T.unpack newRefName)
           Head -> do
             annotCommName <- A.annotatedCommitName annotComm
-            Re.setHead repo annotCommName
+            Re.setHead repo (T.unpack annotCommName)
           Tag -> pure ()
 
         A.freeAnnotatedCommit annotComm

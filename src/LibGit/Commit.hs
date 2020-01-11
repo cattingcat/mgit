@@ -6,6 +6,12 @@ module LibGit.Commit (
   commitMessage
 ) where
 
+import Prelude ()
+
+import System.IO (IO)
+import Control.Applicative
+import Data.Text
+
 import GHC.Generics (Generic)
 
 import Foreign
@@ -41,7 +47,7 @@ getCommit repo oid = do
 freeCommit :: Ptr GitCommit -> IO ()
 freeCommit = c_git_commit_free
 
-commitMessage :: Ptr GitCommit -> IO String
+commitMessage :: Ptr GitCommit -> IO Text
 commitMessage ptr = do
   cstr <- c_git_commit_message ptr
-  peekCString cstr
+  pack <$> peekCString cstr

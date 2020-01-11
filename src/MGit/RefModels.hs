@@ -1,6 +1,12 @@
 module MGit.RefModels where
 
-newtype RefName = RefName String
+import Prelude ()
+
+import Data.Text
+import Text.Show (Show)
+
+
+newtype RefName = RefName Text
   deriving stock (Show)
 
 data RefType = Remote | Head | Tag
@@ -9,5 +15,5 @@ data RefType = Remote | Head | Tag
 data RefInfo = RefInfo {
   refType :: RefType,
   name :: RefName,
-  lastCommitMsg :: String
+  lastCommitMsg :: Text
 } deriving stock (Show)

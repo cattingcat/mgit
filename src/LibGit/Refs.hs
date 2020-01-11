@@ -13,6 +13,17 @@ module LibGit.Refs (
   freeRef
 ) where
 
+import Prelude ()
+
+import System.IO (IO)
+import Control.Applicative
+import Data.Eq
+import Data.Bool
+import Data.Maybe
+import Data.Text
+import Data.Monoid
+import Data.Function
+
 import Foreign
 import Foreign.C.Types
 import Foreign.C.String
@@ -54,22 +65,22 @@ isTag ptr = do
   r <- c_git_reference_is_tag ptr
   pure (r == 1)
 
-refName :: GitRefPtr -> IO String
+refName :: GitRefPtr -> IO Text
 refName ptr = do
   cStr <- c_git_reference_name ptr
-  peekCString cStr
+  pack <$> peekCString cStr
 
-formatRemoteRef :: String -> String -> String
+formatRemoteRef :: Text -> Text -> Text
 formatRemoteRef origin branch = "refs/remotes/" <> origin <> "/" <> branch
 
-formatLocalRef :: String -> String
+formatLocalRef :: Text -> Text
 formatLocalRef branch = "refs/heads/" <> branch
 
-formatTagRef ::  String -> String
+formatTagRef ::  Text -> Text
 formatTagRef tag = "refs/tags/" <> tag
 
-lookupRef :: GitRepoPtr -> String -> IO (Maybe GitRefPtr)
-lookupRef ptr name = withCString name $ \str -> do
+lookupRef :: GitRepoPtr -> Text -> IO (Maybe GitRefPtr)
+lookupRef ptr name = withCString (unpack name) $ \str -> do
   p <- malloc
   r <- c_git_reference_lookup p ptr str
   if r == 0

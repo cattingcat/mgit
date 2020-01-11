@@ -2,11 +2,16 @@
 
 module LibGit.Checkout where
 
+import Prelude ()
+
+import System.IO (IO)
+
 import Foreign
 import Foreign.C.Types
 
 import LibGit.Models
 import LibGit.Commit
+
 
 -- int git_checkout_head(git_repository *repo, const git_checkout_options *opts);
 -- int git_checkout_head_integr(git_repository *repo);
