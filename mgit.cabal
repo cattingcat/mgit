@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 438f9138c8a33df6195b94b04de0f0b97771473414e3770b6d9de65dc8270ce5
+-- hash: 22b68ce6fb2abfec8830e05ee8cc4e7ef59ca27ca2c3b80632265e7453bf06ca
 
 name:           mgit
 version:        0.1.0.0
@@ -92,7 +92,6 @@ library
     , mtl
     , optparse-applicative
     , process
-    , split
     , tagged
     , text
     , time
@@ -120,7 +119,6 @@ executable mgit-exe
     , mtl
     , optparse-applicative
     , process
-    , split
     , tagged
     , text
     , time
@@ -149,7 +147,6 @@ test-suite mgit-test
     , mtl
     , optparse-applicative
     , process
-    , split
     , tagged
     , text
     , time
