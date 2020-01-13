@@ -45,7 +45,7 @@ printBranchesLookup path ms = let
   getPath = pack . makeRelative path . fst
   getBranchName (B.RepoBranchInfo _ (B.BranchName name) _ _) = name
   getBranchRef  (B.RepoBranchInfo _ _ _ (R.RefName ref)) = ref
-  printBranches = printTable @('MaxLen :|: 'MaxLen :|: Endl) (C getBranchName :| C getBranchRef :| Endl)
+  printBranches = printTable @('Pad 10 :|: 'MaxLen :|: 'MaxLen :|: Endl) (C getBranchName :| C getBranchRef :| Endl)
   printPath i = putStrLn $ getPath i
   in mapM_ (\i -> (printPath i) *> (printBranches . B.branches . snd $ i) *> putStrLn "") ms
 

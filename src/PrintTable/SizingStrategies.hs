@@ -9,7 +9,7 @@ import Data.Int (Int)
 import GHC.Show (Show)
 
 
-data CellSizingStrategy = Fixed Nat | MaxLen
+data CellSizingStrategy = Pad Nat | Fixed Nat | MaxLen
 
 data Strategy = StrategyFixed Int | StrategyMaxLen
   deriving stock (Show)

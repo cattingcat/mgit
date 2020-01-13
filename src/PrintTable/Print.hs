@@ -1,3 +1,5 @@
+{-# LANGUAGE UndecidableInstances #-}
+
 module PrintTable.Print (
   Endl,
   type (:|:),
@@ -19,9 +21,11 @@ import Data.List (zip)
 import Data.Function (($))
 import Data.Text as T hiding (foldr, zip)
 import Data.Text.IO
+import Data.Proxy (Proxy(..))
 
 import GHC.Num
 import GHC.Err (error)
+import GHC.TypeLits as TL
 
 import PrintTable.SizingStrategies
 import PrintTable.Cell
@@ -33,22 +37,32 @@ infixr 5 :|:
 data a :|: b
 
 type family Strategies spec :: [CellSizingStrategy] where
-   Strategies (s :|: Endl) = '[s]
-   Strategies (s :|: ss) = s ': Strategies ss
+   Strategies ('Pad _ :|: Endl) = TypeError ('TL.Text "Incorrect printing spec, padding should be first, and spec should'n be empty")
+   Strategies (s      :|: Endl) = '[s]
+   Strategies ('Pad _ :|: ss)   = Strategies ss
+   Strategies (s      :|: ss)   = s ': Strategies ss
+   Strategies _                 = TypeError ('TL.Text "Incorrect printing spec")
+
+type family Padding spec :: Nat where
+  Padding ('Pad n :|: _) = n
+  Padding _              = 0
 
 
-printTable :: forall spec a . Accessors a (Strategies spec) -> ([a] -> IO ())
+printTable :: forall spec a . KnownNat (Padding spec) => Accessors a (Strategies spec) -> ([a] -> IO ())
 printTable accessors as = let
   access :: Accessors a strategy -> a -> [Text]
   access Endl _ = []
   access (C accessor :| cs) a = accessor a : access cs a
 
+  pad = fromInteger $ natVal (Proxy @(Padding spec))
+
   format (str, len) = let
     diff = len - length str
     space n = replicate n " "
+    padding = replicate pad " "
     shorten = take len
     formattedStr = if diff > 0 then str <> space diff else shorten str
-    in formattedStr <> " "
+    in padding <> formattedStr <> " "
 
   formatLine pairs = foldr (<>) "" (fmap format pairs)
 
