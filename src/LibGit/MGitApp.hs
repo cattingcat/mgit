@@ -15,6 +15,7 @@ import System.Directory as Dir
 import LibGit.LibGitApp
 
 import MGit.MonadMGit
+import MGit.MonadMassAction
 import qualified MGit.MonadGit as MG
 import qualified MGit.RefModels as R
 
@@ -31,31 +32,31 @@ instance MonadMultiRepo MGitApp where
     lift $ do
       subdirs <- Dir.listDirectory path
       filterM (Dir.doesPathExist . (</> ".git/")) subdirs
+      
+instance MonadMassAction LibGitApp MGitApp where 
+  mrun m = do
+    rs <- repos
+    lift $ runLibGitApps rs m 
+
 
 instance MonadMGit MGitApp where
   fetch = do
-    rs <- repos
-    lift $ fetchAll rs
+    mrun MG.fetch
     pure ()
-    where
-      fetchAll dirs = runLibGitApps dirs MG.fetch
 
   currentBranches = do
-    rs <- repos
-    infos <- lift $ loadAll rs
+    infos <- mrun loadRepoInfo
     pure $ BranchesInfo infos
     where
-      loadAll dirs = runLibGitApps dirs loadRepoInfo
       loadRepoInfo = liftM2 RepoBranchInfo MG.path MG.currentBranch
 
-  branchesAll = do
-    rs <- repos
-    lift $ runLibGitApps rs $ do
+  branchesAll = mrun $ do
       repoPath <- MG.path
       branches <- MG.branches
       pure (repoPath, branches)
 
   checkout (CheckoutSpec list) = do
+    -- todo: ^ simplify interface, use only branch-name 
     lift $ mapM changeBranch list
     pure ()
       where
