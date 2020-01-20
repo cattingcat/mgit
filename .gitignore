@@ -1,4 +1,6 @@
 .idea/
 .stack-work/
 mgit-test/
+.DS_Store
+
 *~

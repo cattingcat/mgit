@@ -95,7 +95,7 @@ library:
     include
   ghc-options:
     - -Wall
-    - -Werror
+#    - -Werror
     - -Wcompat
     - -Wredundant-constraints
     - -Wincomplete-patterns

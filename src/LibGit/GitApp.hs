@@ -1,4 +1,4 @@
-module LibGit.LibGitApp (
+module LibGit.GitApp (
   LibGitApp,
   runLibGitApp,
   runLibGitApps
@@ -137,10 +137,10 @@ runLibGitApps paths app = C.withLibGit $ filterNothings ioAs
 
 getRefType :: M.GitRefPtr -> IO RefType
 getRefType ref = do
-   isLocal <- Ref.isBranch ref
-   isRemote <- Ref.isRemote ref
-   isTag <- Ref.isTag ref
-   pure $ case (isLocal, isRemote, isTag) of
+  isLocal <- Ref.isBranch ref
+  isRemote <- Ref.isRemote ref
+  isTag <- Ref.isTag ref
+  pure $ case (isLocal, isRemote, isTag) of
     (True, _, _)          -> Head
     (False, True, _)      -> Remote
     (False, False, True)  -> Tag

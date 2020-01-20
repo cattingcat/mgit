@@ -7,8 +7,7 @@ module MGit.MonadMGit (
   MonadMultiRepo(..),
 
   aggregateRemoteBranchCount,
-  lookupBranches,
-  checkoutSafe
+  lookupBranches
 ) where
 
 import Control.Category ((.))
@@ -16,7 +15,7 @@ import Control.Applicative
 import Control.Monad
 import Data.Function (on, ($))
 import Data.Tuple (snd)
-import Data.List (sortBy, find)
+import Data.List (sortBy)
 import Data.Text (Text, isInfixOf)
 import Data.Int
 import Data.Bool
@@ -57,6 +56,7 @@ class (Monad m, MonadMultiRepo m) => MonadMGit m where
   currentBranches :: m BranchesInfo
   branchesAll :: m [(FilePath, Maybe B.Branches)]
   checkout :: CheckoutSpec -> m ()
+  checkoutSafe :: Text -> m ()
 
 
 aggregateRemoteBranchCount :: MonadMGit m => (B.BranchName -> B.BranchName -> Bool) ->  m AggregatedBranchesInfo
@@ -95,22 +95,6 @@ lookupBranches searchString = do
         in case res of
           [] -> Nothing
           _ -> Just (B.Branches currentBranch res)
-
-checkoutSafe :: MonadMGit m => Text -> m ()
-checkoutSafe searchString = do
-  branchesList <- lookupBranches searchString
-  let
-    checkoutSpec = fmap
-      (\(path, B.Branches _ branches) -> let (B.RepoBranchInfo _ _ _ ref) = lookupSuitableBranch branches in (path, ref))
-      branchesList
-
-    lookupSuitableBranch :: [B.RepoBranchInfo] -> B.RepoBranchInfo
-    lookupSuitableBranch bs = let
-      localBranch = find (\case (B.RepoBranchInfo _ _ True _) -> True; _ -> False) bs
-      branch = fromMaybe (head bs) localBranch
-      in branch
-  checkout (CheckoutSpec checkoutSpec)
-
 
 separateBy :: forall a . (a -> a -> Bool) -> [a] -> [[a]]
 separateBy _ [] = []

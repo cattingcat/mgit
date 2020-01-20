@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 22b68ce6fb2abfec8830e05ee8cc4e7ef59ca27ca2c3b80632265e7453bf06ca
+-- hash: 3066bd5f8876a614778f8bb61ba82a4270abdf3f29bd36bed5ae8403934e1b49
 
 name:           mgit
 version:        0.1.0.0
@@ -49,8 +49,8 @@ library
       LibGit.Branch
       LibGit.Commit
       LibGit.Common
+      LibGit.GitApp
       LibGit.GitLibCommands
-      LibGit.LibGitApp
       LibGit.MGitApp
       LibGit.Refs
       LibGit.Remote
@@ -59,6 +59,7 @@ library
       MGit.BranchModels
       MGit.Format
       MGit.MonadGit
+      MGit.MonadMassAction
       MGit.MonadMGit
       MGit.MonadMultiRepo
       MGit.RefModels
@@ -74,7 +75,7 @@ library
   hs-source-dirs:
       src
   default-extensions: NoImplicitPrelude MultiWayIf LambdaCase ViewPatterns OverloadedStrings NegativeLiterals NumDecimals BinaryLiterals HexFloatLiterals NumericUnderscores PartialTypeSignatures NamedWildCards ApplicativeDo Arrows PostfixOperators TupleSections DuplicateRecordFields NamedFieldPuns RecordWildCards DerivingStrategies EmptyDataDeriving StandaloneDeriving GeneralizedNewtypeDeriving DeriveGeneric DeriveFunctor DeriveAnyClass DerivingVia BangPatterns PatternSynonyms EmptyDataDecls TypeOperators LiberalTypeSynonyms DefaultSignatures GADTs MultiParamTypeClasses FunctionalDependencies KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs TypeSynonymInstances FlexibleInstances FlexibleContexts ConstrainedClassMethods TypeFamilies ConstraintKinds RankNTypes PolyKinds ImplicitParams AllowAmbiguousTypes
-  ghc-options: -Wall -Werror -Wcompat -Wredundant-constraints -Wincomplete-patterns -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-deriving-strategies
+  ghc-options: -Wall -Wcompat -Wredundant-constraints -Wincomplete-patterns -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-deriving-strategies
   include-dirs:
       include
   c-sources:

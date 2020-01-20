@@ -6,13 +6,14 @@ module LibGit.MGitApp (
 import Control.Applicative 
 import Control.Monad.Reader
 import Control.Category ((.))
+import Data.Functor (($>))
 import Data.Function (($))
 
 import System.IO (IO)
 import System.FilePath
 import System.Directory as Dir
 
-import LibGit.LibGitApp
+import LibGit.GitApp
 
 import MGit.MonadMGit
 import MGit.MonadMassAction
@@ -33,36 +34,25 @@ instance MonadMultiRepo MGitApp where
       subdirs <- Dir.listDirectory path
       filterM (Dir.doesPathExist . (</> ".git/")) subdirs
       
-instance MonadMassAction LibGitApp MGitApp where 
+instance MonadMassAction LibGitApp MGitApp where
   mrun m = do
     rs <- repos
     lift $ runLibGitApps rs m 
 
-
 instance MonadMGit MGitApp where
-  fetch = do
-    mrun MG.fetch
-    pure ()
+  fetch = mrun MG.fetch $> ()
 
-  currentBranches = do
-    infos <- mrun loadRepoInfo
-    pure $ BranchesInfo infos
+  currentBranches = BranchesInfo <$> mrun (RepoBranchInfo <$> MG.path <*> MG.currentBranch)
+
+  branchesAll = mrun $ (,) <$> MG.path <*> MG.branches
+
+  checkout (CheckoutSpec list) = lift $ mapM changeBranch list $> ()
     where
-      loadRepoInfo = liftM2 RepoBranchInfo MG.path MG.currentBranch
+      changeBranch :: (FilePath, R.RefName) -> IO ()
+      changeBranch (path, ref) = runLibGitApp path (MG.checkoutTree ref)
 
-  branchesAll = mrun $ do
-      repoPath <- MG.path
-      branches <- MG.branches
-      pure (repoPath, branches)
+  checkoutSafe search = mrun (MG.checkoutSafe search) $> ()
 
-  checkout (CheckoutSpec list) = do
-    -- todo: ^ simplify interface, use only branch-name 
-    lift $ mapM changeBranch list
-    pure ()
-      where
-        changeBranch :: (FilePath, R.RefName) -> IO ()
-        changeBranch (path, ref) = runLibGitApp path (MG.checkoutTree ref)
-          
 
 runMGitApp :: FilePath -> MGitApp a -> IO a
 runMGitApp pwd app = runReaderT app $ MGitAppState pwd
