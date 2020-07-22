@@ -11,9 +11,60 @@ packages:
       sha256: 17a631450a907af3253c3aa95414239b1adea9c5d9777705d6beab712cdf61a6
   original:
     hackage: c-storable-deriving-0.1.3
-snapshots:
 - completed:
-    size: 444367
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/nightly/2020/1/6.yaml
-    sha256: 53cc08beac90b2e1fdfcde2df030c3452fa696b38015192a4d1ba54f7a8b196a
-  original: nightly-2020-01-06
+    hackage: optparse-applicative-0.15.1.0@sha256:29ff6146aabf54d46c4c8788e8d1eadaea27c94f6d360c690c5f6c93dac4b07e,4810
+    pantry-tree:
+      size: 2904
+      sha256: 04ad3816bc580cbe0834d3d1f4729ddd386abfe31b43e5b14968885f636d1b0d
+  original:
+    hackage: optparse-applicative-0.15.1.0
+- completed:
+    hackage: tagged-0.8.6@sha256:1f7ca84e6c88cbb923641c60041c9f56c34f1a889759cc073cdf10542b441ff9,2606
+    pantry-tree:
+      size: 543
+      sha256: 7e03b4e4506268d8a1429fba046816d682ec98e1c61d3869ae0ce57d74574d78
+  original:
+    hackage: tagged-0.8.6
+- completed:
+    hackage: vector-0.12.1.2@sha256:9291bc581f36e51d5bda9fce57cb980fbec3dd292996896f285fef39eb80a9a0,7364
+    pantry-tree:
+      size: 3784
+      sha256: f79eefc8ba2b57ded2276f48046e64663d37b210b6047b6b6ecb30c9da196216
+  original:
+    hackage: vector-0.12.1.2
+- completed:
+    hackage: ansi-wl-pprint-0.6.9@sha256:f6fd6dbd4adcad0432bf75e5f5b19bb1deda00a1d8056faf18090026e577652d,2388
+    pantry-tree:
+      size: 472
+      sha256: a49f803a88dc2700cdce18f475525578e51964ae8bc9233d28331c66617711a8
+  original:
+    hackage: ansi-wl-pprint-0.6.9
+- completed:
+    hackage: ansi-terminal-0.10.3@sha256:e2fbcef5f980dc234c7ad8e2fa433b0e8109132c9e643bc40ea5608cd5697797,3226
+    pantry-tree:
+      size: 1461
+      sha256: 02f05d52be3ffcf36c78876629cbab80b63420672685371aea4fd10e1c4aabb6
+  original:
+    hackage: ansi-terminal-0.10.3
+- completed:
+    hackage: primitive-0.7.1.0@sha256:6a237bb338bcc43193077ff8e8c0f0ce2de14c652231496a15672e8b563a07e2,2604
+    pantry-tree:
+      size: 1376
+      sha256: 924e88629b493abb6b2f3c3029cef076554a2b627091e3bb6887ec03487a707d
+  original:
+    hackage: primitive-0.7.1.0
+- completed:
+    hackage: transformers-compat-0.6.5@sha256:50b00c57bf3fc379ec2477bfc261a2aebc983084488478adb29854f193af4696,5490
+    pantry-tree:
+      size: 1773
+      sha256: 3a15141e82214faba9ddcabaa63526273d4c8b7b1d9d6cbc643334bfe41fb2f8
+  original:
+    hackage: transformers-compat-0.6.5
+- completed:
+    hackage: colour-2.3.5@sha256:b27db0a3ad40d70bdbd8510a104269f8707592e80757a1abc66a22ba25e5a42f,1801
+    pantry-tree:
+      size: 1183
+      sha256: ff0f5e24e9f669ceedfcae4d11fd6c68820bbaa2e07ab277368946e9b0f6f8a4
+  original:
+    hackage: colour-2.3.5
+snapshots: []

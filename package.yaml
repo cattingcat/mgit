@@ -2,34 +2,39 @@ name:                mgit
 version:             0.1.0.0
 github:              "cattingcat/mgit"
 license:             BSD3
-author:              "Author name here"
-maintainer:          "Author email here"
-copyright:           "2019 Author name here"
+license-file:        LICENSE
+author:              "Mark M"
+maintainer:          "mark.martynov@yahoo.com"
+copyright:           "2019 Mark M"
 synopsis:            Multi-repo git tool
-category:            git, tools
-description:         Please see the README on GitHub at <https://github.com/cattingcat/mgit#readme>
+category:            git, tools, cli
+description:
+  Please see the README on GitHub at <https://github.com/cattingcat/mgit#readme>
 
 extra-libraries:
   - git2                # libgit2 @ 0.28.3  (https://libgit2.org/)
+
+#pkgconfig-depends:
+#  libgit2 >0.28.3
 
 extra-source-files:
   - README.md
   - ChangeLog.md
 
 dependencies:
-- base >= 4.7 && < 5
-- mtl                   # monad transformers
-- array                 # old lib for arrays
-- vector                # arrays
-- optparse-applicative  # cli args parser
-- directory             # working with dirs, standard lib
-- filepath              # manipulation with path
-- text                  # overloading strings
-- bytestring            # overloading byte strings
-- c-storable-deriving   # Storable deriving for C lang
-- time
-- tagged
-- process
+  - base
+  - mtl                   # monad transformers
+  - array                 # old lib for arrays
+  - vector                # arrays
+  - optparse-applicative  # cli args parser
+  - directory             # working with dirs, standard lib
+  - filepath              # manipulation with path
+  - text                  # overloading strings
+  - bytestring            # overloading byte strings
+  - c-storable-deriving   # Storable deriving for C lang
+  - time
+  - tagged
+  - process
 
 default-extensions:
   - NoImplicitPrelude
@@ -94,17 +99,18 @@ library:
   include-dirs:
     include
   ghc-options:
-    - -Wall
-#    - -Werror
+    - -Weverything
     - -Wcompat
-    - -Wredundant-constraints
-    - -Wincomplete-patterns
-    - -Wincomplete-uni-patterns
-    - -Wincomplete-record-updates
-    - -Wmissing-deriving-strategies
+    - -Wno-safe
+    - -Wno-unused-top-binds
+    - -Wno-missing-import-lists
+    - -Wno-implicit-prelude
+    - -Wno-unsafe
+    - -Wno-missing-safe-haskell-mode
+    - -optP-Wno-nonportable-include-path
 
 executables:
-  mgit-exe:
+  mgit:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -116,6 +122,7 @@ executables:
     - -Wcompat
     - -Wredundant-constraints
     - -Wincomplete-patterns
+    - -optP-Wno-nonportable-include-path
     dependencies:
     - mgit
 

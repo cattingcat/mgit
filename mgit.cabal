@@ -1,21 +1,21 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.2.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3066bd5f8876a614778f8bb61ba82a4270abdf3f29bd36bed5ae8403934e1b49
+-- hash: e59904927cb0364b5e389bbb8ff25be30372d0c6c3d6b53e36e0f903f396762e
 
 name:           mgit
 version:        0.1.0.0
 synopsis:       Multi-repo git tool
 description:    Please see the README on GitHub at <https://github.com/cattingcat/mgit#readme>
-category:       git, tools
+category:       git, tools, cli
 homepage:       https://github.com/cattingcat/mgit#readme
 bug-reports:    https://github.com/cattingcat/mgit/issues
-author:         Author name here
-maintainer:     Author email here
-copyright:      2019 Author name here
+author:         Mark M
+maintainer:     mark.martynov@yahoo.com
+copyright:      2019 Mark M
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -75,7 +75,7 @@ library
   hs-source-dirs:
       src
   default-extensions: NoImplicitPrelude MultiWayIf LambdaCase ViewPatterns OverloadedStrings NegativeLiterals NumDecimals BinaryLiterals HexFloatLiterals NumericUnderscores PartialTypeSignatures NamedWildCards ApplicativeDo Arrows PostfixOperators TupleSections DuplicateRecordFields NamedFieldPuns RecordWildCards DerivingStrategies EmptyDataDeriving StandaloneDeriving GeneralizedNewtypeDeriving DeriveGeneric DeriveFunctor DeriveAnyClass DerivingVia BangPatterns PatternSynonyms EmptyDataDecls TypeOperators LiberalTypeSynonyms DefaultSignatures GADTs MultiParamTypeClasses FunctionalDependencies KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs TypeSynonymInstances FlexibleInstances FlexibleContexts ConstrainedClassMethods TypeFamilies ConstraintKinds RankNTypes PolyKinds ImplicitParams AllowAmbiguousTypes
-  ghc-options: -Wall -Wcompat -Wredundant-constraints -Wincomplete-patterns -Wincomplete-uni-patterns -Wincomplete-record-updates -Wmissing-deriving-strategies
+  ghc-options: -Weverything -Wcompat -Wno-safe -Wno-unused-top-binds -Wno-missing-import-lists -Wno-implicit-prelude -Wno-unsafe -Wno-missing-safe-haskell-mode -optP-Wno-nonportable-include-path
   include-dirs:
       include
   c-sources:
@@ -85,7 +85,7 @@ library
       git2
   build-depends:
       array
-    , base >=4.7 && <5
+    , base
     , bytestring
     , c-storable-deriving
     , directory
@@ -99,19 +99,19 @@ library
     , vector
   default-language: Haskell2010
 
-executable mgit-exe
+executable mgit
   main-is: Main.hs
   other-modules:
       Paths_mgit
   hs-source-dirs:
       app
   default-extensions: NoImplicitPrelude MultiWayIf LambdaCase ViewPatterns OverloadedStrings NegativeLiterals NumDecimals BinaryLiterals HexFloatLiterals NumericUnderscores PartialTypeSignatures NamedWildCards ApplicativeDo Arrows PostfixOperators TupleSections DuplicateRecordFields NamedFieldPuns RecordWildCards DerivingStrategies EmptyDataDeriving StandaloneDeriving GeneralizedNewtypeDeriving DeriveGeneric DeriveFunctor DeriveAnyClass DerivingVia BangPatterns PatternSynonyms EmptyDataDecls TypeOperators LiberalTypeSynonyms DefaultSignatures GADTs MultiParamTypeClasses FunctionalDependencies KindSignatures DataKinds ScopedTypeVariables TypeApplications InstanceSigs TypeSynonymInstances FlexibleInstances FlexibleContexts ConstrainedClassMethods TypeFamilies ConstraintKinds RankNTypes PolyKinds ImplicitParams AllowAmbiguousTypes
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror -Wcompat -Wredundant-constraints -Wincomplete-patterns
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror -Wcompat -Wredundant-constraints -Wincomplete-patterns -optP-Wno-nonportable-include-path
   extra-libraries:
       git2
   build-depends:
       array
-    , base >=4.7 && <5
+    , base
     , bytestring
     , c-storable-deriving
     , directory
@@ -139,7 +139,7 @@ test-suite mgit-test
       git2
   build-depends:
       array
-    , base >=4.7 && <5
+    , base
     , bytestring
     , c-storable-deriving
     , directory
