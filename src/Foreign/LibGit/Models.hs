@@ -1,11 +1,22 @@
 {-# LANGUAGE UndecidableInstances #-}
 
-module Foreign.LibGit.Models where
+module Foreign.LibGit.Models (
+  GitOid(..),
+  GitRepo(..),
+  GitRepoPtr(..),
+  GitReference(..),
+  GitRefPtr(..),
+  GitCommit(..),
+
+  GitStrArr(..),
+  makeStrArr,
+  freeStrArr
+) where
 
 import System.IO (IO)
 import Data.Ord
-import Data.List as L
-import Data.Text hiding (count)
+import Data.List(length)
+import Data.Text hiding (count, length)
 import Data.Function (($))
 import Control.Applicative 
 import Control.Monad
@@ -58,7 +69,7 @@ data GitStrArr = GitStrArr {
 makeStrArr :: [Text] -> IO (Ptr GitStrArr)
 makeStrArr strings = do
   ptrs <- mapM (newCString . unpack) strings
-  let len = L.length strings
+  let len = length strings
   arr <- newArray ptrs
   ptr <- malloc
   poke ptr $ GitStrArr arr (toEnum len)

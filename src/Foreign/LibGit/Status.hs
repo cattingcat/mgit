@@ -1,4 +1,14 @@
-module Foreign.LibGit.Status where
+module Foreign.LibGit.Status (
+  GitStatusList(..),
+  GitDiffFile(..),
+  GitDiffDelta(..),
+  GitStatusEntry(..),
+  
+  c_git_status_list_new_integr,
+  c_git_status_byindex,
+  c_git_status_list_entrycount,
+  c_git_status_list_free
+) where
 
 import System.IO (IO)
 import Text.Show (Show)

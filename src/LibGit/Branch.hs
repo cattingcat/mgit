@@ -22,8 +22,8 @@ import Data.Ord ((<))
 import Data.Function (($))
 import Data.Bool (otherwise)
 import Data.Monoid ((<>))
-import qualified Data.Text as T
-import qualified Data.Text.Foreign as T
+import Data.Text qualified as T
+import Data.Text.Foreign qualified as T
 import Text.Show (show)
 import GHC.Err (error)
 

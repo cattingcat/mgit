@@ -9,16 +9,16 @@ module MGit.MonadGit (
 import System.FilePath
 import Control.Monad
 import Control.Applicative
-import qualified Data.List as L
+import Data.List qualified as L
 import Data.Bool
 import Data.Maybe
 import Data.Monoid
 import Data.Function
 import Data.Text
 
-import qualified MGit.StatusModels as S
-import qualified MGit.BranchModels as B
-import qualified MGit.RefModels as R
+import MGit.StatusModels qualified as S
+import MGit.BranchModels qualified as B
+import MGit.RefModels qualified as R
 
 
 class Monad m => MonadGit m where

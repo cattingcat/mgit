@@ -14,9 +14,9 @@ import Data.Eq
 import Data.Text
 import Data.Text.IO
 
-import qualified LibGit.MGitApp as MA
-import qualified MGit.MonadMGit as MA
-import qualified MGit.Format as F
+import LibGit.MGitApp qualified as MA
+import MGit.MonadMGit qualified as MA
+import MGit.Format qualified as F
 
 
 currentBranches :: IO ()

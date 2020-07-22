@@ -28,8 +28,8 @@ import GHC.Show (Show)
 import GHC.Num ((+))
 import GHC.List (concatMap, filter, length, head)
 
-import qualified MGit.BranchModels as B
-import qualified MGit.RefModels as R
+import MGit.BranchModels qualified as B
+import MGit.RefModels qualified as R
 import MGit.MonadMultiRepo (MonadMultiRepo(..))
 
 

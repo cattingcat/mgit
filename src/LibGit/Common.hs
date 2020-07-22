@@ -14,7 +14,6 @@ import Data.Text
 import Data.Maybe
 import Data.Monoid
 import Data.Function (($))
-import Data.Typeable (Typeable)
 import Text.Show (show)
 
 import Control.Applicative
@@ -29,7 +28,7 @@ import Foreign.LibGit.Common
 
 
 newtype OpenRepoError = OpenRepoError CInt 
-  deriving stock (Show, Typeable)
+  deriving stock (Show)
 instance Exception OpenRepoError
 
 withLibGit :: IO a -> IO a

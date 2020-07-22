@@ -1,4 +1,8 @@
-module MGit.RefModels where
+module MGit.RefModels (
+  RefName(..),
+  RefType(..),
+  RefInfo(..)
+) where
 
 import Data.Text
 import Text.Show (Show)

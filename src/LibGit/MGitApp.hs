@@ -17,8 +17,8 @@ import LibGit.GitApp
 
 import MGit.MonadMGit
 import MGit.MonadMassAction
-import qualified MGit.MonadGit as MG
-import qualified MGit.RefModels as R
+import MGit.MonadGit qualified as MG
+import MGit.RefModels qualified as R
 
 
 newtype MGitAppState = MGitAppState {

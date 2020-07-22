@@ -19,9 +19,9 @@ import Data.Function (($))
 import Data.Text
 import Text.Show (show)
 
-import qualified MGit.MonadMGit as MG
-import qualified MGit.BranchModels as B
-import qualified MGit.RefModels as R
+import MGit.MonadMGit qualified as MG
+import MGit.BranchModels qualified as B
+import MGit.RefModels qualified as R
 
 import PrintTable.Print
 

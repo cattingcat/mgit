@@ -26,9 +26,9 @@ cliParser = subparser $
   command "branch"      (info branchParser (progDesc "Current branch for each repo"))     <>
   command "branches"    (info branchesParser (progDesc "Branches aggregated info"))       <>
   command "fetch"       (info fetchParser (progDesc "Fetch all repos"))                   <>
-  command "lookup"      (info lookupParser (progDesc "Set head in all repos"))            <>
+  command "lookup"      (info lookupParser (progDesc "Lookup branch name"))               <>
   command "checkout"    (info checkoutParser (progDesc "Set head in all repos"))          <>
-  command "repos"       (info reposParser (progDesc "print available repos"))          <>
+  command "repos"       (info reposParser (progDesc "print available repos"))             <>
   command "test"        (info testParser (progDesc "Test command"))
 
   where

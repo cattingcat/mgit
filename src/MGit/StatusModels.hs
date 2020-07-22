@@ -1,4 +1,9 @@
-module MGit.StatusModels where
+module MGit.StatusModels(
+  DeltaStatus(..),
+  DeltaInfo(..),
+  StatusEntryDeltaInfo(..),
+  StatusInfo(..)
+) where
 
 import System.FilePath
 import Data.Maybe

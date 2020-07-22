@@ -1,4 +1,9 @@
-module MGit.BranchModels where
+module MGit.BranchModels(
+  BranchName(..),
+  BranchType(..),
+  RepoBranchInfo(..),
+  Branches(..)
+) where
 
 import Data.Eq
 import Data.Bool
@@ -6,7 +11,7 @@ import Data.Text
 
 import GHC.Show
 
-import qualified MGit.RefModels as R
+import MGit.RefModels qualified as R
 
 
 newtype BranchName = BranchName Text

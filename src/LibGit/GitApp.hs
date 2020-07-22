@@ -9,7 +9,7 @@ import System.FilePath
 
 import Data.Maybe
 import Data.Bool
-import qualified Data.Text as T
+import Data.Text qualified as T
 import Data.Function (($))
 import Control.Monad
 import Control.Applicative
@@ -18,17 +18,17 @@ import Control.Monad.State
 import MGit.MonadGit
 import MGit.RefModels
 
-import qualified Foreign.LibGit.Models as M
-import qualified Foreign.LibGit.Checkout as Chk
+import Foreign.LibGit.Models qualified as M
+import Foreign.LibGit.Checkout qualified as Chk
 
-import qualified LibGit.Remote as R
-import qualified LibGit.Repository as Re
-import qualified LibGit.Refs as Ref
-import qualified LibGit.AnnotatedCommit as A
-import qualified LibGit.Commit as Comm
-import qualified LibGit.Status as S
-import qualified LibGit.Common as C
-import qualified LibGit.Branch as B
+import LibGit.Remote qualified as R
+import LibGit.Repository qualified as Re
+import LibGit.Refs qualified as Ref
+import LibGit.AnnotatedCommit qualified as A
+import LibGit.Commit qualified as Comm
+import LibGit.Status qualified as S
+import LibGit.Common qualified as C
+import LibGit.Branch qualified as B
 import GHC.Err (error)
 import Data.List (last)
 

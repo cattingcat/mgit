@@ -1,10 +1,10 @@
-module Main where
+module Main (main) where
 
 import System.IO (IO)
 
-import qualified LibGit.GitLibCommands as T
-import qualified Cli.CliParser as Cli
-import qualified Test as Tst
+import LibGit.GitLibCommands  qualified as T
+import Cli.CliParser          qualified as Cli
+import Test                   qualified as Tst
 
 main :: IO ()
 main = do

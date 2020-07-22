@@ -1,4 +1,7 @@
-module Foreign.MyStruct where
+module Foreign.MyStruct (
+    MyStruct(..),
+    KekStatusOpt(..)
+) where
 
 #include "test_ffi.h"
 

@@ -15,7 +15,7 @@ import GHC.Generics (Generic)
 import System.Directory
 import Foreign.CVector
 import Foreign.CStorableWrap
-import qualified LibGit.Status as S
+import LibGit.Status qualified as S
 import Data.Vector as V hiding ((++))
 
 
